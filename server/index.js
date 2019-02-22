@@ -2,9 +2,9 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 8080
 
-// app.get('/', (req, res) => {
-// 	res.send('Hello there welcome to TAdummy - Ed, Matt')
-// })
+app.get('/', (req, res) => {
+	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
+})
 let myresults;
 const oracledb = require('oracledb')
 function getEmployee(empid) {
@@ -48,9 +48,3 @@ async function run() {
 
 run();
 
-
-
-
-
-
-app.listen(port, () => console.log(`server running on port ${port}`))
