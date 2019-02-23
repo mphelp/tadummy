@@ -11,7 +11,7 @@ let CLASSIP = "34.238.200.26"
 let potentialXEConnectString = "Driver=(Oracle in XEClient);dbq=34.238.200.26:1521/XE;Uid=mphelps3;Pwd=mphelps3;"
 let connectStr = "(DESCRIPTION = \
 	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ CLASSIP + ")(PORT=1521)) \
- 	(CONNECT_DATA = (SID = ORCL)))"
+ 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
 
 let myresults;
 const oracledb = require('oracledb')
