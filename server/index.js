@@ -1,55 +1,67 @@
+// setup
 const express = require('express')
 const app = express()
 const port = process.env.PORT || 8080
+const oracledb = require('oracledb')
+const dbconfig = require('../dbconfig.js')
+
 
 app.get('/', (req, res) => {
 	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
 })
 
-// Database connection attempt
+// Database connection configurations
 let CLASSIP = "34.238.200.26"
 let potentialXEConnectString = "Driver=(Oracle in XEClient);dbq=34.238.200.26:1521/XE;Uid=mphelps3;Pwd=mphelps3;"
 let connectStr = "(DESCRIPTION = \
 	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ CLASSIP + ")(PORT=1521)) \
 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
-let thisQuery = `SELECT * FROM salesperson`
 
-const oracledb = require('oracledb')
-function getEmployee(empid) {
-  return new Promise(async function(resolve, reject) {
-    let conn;
+// SQL queries
+let sql1 = `SELECT * FROM customer`
 
-    try {
-      conn = await oracledb.getConnection({
-        user          : "mphelps3",
-        password      : "mphelps3",
-        connectString : connectStr
-      });
+// use connection pool to execute query
+function queryDB(){
+	return new Promise(async function(resolve, reject){
 
-      let result = await conn.execute(
-        thisQuery,
-      );
-      resolve(result.rows);
+		let conn;
+		try {
+			// get connection from default pool
+			conn = await oracledb.getConnection();
+			let options = { outFormat: oracledb.OBJECT };
+			let result1 = await conn.execute(sql1, [], options);
 
-    } catch (err) { // catches errors in getConnection and the query
-      reject(err);
-    } finally {
-      if (conn) {   // the conn assignment worked, must release
-        try {
-          await conn.release();
-        } catch (e) {
-          console.error(e);
-        }
-      }
-    }
-  });
+			resolve(result1.rows);
+
+		} catch (err) {
+			console.error(err);
+		} finally {
+			if (conn) {
+				try {
+					// put connection back in pool
+					await conn.close();
+				} catch (err) {
+					console.error(err);
+				}
+			}
+		}
+	});
 }
-
+async function processResults(res){
+	console.log(res)
+}
 async function run() {
   try {
-    let res = await getEmployee(101);
-		console.log("Results for this query: "+thisQuery)
-    console.log(res);
+
+		await oracledb.createPool({
+			user          : dbconfig.user,
+			password      : dbconfig.password,
+			connectString : connectStr
+		});
+
+		let result1 = await queryDB();
+		console.log("Results for this query: " + sql1)
+		processResults(result1);
   } catch (err) {
     console.error(err);
   }
