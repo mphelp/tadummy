@@ -1,0 +1,2 @@
+https://oracle.github.io/node-oracledb/doc/api.html#-28-asyncawait-and-node-oracledb
+Good example of connection pool and async: https://github.com/oracle/node-oracledb/blob/master/examples/connectionpool.js
