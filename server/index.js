@@ -11,9 +11,9 @@ let CLASSIP = "34.238.200.26"
 let potentialXEConnectString = "Driver=(Oracle in XEClient);dbq=34.238.200.26:1521/XE;Uid=mphelps3;Pwd=mphelps3;"
 let connectStr = "(DESCRIPTION = \
 	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ CLASSIP + ")(PORT=1521)) \
- 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
+	(CONNECT_DATA = (SERVICE_NAME = XE)))"
+let thisQuery = `SELECT * FROM salesperson`
 
-let myresults;
 const oracledb = require('oracledb')
 function getEmployee(empid) {
   return new Promise(async function(resolve, reject) {
@@ -27,7 +27,7 @@ function getEmployee(empid) {
       });
 
       let result = await conn.execute(
-        `SELECT * FROM salesperson`,
+        thisQuery,
       );
       resolve(result.rows);
 
@@ -48,6 +48,7 @@ function getEmployee(empid) {
 async function run() {
   try {
     let res = await getEmployee(101);
+		console.log("Results for this query: "+thisQuery)
     console.log(res);
   } catch (err) {
     console.error(err);
