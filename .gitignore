@@ -28,4 +28,5 @@
 /client/yarn-error.log*
 
 # ignore config files
+.editorconfig
 dbconfig.js
