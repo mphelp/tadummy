@@ -11,6 +11,8 @@ app.get('/', (req, res) => {
 	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
 })
 
+app.listen(port, () => console.log(`Running on port ${port}`))
+
 // Database connection configurations
 let CLASSIP = "34.238.200.26"
 let connectStr = "(DESCRIPTION = \
