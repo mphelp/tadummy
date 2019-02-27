@@ -1,6 +1,5 @@
-## This application is currently in development.
-**Dev. Notes:**
-
+* This app is currently in development.
+## Developer Notes:
 
 ### Server
 ```
