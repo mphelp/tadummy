@@ -1,9 +1,10 @@
 // setup
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 8080
+const dbconfig = require('./dbconfig.js')
+const webconfig = require('./webconfig.js')
+const port = webconfig.port
 const oracledb = require('oracledb')
-const dbconfig = require('../dbconfig.js')
 
 
 app.get('/', (req, res) => {
@@ -12,7 +13,6 @@ app.get('/', (req, res) => {
 
 // Database connection configurations
 let CLASSIP = "34.238.200.26"
-let potentialXEConnectString = "Driver=(Oracle in XEClient);dbq=34.238.200.26:1521/XE;Uid=mphelps3;Pwd=mphelps3;"
 let connectStr = "(DESCRIPTION = \
 	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ CLASSIP + ")(PORT=1521)) \
 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
