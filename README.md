@@ -1,4 +1,4 @@
-* This app is currently in development.
+This app is currently in development.
 ## Developer Notes:
 
 ### Server
@@ -14,7 +14,12 @@ Create config.js file in base directory
 **config.js**
 ```
 module.exports = {
-    
+    server: {
+        port:   <YOUR SERVER PORT>,
+        dbuser: <YOUR ORACLE DB USER>,
+        dbpass: <YOUR ORACLE DB PASSWORD>,
+    },
+    client: {},
 }
 ```
 ## Usage
@@ -26,7 +31,7 @@ $ npm run dev
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Available React Scripts
 
 In the project directory, you can run:
 
