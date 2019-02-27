@@ -1,3 +1,30 @@
+## This application is currently in development.
+**Dev. Notes:**
+
+
+### Server
+```
+$ npm i
+```
+### Client
+```
+$ npm i
+```
+Create config.js file in base directory
+
+**config.js**
+```
+module.exports = {
+    
+}
+```
+## Usage
+go to server
+```
+$ npm run dev
+```
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
