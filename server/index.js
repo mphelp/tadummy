@@ -52,7 +52,7 @@ async function processResults(res){
 }
 async function run() {
   try {
-
+		/*
 		await oracledb.createPool({
 			user          : dbconfig.user,
 			password      : dbconfig.password,
@@ -62,6 +62,7 @@ async function run() {
 		let result1 = await queryDB();
 		console.log("Results for this query: " + sql1)
 		processResults(result1);
+		*/
   } catch (err) {
     console.error(err);
   }
