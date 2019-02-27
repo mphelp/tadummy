@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const dbconfig = require('./dbconfig.js')
 const webconfig = require('./webconfig.js')
-const port = webconfig.port
+const { port } = webconfig
 const oracledb = require('oracledb')
 
 
@@ -63,7 +63,7 @@ async function run() {
 		console.log("Results for this query: " + sql1)
 		processResults(result1);
   } catch (err) {
-    console.error(err);
+		console.error(err);
   }
 }
 
