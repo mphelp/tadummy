@@ -1,12 +1,14 @@
 This app is currently in development.
-## How to contribute:
+## Developer Notes
 
-### Install nodejs and npm:
+### Install node and npm
 * For Amazon Linux users ...
 ```
-curl --silent --location https://rpm.nodesource.com/setup_11.x | sudo bash -
-sudo yum install -y nodejs
+curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
+. ~/.nvm/nvm.sh
+nvm install node
 ```
+Note: These installations are specific to the current shell user.
 ### Clone
 ```
 $ git clone git@github.com:mphelp/tadummy.git
@@ -30,7 +32,9 @@ module.exports = {
     client: {},
 }
 ```
-### Usage: Go to server
+### Setup Oracle client
+* TODO: Add setup
+## Usage: Go to server
 ```
 $ npm run dev
 ```
