@@ -1,6 +1,10 @@
 This app is currently in development.
 ## Developer Notes:
 
+### Clone
+```
+$ git clone git@github.com:mphelp/tadummy.git
+```
 ### Server
 ```
 $ npm i
