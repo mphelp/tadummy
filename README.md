@@ -9,9 +9,7 @@ $ npm i
 ```
 $ npm i
 ```
-Create config.js file in base directory
-
-**config.js**
+Create **config.js** file in base directory
 ```
 module.exports = {
     server: {
