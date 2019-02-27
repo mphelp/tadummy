@@ -1,9 +1,8 @@
 // setup
 const express = require('express')
 const app = express()
-const dbconfig = require('./dbconfig.js')
-const webconfig = require('./webconfig.js')
-const { port } = webconfig
+const config = require('../config.js').server
+const {port} = config
 const oracledb = require('oracledb')
 
 
@@ -56,8 +55,8 @@ async function run() {
   try {
 		/*
 		await oracledb.createPool({
-			user          : dbconfig.user,
-			password      : dbconfig.password,
+			user          : config.dbuser,
+			password      : config.dbpass,
 			connectString : connectStr
 		});
 

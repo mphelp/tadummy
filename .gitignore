@@ -29,5 +29,4 @@
 
 # ignore config files
 .editorconfig
-/**/dbconfig.js
-/**/webconfig.js
+config.js
