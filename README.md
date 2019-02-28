@@ -33,7 +33,11 @@ module.exports = {
 }
 ```
 ### Setup Oracle client
-* TODO: Add setup
+You must add the existing oracle client libraries on your machine within `$ORACLE_HOME/lib` to your `$LD_LIBRARY_PATH`
+If your `.bashrc` or similar shell startup file:
+```
+export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
+```
 ## Usage: Go to server
 ```
 $ npm run dev
