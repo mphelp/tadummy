@@ -2,7 +2,6 @@ This app is currently in development.
 ## Developer Notes
 
 ### Install node and npm
-* For Amazon Linux users ...
 ```
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.34.0/install.sh | bash
 . ~/.nvm/nvm.sh
