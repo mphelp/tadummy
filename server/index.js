@@ -5,9 +5,10 @@ const config = require('../config.js').server
 const {port} = config
 const oracledb = require('oracledb')
 
-
 app.get('/', (req, res) => {
 	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
+	//let data = ldap.search({base: 'uid=eatkins1', scope: LDAP.SUBTREE})
+	//res.send(`Data for eatkins1: {data}`)
 })
 
 app.listen(port, () => console.log(`Running on port ${port}`))
@@ -53,7 +54,6 @@ async function processResults(res){
 }
 async function run() {
   try {
-		/*
 		await oracledb.createPool({
 			user          : config.dbuser,
 			password      : config.dbpass,
@@ -63,7 +63,6 @@ async function run() {
 		let result1 = await queryDB();
 		console.log("Results for this query: " + sql1)
 		processResults(result1);
-		*/
   } catch (err) {
 		console.error(err);
   }
