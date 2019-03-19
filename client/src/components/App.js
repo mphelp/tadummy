@@ -32,9 +32,8 @@ export default class extends Component {
 						<Route path="/blog" children={({ match }) => (
 							<li className={match ? 'active' : ''}>
 								<Link to="/blog">Blog</Link>
-							</li>
-						)}
-							
+							</li>)} />
+						<Route render={() => <h1>Page not found</h1>}/>
 					</Switch>
 				</div>
 			</BrowserRouter>
