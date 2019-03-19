@@ -6,7 +6,7 @@ import './App.css';
 const Home = () => (
 	<div className="App">
 		<header className="App-header">
-			This is Home. Let's get started boys.
+			This is Home.
 		</header>
 	</div>
 )
