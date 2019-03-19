@@ -27,6 +27,5 @@
 /client/yarn-debug.log*
 /client/yarn-error.log*
 
-# ignore config files
-.editorconfig
+# ignore config files (not editorconfig)
 config.js
