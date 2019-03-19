@@ -21,8 +21,6 @@ export default class extends Component {
 					<Link to="/about">About</Link>{' '}
 					<Link to="/contact">Contact</Link>
 
-
-
 					<Switch>
 						<Route exact path="/" component={Home}/>
 						<Route path="/about" component={About}/>
