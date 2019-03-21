@@ -1,5 +1,5 @@
 This app is currently in development.
-## Developer Notes
+# Developer Notes
 
 ### Install node and npm
 ```
@@ -20,16 +20,19 @@ $ npm i
 ```
 $ npm i
 ```
-### Create **config.js** file in base directory
+### Configure server and db: Create **config.js** file in base directory
 ```
 module.exports = {
     server: {
         port:   <YOUR SERVER PORT>,
         dbuser: <YOUR ORACLE DB USER>,
         dbpass: <YOUR ORACLE DB PASSWORD>,
-    },
-    client: {},
+    }
 }
+```
+### Configure client: Create .env.local file in client directory
+```
+PORT = <YOUR CLIENT PORT>
 ```
 ### Setup Oracle client
 You must add the existing oracle client libraries on your machine within `$ORACLE_HOME/lib` to your `$LD_LIBRARY_PATH` environment variable
@@ -38,6 +41,8 @@ In your `.bashrc`, `.zshrc`, or similar shell startup file (exact syntax may var
 export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
 ```
 Make sure that source your `oracle_env.sh` file **before** your update your `$LD_LIBRARY_PATH`, otherwise `$ORACLE_HOME` won't yet exist.
+
+------
 
 ## Usage: Go to server
 ```
