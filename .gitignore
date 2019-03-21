@@ -29,4 +29,3 @@
 
 # ignore config files (not editorconfig)
 config.js
-.env
