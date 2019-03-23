@@ -1,0 +1,60 @@
+
+CUSTOMER
+
+CUST_ID CUST_NAME         CITY          COUNTRY        BEG_BAL   CUR_BAL 
+------- ----------------- ------------- ------------ --------- ---------
+    100 Watabe Bros       Tokyo         Japan            45551     52113  
+    101 Maltzl            Salzburg      Austria          75314     77200 
+    105 Jefferson         Chicago       USA              49333     57811  
+    110 Gomez             Santiago      Chile            27400     35414  
+
+
+SALESPERSON
+
+SALPERS_ID SALPERS_NAME        MANAGER_ID  OFFICE          COMM   
+---------- ------------------- ----------  ------------- ------  
+        10 Rodney Jones                27  Chicago           10  
+        14 Masaji Matsu                44  Tokyo             11 
+        23 Francois Moire              35  Brussels           9  
+        37 Elena Hermana               12  B.A.              13  
+        39 Goro Azuma                  44  Tokyo             10  
+        27 Terry Cardon                    Chicago           15  
+        44 Albert Ige                  27  Tokyo             12  
+        35 Brigit Bovary               27  Brussels          11  
+        12 Buster Sanchez              27  B.A.              10  
+
+
+PRODUCT
+
+   PROD_ID PROD_DESC              MANUFACTR_ID       COST      PRICE  
+---------- ---------------------- ------------ ---------- ----------  
+      1035 Sweater                    210           11.25      22.00 
+      2241 Table Lamp                 317           22.25      33.25 
+      2249 Desk Lamp                  317           13.55      24.80 
+      2518 Brass Sculpture            253           13.60      21.20  
+
+
+SALE
+
+SALE_ID  DATE     CUST_ID SALPERS_ID    PROD_ID        QTY 
+-------  -----   -------- ---------- ---------- ----------
+  01     02/28        100         10       2241        200  
+  02     02/12        101         23       2518        300 
+  03     02/15        101         23       1035        150
+  04     02/19        100         39       2518        200
+  05     02/02        101         23       1035        200
+  06     02/05        105         10       2241        100 
+  07     02/22        110         37       2518        150
+  08     02/14        105         10       2249         50
+  09     02/01        101         23       2249         75
+  10     02/04        101         23       2241        250  
+
+
+MANUFACTURER
+
+MANUFACTR_ID MANUFACTR_NAME            CITY               COUNTRY   
+------------ ------------------------- ------------------ -----------
+         210 Kiwi Klothes              Auckland           New Zealand
+         253 Brass Works               Lagos              Nigeria    
+         317 Llama Lamps               Lima               Peru        
+

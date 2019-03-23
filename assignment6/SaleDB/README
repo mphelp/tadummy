@@ -1,0 +1,18 @@
+
+To create the tables and populate them, just log on to 
+the oracle database using sqlplus, and run the BUILD.sql
+file once you get the SQL> prompt :
+
+ SQL> @BUILD
+
+That's all you need. 
+
+Note that the first time you do this, you will get warnings
+that the tables don't exist (the BUILD.sql script destroys
+everything, and then rebuilds the whole thing). The warnings
+are not a problem at all.
+
+Notice the tree structure of how the scripts call each other.
+
+Note: this version of the scripts does not include any constraints.
+
