@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
-import app from './components/app';
-//import registerServiceWorker from './registerServiceWorker'
+import App from './components/App';
 
-render(<app />, document.getElementById('root'));
-//registerServiceWorker()
+render(<App />, document.getElementById('root'));
+
