@@ -1,6 +1,7 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation';
+import Apply from './Apply';
 
 // CSS
 import "normalize.css";
@@ -13,7 +14,6 @@ const Home = () => (
         This is Home.
     </header>
 )
-const About = () => <h2>About</h2>
 
 export default class extends React.Component {
   render() {
@@ -21,12 +21,9 @@ export default class extends React.Component {
 			<BrowserRouter>
 				<div>
                     <Navigation />
-					<Link to="/">Home</Link>{' '}
-					<Link to="/about">About</Link>{' '}
-
 					<Switch>
 						<Route exact path="/" component={Home}/>
-						<Route path="/about" component={About}/>
+						<Route path="/apply" component={Apply}/>
 						<Route render={() => <h1>Page not found</h1>}/>
 					</Switch>
 				</div>

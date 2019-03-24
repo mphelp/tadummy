@@ -1,12 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import {
     FormGroup,
     InputGroup,
     Switch
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import { Example } from "@blueprintjs/docs-theme";
 
 export default class extends React.Component {
     state = {
@@ -14,20 +12,28 @@ export default class extends React.Component {
         labelInfo: true
     }
     render(){
-        const { label, requiredLabel } = this.state
+        const { label, labelInfo } = this.state
 
         return (
-            <Example>
+            <div style={{ margin: 20 }}>
                 <FormGroup
                     label={label && "Name"}
                     labelInfo={labelInfo && "(required)"}
                 >
-                    <InputGroup id="input1"placeholder="Your name here..."/>
+                    <InputGroup
+                        id="input1"
+                        placeholder="Your name here..."
+                        style={{ maxWidth: 300 }}
+                    />
                 </FormGroup>
                 <FormGroup>
                     <Switch id="stud" label="Student"/>
                     <Switch id="prof" label="Professor"/>
                 </FormGroup>
+                <Select>
+                    hi
+                </Select>
+            </div>
         )
     }
 }
