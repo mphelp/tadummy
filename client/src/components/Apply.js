@@ -2,17 +2,38 @@ import React from 'react';
 import {
     FormGroup,
     InputGroup,
-    Switch
+    Switch,
+    Classes,
+    MenuItem,
+    Button
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
+import * as Courses from './courses';
+
 
 export default class extends React.Component {
     state = {
         label: true,
-        labelInfo: true
-    }
+        labelInfo: true,
+        course: Courses[0],
+    };
+
+    handleValueChange = (item) => console.log(item);
+    renderSelectItem = ({ handleClick, item, isActive }) => (
+        <MenuItem
+            className={ isActive ? Classes.ACTIVE : "" }
+            key={item.crn}
+            label={item.course}
+            onClick={handleClick}
+            text={item.teacher}
+        />
+    )
     render(){
-        const { label, labelInfo } = this.state
+        const {
+            label,
+            labelInfo,
+            course
+        } = this.state
 
         return (
             <div style={{ margin: 20 }}>
@@ -30,10 +51,20 @@ export default class extends React.Component {
                     <Switch id="stud" label="Student"/>
                     <Switch id="prof" label="Professor"/>
                 </FormGroup>
-                <Select>
-                    hi
-                </Select>
             </div>
         )
     }
 }
+/*
+<Select
+    items={Courses}
+    onItemSelect={this.handleValueChange}
+    itemRenderer={this.renderSelectItem}
+>
+    <Button rightIconName="caret-down"
+        text={course ? course.title : "(No selection)" }
+    />
+</Select>
+
+
+*/
