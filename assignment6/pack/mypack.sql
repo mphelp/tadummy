@@ -22,7 +22,8 @@ is
 
     -- for Patrick to finish
 
-
+    function getcname(id customer.cust_id%type)
+        return customer.cust_name%type;
     -- for Matt to finish
 
 end salepack;
