@@ -107,19 +107,33 @@ procedure cust_transactions(cid customer.cust_id%type) is
     trans trans_c%rowtype;
     total_sum binary_integer := 0;
     counter binary_integer := 0;
-
+    cname customer.cust_name%type;
 begin
+    select cust_name
+    into cname
+    from customer
+    where cust_id = cid;
+
+    dbms_output.put_line('Transactions for ' || cname || ':');
+    dbms_output.put_line('#' || chr(9) || RPAD('Item', 20) || 'Cost');
+
     open trans_c;
     loop
         fetch trans_c into trans;
         exit when trans_c%notfound;
         counter := counter + 1;
         total_sum := total_sum + trans.total;
-        dbms_output.put_line(counter || chr(9) || trans.item || chr(9) || trans.total);
-
+        dbms_output.put_line(counter || chr(9) || RPAD(trans.item, 20) || '$' || trans.total);
     end loop;
 
-
+    dbms_output.put_line('Total money spent: $' || total_sum);
+    exception
+    when no_data_found then
+        if cname is null then
+            dbms_output.put_line('no such customer exists');
+        else
+            dbms_output.put_line(cname || ' does not have any transactions');
+        end if;
 end;
 
 -- PATRICK'S STUFF
