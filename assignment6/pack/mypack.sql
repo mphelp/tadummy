@@ -24,6 +24,8 @@ is
 
     function getcname(id customer.cust_id%type)
         return customer.cust_name%type;
+    function getcid(name customer.cust_name%type)
+        return customer.cust_id%type;
     -- for Matt to finish
 
 end salepack;

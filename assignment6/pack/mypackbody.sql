@@ -138,6 +138,22 @@ when no_data_found then
     dbms_output.put_line('getcname error: ' || id || ' not found');
     return null;
 end;
+
+function getcid(name customer.cust_name%type)
+    return customer.cust_id%type
+is
+    id customer.cust_id%type;
+begin
+    select cust_id
+    into id
+    from customer
+    where cust_name = name;
+    return id;
+exception
+when no_data_found then
+    dbms_output.put_line('getcid error: ' || name || ' not found');
+    return null;
+end;
 -- MATT'S STUFF
 
 end salepack;

@@ -1,5 +1,6 @@
 set verify off
 set feedback off
+--tests getcname which gets customer's name from their id
 declare
     cid customer.cust_id%type := '&id';
     nm customer.cust_name%type;
