@@ -154,6 +154,54 @@ when no_data_found then
     dbms_output.put_line('getcid error: ' || name || ' not found');
     return null;
 end;
+
+function getproddesc(id product.prod_id%type)
+    return product.prod_desc%type
+is
+    name product.prod_desc%type;
+begin
+    select prod_desc
+    into name
+    from product
+    where prod_id = id;
+    return name;
+exception
+when no_data_found then
+    dbms_output.put_line('getcname error: ' || id || ' not found');
+    return null;
+end;
+
+function getprodcost(id product.prod_id%type)
+    return product.prod_desc%type
+is
+    cost product.cost%type;
+begin
+    select cost
+    into cost
+    from product
+    where prod_id = id;
+    return cost;
+exception
+when no_data_found then
+    dbms_output.put_line('getcname error: ' || id || ' not found');
+    return null;
+end;
+
+function getprodprice(id product.prod_id%type)
+    return product.prod_desc%type
+is
+    price product.price%type;
+begin
+    select price
+    into price
+    from product
+    where prod_id = id;
+    return price;
+exception
+when no_data_found then
+    dbms_output.put_line('getcname error: ' || id || ' not found');
+    return null;
+end;
 -- MATT'S STUFF
 
 end salepack;

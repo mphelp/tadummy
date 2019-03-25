@@ -26,6 +26,12 @@ is
         return customer.cust_name%type;
     function getcid(name customer.cust_name%type)
         return customer.cust_id%type;
+    function getproddesc(id product.prod_id%type)
+        return product.prod_desc%type;
+    function getprodcost(id product.prod_id%type)
+        return product.prod_desc%type;
+    function getprodprice(id product.prod_id%type)
+        return product.prod_desc%type;
     -- for Matt to finish
 
 end salepack;
