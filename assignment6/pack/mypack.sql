@@ -32,6 +32,7 @@ is
         return product.prod_desc%type;
     function getprodprice(id product.prod_id%type)
         return product.prod_desc%type;
+    procedure getmanager (sid salesperson.salpers_id%type);
     -- for Matt to finish
 
 end salepack;

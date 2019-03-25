@@ -167,7 +167,7 @@ begin
     return name;
 exception
 when no_data_found then
-    dbms_output.put_line('getcname error: ' || id || ' not found');
+    dbms_output.put_line('getproddesc error: ' || id || ' not found');
     return null;
 end;
 
@@ -183,7 +183,7 @@ begin
     return cost;
 exception
 when no_data_found then
-    dbms_output.put_line('getcname error: ' || id || ' not found');
+    dbms_output.put_line('getprodcost error: ' || id || ' not found');
     return null;
 end;
 
@@ -199,9 +199,41 @@ begin
     return price;
 exception
 when no_data_found then
-    dbms_output.put_line('getcname error: ' || id || ' not found');
+    dbms_output.put_line('getprodprice error: ' || id || ' not found');
     return null;
 end;
+
+procedure getmanager (sid salesperson.salpers_id%type)
+is
+    mname salesperson.salpers_name%type;
+    sname salesperson.salpers_name%type;
+    manid salesperson.manager_id%type;
+
+begin
+    select salpers_name, manager_id
+    into sname, manid
+    from salesperson
+    where salpers_id = sid;
+    dbms_output.put_line('Salesperson: ' || sname);
+
+    select salpers_name
+    into mname
+    from salesperson
+    where salpers_id = manid;
+    dbms_output.put_line('Manager: ' || mname);
+
+    exception
+    when no_data_found then
+        if sname is null then
+            dbms_output.put_line('no such salesperson exists');
+        end if;
+        if sname is not null then
+            dbms_output.put_line(sname || ' does not have a manager');
+        end if;
+end;
+
+
+
 -- MATT'S STUFF
 
 end salepack;
