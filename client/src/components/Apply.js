@@ -44,12 +44,12 @@ export default class extends React.Component {
         course: Courses[0],
     };
 
-    handleClick = (item) => console.log(item);
+    handleClick = (item) => console.log(item.crn + ' class selected');
     itemRenderer = (item, { handleClick, isActive }) => (
         <MenuItem
             className={ isActive ? Classes.ACTIVE : "" }
             key={item.crn}
-            label={item.course}
+            label={item.title}
             text={item.teacher}
             onClick={handleClick}
         />
