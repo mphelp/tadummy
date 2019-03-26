@@ -11,13 +11,6 @@ is
 
     -- for Edward to finish
 
-    --function get_sp_comm(id salesperson.salpers_id%type)
-    --    return salesperson.comm%type;
-
-    --function get_sp_comm(name salesperson.salpers_id%type)
-    --    return salesperson.comm%type;
-
-
     procedure cust_transactions(cid customer.cust_id%type);
 
     -- for Patrick to finish
@@ -34,6 +27,8 @@ is
         return product.prod_desc%type;
     procedure getmanager (sid salesperson.salpers_id%type);
     -- for Matt to finish
+
+    procedure sp_transactions(sid salesperson.salpers_id%type);
 
 end salepack;
 /
