@@ -8,8 +8,34 @@ import {
     Button
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import * as Courses from './courses';
+// import * as Courses from './courses';
 
+const Courses = [
+    {
+        title: 'Systems Programming',
+        crn: 12345,
+        teacher: 'Peter Bui',
+        year: 2019,
+    },
+    {
+        title: 'Theory of Computing',
+        crn: 10001,
+        teacher: 'Corey Pennycuff',
+        year: 2019,
+    },
+    {
+        title: 'Logic Design',
+        crn: 22022,
+        teacher: 'Jay Brockman',
+        year: 2018,
+    },
+    {
+        title: 'Fundamentals of Computing',
+        crn: 40000,
+        teacher: 'Ramzi Bualuan',
+        year: 2017,
+    },
+]
 
 export default class extends React.Component {
     state = {
@@ -18,14 +44,14 @@ export default class extends React.Component {
         course: Courses[0],
     };
 
-    handleValueChange = (item) => console.log(item);
-    renderSelectItem = ({ handleClick, item, isActive }) => (
+    handleClick = (item) => console.log(item);
+    itemRenderer = (item, { handleClick, isActive }) => (
         <MenuItem
             className={ isActive ? Classes.ACTIVE : "" }
             key={item.crn}
             label={item.course}
-            onClick={handleClick}
             text={item.teacher}
+            onClick={handleClick}
         />
     )
     render(){
@@ -51,6 +77,15 @@ export default class extends React.Component {
                     <Switch id="stud" label="Student"/>
                     <Switch id="prof" label="Professor"/>
                 </FormGroup>
+                <Select
+                    items={Courses}
+                    itemRenderer={this.itemRenderer}
+                    onItemSelect={this.handleClick}
+                >
+                    <Button rightIconName="caret-down"
+                            text={course ? course.title : "(No selection)" }
+                    />
+                </Select>
             </div>
         )
     }
