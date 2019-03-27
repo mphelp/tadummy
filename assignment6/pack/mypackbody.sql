@@ -1,7 +1,5 @@
 create or replace package body salepack
 is
-
--- RAMZI'S STUFF
     function getspname(id salesperson.salpers_id%type)
         return salesperson.salpers_name%type
     is
@@ -96,8 +94,6 @@ is
           dbms_output.put_line('no such salesperson');
         end;
 
--- EDWARD'S STUFF
-
 procedure cust_transactions(cid customer.cust_id%type) is
     cursor trans_cur is
         select p.prod_desc as item, s.qty as qty, p.price as price, s.salpers_id as sid, (s.qty * p.price) as total
@@ -141,7 +137,6 @@ when no_data_found then
     end if;
 end;
 
--- PATRICK'S STUFF
 function getcname(id customer.cust_id%type)
     return customer.cust_name%type
 is
