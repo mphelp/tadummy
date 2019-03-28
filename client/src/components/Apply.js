@@ -8,7 +8,6 @@ import {
     Button
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-// import * as Courses from './courses';
 
 const Courses = [
     {
@@ -37,6 +36,14 @@ const Courses = [
     },
 ]
 
+// Styles
+const general = {
+    margin: 20,
+}
+const inputName = {
+    maxWidth: 300,
+}
+
 export default class extends React.Component {
     state = {
         label: true,
@@ -62,15 +69,15 @@ export default class extends React.Component {
         } = this.state
 
         return (
-            <div style={{ margin: 20 }}>
+            <div style={general}>
                 <FormGroup
                     label={label && "Name"}
                     labelInfo={labelInfo && "(required)"}
                 >
                     <InputGroup
-                        id="input1"
+                        id="inputName"
                         placeholder="Your name here..."
-                        style={{ maxWidth: 300 }}
+                        style={inputName}
                     />
                 </FormGroup>
                 <FormGroup>
@@ -83,7 +90,7 @@ export default class extends React.Component {
                     onItemSelect={this.handleClick}
                 >
                     <Button rightIconName="caret-down"
-                            text={course ? course.title : "(No selection)" }
+                        text={course ? course.title : "(No selection)" }
                     />
                 </Select>
             </div>
