@@ -37,10 +37,10 @@ const Courses = [
 ]
 
 // Styles
-const general = {
+const general_s = {
     margin: 20,
 }
-const inputName = {
+const inputName_s = {
     maxWidth: 300,
 }
 
@@ -69,7 +69,7 @@ export default class extends React.Component {
         } = this.state
 
         return (
-            <div style={general}>
+            <div style={general_s}>
                 <FormGroup
                     label={label && "Name"}
                     labelInfo={labelInfo && "(required)"}
@@ -77,7 +77,7 @@ export default class extends React.Component {
                     <InputGroup
                         id="inputName"
                         placeholder="Your name here..."
-                        style={inputName}
+                        style={inputName_s}
                     />
                 </FormGroup>
                 <FormGroup>
