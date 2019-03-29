@@ -48,10 +48,12 @@ export default class extends React.Component {
     state = {
         label: true,
         labelInfo: true,
-        course: Courses[0],
+        course: Courses[1],
     };
 
-    handleClick = (item) => console.log(item.crn + ' class selected');
+    handleSelectClick = (course) => {
+        this.setState(state => ({ course: course }))
+    }
     itemRenderer = (item, { handleClick, isActive }) => (
         <MenuItem
             className={ isActive ? Classes.ACTIVE : "" }
@@ -87,9 +89,9 @@ export default class extends React.Component {
                 <Select
                     items={Courses}
                     itemRenderer={this.itemRenderer}
-                    onItemSelect={this.handleClick}
+                    onItemSelect={this.handleSelectClick}
                 >
-                    <Button rightIconName="caret-down"
+                    <Button rightIcon="caret-down"
                         text={course ? course.title : "(No selection)" }
                     />
                 </Select>
@@ -103,7 +105,7 @@ export default class extends React.Component {
     onItemSelect={this.handleValueChange}
     itemRenderer={this.renderSelectItem}
 >
-    <Button rightIconName="caret-down"
+    <Button rightIcon="caret-down"
         text={course ? course.title : "(No selection)" }
     />
 </Select>
