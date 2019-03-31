@@ -5,7 +5,24 @@ const config = require('../config.js').server
 const {port} = config
 const oracledb = require('oracledb')
 
-app.get('/', (req, res) => {
+const session = require('express-session')
+const CASAutentication = require('cas-authentication')
+
+
+app.use(session({
+    secret              : 'super secret key',
+    resave              : false,
+    saveUninitialized   : true
+}));
+
+const cas = new CASAutentication({
+    cas_url     : 'https://login-test.cc.nd.edu/cas',
+    service_url : 'http://ta.esc/nd.edu',
+    cas_version : '3.0',
+    session_name: 'cas_user'
+});
+
+app.get('/', cas.bounce, (req, res) => {
 	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
 	//let data = ldap.search({base: 'uid=eatkins1', scope: LDAP.SUBTREE})
 	//res.send(`Data for eatkins1: {data}`)
