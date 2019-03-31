@@ -14,13 +14,14 @@ app.get('/', (req, res) => {
 app.listen(port, () => console.log(`Running on port ${port}`))
 
 // Database connection configurations
-let CLASSIP = "34.238.200.26"
+//let CLASSIP = "34.238.200.26"
+let IP = "localhost"
 let connectStr = "(DESCRIPTION = \
-	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ CLASSIP + ")(PORT=1521)) \
+	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ IP + ")(PORT=1521)) \
 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
 
 // SQL queries
-let sql1 = `SELECT * FROM customer`
+let sql1 = `SELECT * FROM cat`
 
 // use connection pool to execute query
 function queryDB(){
@@ -34,7 +35,6 @@ function queryDB(){
 			let result1 = await conn.execute(sql1, [], options);
 
 			resolve(result1.rows);
-
 		} catch (err) {
 			console.error(err);
 		} finally {
