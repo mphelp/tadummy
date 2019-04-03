@@ -14,9 +14,9 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 import './App.css';
 
 const Home = () => (
-    <header>
+    <h1>
         This is Home.
-    </header>
+    </h1>
 )
 const Calendar = () => (
     <h2>
@@ -31,6 +31,7 @@ const Contact = () => (
 
 const BodyGeneral_s = {
     display: "flex",
+    flexDirection: "row",
     height: "100%"
 }
 
@@ -39,7 +40,7 @@ export default class extends React.Component {
 		return (
 			<BrowserRouter>
                 <Navigation />
-                <React.Fragment
+                <div
                     style={BodyGeneral_s}
                 >
                     <Sidebar />
@@ -50,7 +51,7 @@ export default class extends React.Component {
                         <Route path="/contact" component={Contact}/>
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
-                </React.Fragment>
+                </div>
 			</BrowserRouter>
     );
   }

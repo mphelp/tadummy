@@ -1,4 +1,4 @@
-const TAs = [
+export default [
     'Edward Atkinson',
     'Francis Shickel',
     'Bailey Logan',
