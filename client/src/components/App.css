@@ -1,0 +1,4 @@
+/* Default height */
+html, body, #root, #app, #app>div {
+    height: 100%
+}

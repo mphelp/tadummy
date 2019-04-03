@@ -4,11 +4,14 @@ import Navigation from './Navigation';
 import Sidebar from './Sidebar';
 import Apply from './Apply';
 
-// CSS
+// Framework CSS
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
+
+// My CSS
+import './App.css';
 
 const Home = () => (
     <header>
@@ -27,28 +30,27 @@ const Contact = () => (
 )
 
 const BodyGeneral_s = {
-    display: "flex"
+    display: "flex",
+    height: "100%"
 }
 
 export default class extends React.Component {
   render() {
 		return (
 			<BrowserRouter>
-				<div>
-                    <Navigation />
-                    <React.Fragment
-                        style={BodyGeneral_s}
-                    >
-                        <Sidebar />
-                        <Switch>
-                            <Route exact path="/" component={Home}/>
-                            <Route path="/apply" component={Apply}/>
-                            <Route path="/calendar" component={Calendar}/>
-                            <Route path="/contact" component={Contact}/>
-                            <Route render={() => <h1>Page not found</h1>}/>
-                        </Switch>
-                    </React.Fragment>
-				</div>
+                <Navigation />
+                <React.Fragment
+                    style={BodyGeneral_s}
+                >
+                    <Sidebar />
+                    <Switch>
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/apply" component={Apply}/>
+                        <Route path="/calendar" component={Calendar}/>
+                        <Route path="/contact" component={Contact}/>
+                        <Route render={() => <h1>Page not found</h1>}/>
+                    </Switch>
+                </React.Fragment>
 			</BrowserRouter>
     );
   }

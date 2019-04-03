@@ -5,6 +5,7 @@
   "dependencies": {
     "@blueprintjs/core": "^3.14.1",
     "@blueprintjs/select": "^3.7.0",
+    "flexboxgrid": "^6.3.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-router-dom": "^5.0.0",
