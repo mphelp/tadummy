@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation';
+import Sidebar from './Sidebar';
 import Apply from './Apply';
 
 // CSS
@@ -25,19 +26,28 @@ const Contact = () => (
     </p>
 )
 
+const BodyGeneral_s = {
+    display: "flex"
+}
+
 export default class extends React.Component {
   render() {
 		return (
 			<BrowserRouter>
 				<div>
                     <Navigation />
-					<Switch>
-						<Route exact path="/" component={Home}/>
-						<Route path="/apply" component={Apply}/>
-						<Route path="/calendar" component={Calendar}/>
-						<Route path="/contact" component={Contact}/>
-						<Route render={() => <h1>Page not found</h1>}/>
-					</Switch>
+                    <React.Fragment
+                        style={BodyGeneral_s}
+                    >
+                        <Sidebar />
+                        <Switch>
+                            <Route exact path="/" component={Home}/>
+                            <Route path="/apply" component={Apply}/>
+                            <Route path="/calendar" component={Calendar}/>
+                            <Route path="/contact" component={Contact}/>
+                            <Route render={() => <h1>Page not found</h1>}/>
+                        </Switch>
+                    </React.Fragment>
 				</div>
 			</BrowserRouter>
     );

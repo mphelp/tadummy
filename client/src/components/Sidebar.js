@@ -1,12 +1,13 @@
 import React from 'react'
 
-const SideBarGeneral_s = {
-    maxWidth: "25%"
+const SidebarGeneral_s = {
 }
 export default class extends React.Component {
     render(){
         return (
-            <React.Fragment>
+            <React.Fragment
+                style={SidebarGeneral_s}
+            >
                 This is the sidebar
             </React.Fragment>
         )
