@@ -2,6 +2,9 @@ import React from 'react'
 import { Switch } from '@blueprintjs/core'
 import TAs from './TAs'
 
+// CSS
+import 'status-indicator/styles.css'
+
 const SidebarGeneral_s = {
     overflow: "auto",
     poxition: "fixed",
@@ -21,10 +24,7 @@ export default class extends React.Component {
             <div style={SidebarGeneral_s}>
                 <header style={header_s}>Statuses go here:</header>
                     {TAs.map( name  =>
-                        <Switch
-                            label={name}
-                            alignIndicator="right"
-                        />
+                        <status-indicator></status-indicator>
                     )}
             </div>
         )
