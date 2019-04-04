@@ -1,6 +1,20 @@
 export default [
-    'Edward Atkinson',
-    'Francis Shickel',
-    'Bailey Logan',
-    'Matthew Phelps',
+	{
+		'name': 'Edward Atkinson',
+		'active': 'false',
+		'busy': 'true',		
+	},
+	{ 
+		'name': 'Francis Shickel',
+		'active': 'true',
+		'busy': 'false',		
+	},
+  {	'name': 'Bailey Logan',
+		'active': 'false',
+		'busy': 'false',		
+	},
+	{ 'name': 'Matthew Phelps',
+		'active': 'true',
+		'busy': 'false',		
+	},
 ]
