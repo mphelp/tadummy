@@ -10,16 +10,15 @@ const fs = require('fs')
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
 
-console.log(config.sslKeyPath);
-console.log(config.sslCertPath);
+if (config.https) {
+    var options = {
+        hostname: 'localhost',
+        key: fs.readFileSync(config.sslKeyPath),
+        cert: fs.readFileSync(config.sslCertPath)
+    };
 
-var options = {
-    hostname: 'localhost',
-    key: fs.readFileSync(config.sslKeyPath),
-    cert: fs.readFileSync(config.sslCertPath)
-};
-
-var server = https.createServer(options, app).listen(port);
+    var server = https.createServer(options, app).listen(port);
+}
 
 app.use(session({
     secret              : 'super secret key',
@@ -41,7 +40,7 @@ app.get('/', cas.bounce, (req, res) => {
     res.json({cas_user : req.session[cas.session_name]});
 })
 
-//app.listen(port, () => console.log(`Running on port ${port}`))
+app.listen(port, () => console.log(`Running on port ${port}`))
 
 // Database connection configurations
 //let CLASSIP = "34.238.200.26"
