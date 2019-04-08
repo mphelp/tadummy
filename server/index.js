@@ -13,11 +13,13 @@ const CASAutentication = require('cas-authentication')
 if (config.https) {
     var options = {
         hostname: 'localhost',
-        key: fs.readFileSync(config.sslKeyPath),
-        cert: fs.readFileSync(config.sslCertPath)
+        key: fs.readFileSync(config.https.sslKeyPath),
+        cert: fs.readFileSync(config.https.sslCertPath)
     };
 
     var server = https.createServer(options, app).listen(port);
+} else {
+    app.listen(port, () => console.log(`Running on port ${port}`))
 }
 
 app.use(session({
@@ -36,11 +38,16 @@ const cas = new CASAutentication({
 });
 
 app.get('/', cas.bounce, (req, res) => {
-	//res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
     res.json({cas_user : req.session[cas.session_name]});
 })
 
-app.listen(port, () => console.log(`Running on port ${port}`))
+app.get('/hi', cas.bounce, (req, res) => {
+    res.json({
+        cas_user : req.session[cas.session_name],
+        data: "hi",
+    });
+})
+
 
 // Database connection configurations
 //let CLASSIP = "34.238.200.26"
