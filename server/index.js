@@ -2,7 +2,6 @@
 const express = require('express')
 const app = express()
 const config = require('./config.js')
-const {port} = config
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -17,10 +16,10 @@ if (config.https) {
         cert: fs.readFileSync(config.https.sslCertPath)
     };
 
-    var server = https.createServer(options, app).listen(port);
-} else {
-    app.listen(port, () => console.log(`Running on port ${port}`))
+    var server = https.createServer(options, app).listen(config.https.port, () => console.log(`Running https server on port ${config.https.port}`));
 }
+
+app.listen(config.port, () => console.log(`Running http server on port ${config.port}`))
 
 app.use(session({
     secret              : 'super secret key',
@@ -30,7 +29,7 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + port,
+    service_url : 'https://ta.esc.nd.edu:' + config.https.port || config.port,
     cas_version : '3.0',
     session_name: 'cas_user',
     is_dev_mode : (config.casUser != null),
