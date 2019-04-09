@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tag } from '@blueprintjs/core'
+import { Tag, Card } from '@blueprintjs/core'
 import TAs from './TAs'
 
 // CSS
@@ -35,31 +35,38 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-                <h3 style={header_s}>Statuses go here:</h3>
-                    {TAs.map( TA  => (
-												<Tag round={true} large={true} style={Tag_s}>
-														<div style={TagContent_s}>
-																{ TA.name }
-																<div>
-																		{ TA.active === true 
-																				? <status-indicator active pulse multiline='True'
-																						style={Status_s}
-																				/>
-																				: 
-																						{if TA.busy == true
-																						?
+									<h3 style={header_s}>Statuses go here:</h3>
+											{TAs.map( TA  => (
+													<Tag round={true} large={true} style={Tag_s}>
+															<div style={TagContent_s}>
+																	{ TA.name }
+																	<div>
+																			{ (() => {
+																				if(TA.active) {
+																					return (
+																						<status-indicator active pulse multiline='True'
+																								style={Status_s}
+																						/>
+																					)
+																				} else if (TA.busy){
+																					return (
 																						<status-indicator negative pulse multiline='True'
 																								style={Status_s}
 																						/>
+																					)
+																				} else {
+																					return (
 																						<status-indicator pulse multiline='True'
 																								style={Status_s}
 																						/>
-																					  }
-																		} 
-																</div>
-														</div>
-												</Tag>		
-                    ))}
+																					)
+																				}
+																				})()
+																			}
+																	</div>
+															</div>
+													</Tag>		
+											))}
             </div>
         )
     }
