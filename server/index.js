@@ -1,17 +1,52 @@
 // setup
 const express = require('express')
 const app = express()
-const config = require('../config.js').server
-const {port} = config
+const config = require('./config.js')
 const oracledb = require('oracledb')
+const https = require('https')
+const fs = require('fs')
 
-app.get('/', (req, res) => {
-	res.send('Hello there welcome to TAdummy - Ed, Matt, Patrick!')
-	//let data = ldap.search({base: 'uid=eatkins1', scope: LDAP.SUBTREE})
-	//res.send(`Data for eatkins1: {data}`)
+const session = require('express-session')
+const CASAutentication = require('cas-authentication')
+
+if (config.https) {
+    var options = {
+        hostname: 'localhost',
+        key: fs.readFileSync(config.https.sslKeyPath),
+        cert: fs.readFileSync(config.https.sslCertPath)
+    };
+
+    var server = https.createServer(options, app).listen(config.https.port, () => console.log(`Running https server on port ${config.https.port}`));
+}
+
+app.listen(config.port, () => console.log(`Running http server on port ${config.port}`))
+
+app.use(session({
+    secret              : 'super secret key',
+    resave              : false,
+    saveUninitialized   : true
+}));
+
+const cas = new CASAutentication({
+    cas_url     : 'https://login-test.cc.nd.edu/cas',
+    service_url : 'https://ta.esc.nd.edu:' + config.https.port || config.port,
+    cas_version : '3.0',
+    session_name: 'cas_user',
+    is_dev_mode : (config.casUser != null),
+    dev_mode_user: config.casUser,
+});
+
+app.get('/', cas.bounce, (req, res) => {
+    res.json({cas_user : req.session[cas.session_name]});
 })
 
-app.listen(port, () => console.log(`Running on port ${port}`))
+app.get('/hi', cas.bounce, (req, res) => {
+    res.json({
+        cas_user : req.session[cas.session_name],
+        data: "hi",
+    });
+})
+
 
 // Database connection configurations
 //let CLASSIP = "34.238.200.26"

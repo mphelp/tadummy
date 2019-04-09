@@ -12,7 +12,9 @@
 		"nodemon": "^1.18.4"
 	},
 	"dependencies": {
+		"cas-authentication": "0.0.8",
 		"express": "^4.16.4",
+		"express-session": "^1.15.6",
 		"oracledb": "^3.1.1"
 	}
 }
