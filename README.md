@@ -23,11 +23,11 @@ $ npm i
 ### Configure server and db: Create **config.js** file in base directory
 ```
 module.exports = {
-    server: {
         port:   <YOUR SERVER PORT>,
         dbuser: <YOUR ORACLE DB USER>,
         dbpass: <YOUR ORACLE DB PASSWORD>,
-    }
+        https:  null,
+        casUser:<USERNAME>,
 }
 ```
 ### Configure client: Create .env.local file in client directory
