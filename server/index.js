@@ -3,6 +3,7 @@ const express = require('express')
 const app = express()
 const config = require('./config.js')
 const database = require('./database.js')
+const dbAuth = require('./dbAuth.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -47,7 +48,12 @@ const cas = new CASAutentication({
 });
 
 app.get('/', cas.bounce, (req, res) => {
-    res.json({cas_user : req.session[cas.session_name]});
+    let netid = req.session[cas.session_name];
+    if (dbAuth.authorize(netid)) {
+        res.json({cas_user : netid});
+    } else {
+        res.send("Not authorized!");
+    }
 })
 
 app.get('/hi', cas.bounce, (req, res) => {
