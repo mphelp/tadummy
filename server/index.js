@@ -49,15 +49,8 @@ app.get('/hi', cas.bounce, (req, res) => {
 })
 
 
-// Database connection configurations
-//let CLASSIP = "34.238.200.26"
-let IP = "localhost"
-let connectStr = "(DESCRIPTION = \
-	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ IP + ")(PORT=1521)) \
-	(CONNECT_DATA = (SERVICE_NAME = XE)))"
-
 // SQL queries
-let sql1 = `SELECT * FROM users`
+let sql1 = `SELECT * FROM admin.users`
 
 // use connection pool to execute query
 function queryDB(){
