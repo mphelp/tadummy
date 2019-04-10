@@ -17,9 +17,17 @@ if (config.https) {
         cert: fs.readFileSync(config.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.port, () => console.log(`Running https server on port ${config.port}`));
+    https.createServer(options, app).listen(config.port, () => {
+        database.createConnectionPool(config.database);
+        //database.testQuery();
+        console.log(`Running https server on port ${config.port}`);
+    });
 } else {
-    app.listen(config.port, () => console.log(`Running http server on port ${config.port}`))
+    app.listen(config.port, () => {
+        database.createConnectionPool(config.database);
+        //database.testQuery();
+        console.log(`Running http server on port ${config.port}`);
+    });
 }
 
 
@@ -43,30 +51,14 @@ app.get('/', cas.bounce, (req, res) => {
 })
 
 app.get('/hi', cas.bounce, (req, res) => {
-    res.json({
-        cas_user : req.session[cas.session_name],
-        data: "hi",
+    let query = `select * from admin.users`;
+    let resultPromise = database.queryDB(query, []);
+    resultPromise.then(function(result) {
+        res.json({
+            cas_user : req.session[cas.session_name],
+            data: result
+        });
+    }, function(err) {
+        console.log(err);
     });
 })
-
-// SQL queries
-let sql1 = `SELECT * FROM admin.users`
-
-
-async function processResults(res){
-	console.log(res)
-}
-async function run() {
-  try {
-		await oracledb.createPool(config.database);
-
-		let result1 = await database.queryDB(sql1, []);
-		console.log("Results for this query: " + sql1)
-		processResults(result1);
-  } catch (err) {
-		console.error(err);
-  }
-}
-
-run();
-

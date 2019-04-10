@@ -2,6 +2,32 @@ const oracledb = require('oracledb')
 
 // Database functions go here:
 
+
+async function createConnectionPool(dbConfig) {
+    try {
+        await oracledb.createPool(dbConfig);
+    } catch (err) {
+		console.error(err);
+    }
+}
+
+// SQL queries
+let sql1 = `SELECT * FROM admin.users`
+
+async function testQuery() {
+    try {
+		let result1 = await queryDB(sql1, []);
+		console.log("Results for this query: " + sql1)
+		processResults(result1);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function processResults(res){
+	console.log(res)
+}
+
 // use connection pool to execute query
 function queryDB(sqlquery, bindings){
 	return new Promise(async function(resolve, reject){
@@ -30,5 +56,7 @@ function queryDB(sqlquery, bindings){
 }
 
 module.exports = {
-    queryDB: queryDB
+    queryDB: queryDB,
+    createConnectionPool: createConnectionPool,
+    testQuery: testQuery
 }
