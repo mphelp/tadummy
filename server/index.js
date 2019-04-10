@@ -52,13 +52,10 @@ app.get('/', cas.bounce, (req, res) => {
 
 app.get('/hi', cas.bounce, (req, res) => {
     let query = `select * from admin.users`;
-    let resultPromise = database.queryDB(query, []);
-    resultPromise.then(function(result) {
+    database.queryDBSync(query, [], result => {
         res.json({
             cas_user : req.session[cas.session_name],
             data: result
         });
-    }, function(err) {
-        console.log(err);
     });
 })

@@ -55,8 +55,18 @@ function queryDB(sqlquery, bindings){
 	});
 }
 
+function queryDBSync(sqlquery, bindings, callback) {
+    let resultPromise = queryDB(sqlquery, bindings);
+    resultPromise.then(result => {
+        callback(result);
+    }, function(err) {
+        console.log(err);
+    })
+}
+
 module.exports = {
     queryDB: queryDB,
+    queryDBSync: queryDBSync,
     createConnectionPool: createConnectionPool,
     testQuery: testQuery
 }
