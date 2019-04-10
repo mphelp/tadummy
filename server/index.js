@@ -49,11 +49,9 @@ const cas = new CASAutentication({
 
 app.get('/', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-    if (dbAuth.authorize(netid)) {
-        res.json({cas_user : netid});
-    } else {
-        res.send("Not authorized!");
-    }
+    let roles = dbAuth.authorize(netid);
+    console.log(roles);
+    res.json(roles);
 })
 
 app.get('/hi', cas.bounce, (req, res) => {
