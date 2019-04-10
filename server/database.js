@@ -1,3 +1,5 @@
+const oracledb = require('oracledb')
+
 // Database functions go here:
 
 // use connection pool to execute query
@@ -25,4 +27,8 @@ function queryDB(sqlquery, bindings){
 			}
 		}
 	});
+}
+
+module.exports = {
+    queryDB: queryDB
 }
