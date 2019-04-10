@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const config = require('./config.js')
+const database = require('./database.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -48,36 +49,10 @@ app.get('/hi', cas.bounce, (req, res) => {
     });
 })
 
-
 // SQL queries
 let sql1 = `SELECT * FROM admin.users`
 
-// use connection pool to execute query
-function queryDB(){
-	return new Promise(async function(resolve, reject){
 
-		let conn;
-		try {
-			// get connection from default pool
-			conn = await oracledb.getConnection();
-			let options = { outFormat: oracledb.OBJECT };
-			let result1 = await conn.execute(sql1, [], options);
-
-			resolve(result1.rows);
-		} catch (err) {
-			console.error(err);
-		} finally {
-			if (conn) {
-				try {
-					// put connection back in pool
-					await conn.close();
-				} catch (err) {
-					console.error(err);
-				}
-			}
-		}
-	});
-}
 async function processResults(res){
 	console.log(res)
 }
@@ -85,7 +60,7 @@ async function run() {
   try {
 		await oracledb.createPool(config.database);
 
-		let result1 = await queryDB();
+		let result1 = await database.queryDB(sql1, []);
 		console.log("Results for this query: " + sql1)
 		processResults(result1);
   } catch (err) {
