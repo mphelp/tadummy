@@ -2,6 +2,7 @@
 const express = require('express')
 const app = express()
 const config = require('./config.js')
+const database = require('./database.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -54,7 +55,8 @@ app.get('/hi', cas.bounce, (req, res) => {
 
 // Database connection configurations
 //let CLASSIP = "34.238.200.26"
-let IP = "localhost"
+//let IP = "localhost"
+let IP = "3.210.165.177"
 let connectStr = "(DESCRIPTION = \
 	(ADDRESS = (PROTOCOL = TCP)(HOST = "+ IP + ")(PORT=1521)) \
 	(CONNECT_DATA = (SERVICE_NAME = XE)))"
@@ -62,32 +64,7 @@ let connectStr = "(DESCRIPTION = \
 // SQL queries
 let sql1 = `SELECT * FROM cat`
 
-// use connection pool to execute query
-function queryDB(){
-	return new Promise(async function(resolve, reject){
 
-		let conn;
-		try {
-			// get connection from default pool
-			conn = await oracledb.getConnection();
-			let options = { outFormat: oracledb.OBJECT };
-			let result1 = await conn.execute(sql1, [], options);
-
-			resolve(result1.rows);
-		} catch (err) {
-			console.error(err);
-		} finally {
-			if (conn) {
-				try {
-					// put connection back in pool
-					await conn.close();
-				} catch (err) {
-					console.error(err);
-				}
-			}
-		}
-	});
-}
 async function processResults(res){
 	console.log(res)
 }
@@ -99,7 +76,7 @@ async function run() {
 			connectString : connectStr
 		});
 
-		let result1 = await queryDB();
+		let result1 = await database.queryDB(sql1, []);
 		console.log("Results for this query: " + sql1)
 		processResults(result1);
   } catch (err) {
