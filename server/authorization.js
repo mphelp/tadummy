@@ -34,6 +34,11 @@ function authorize(validRoles = [], cas) {
     return [
         (req, res, next) => {
             let netid = req.session[cas.session_name];
+            if (!netid) {
+                return res.status(401).json({
+                    message: "Unauthenticated. You must sign in through CAS before accessing this site."
+                });
+            }
             let rolePromise = getRoles(netid);
             rolePromise.then(userRoles => {
                 req.session['user_roles'] = userRoles;
