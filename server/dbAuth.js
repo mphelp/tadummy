@@ -11,7 +11,7 @@ const USER_ROLES = {
 function authorize(netid) {
     let sql = `select netid, isAdmin from admin.users where netid = :id`;
     let done = false;
-    let roles = [];
+    let roles = {};
     let result = database.queryDBSync(sql, [netid], (result) => {
         console.log(result);
         if (result.length === 0) {

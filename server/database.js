@@ -5,7 +5,11 @@ const oracledb = require('oracledb')
 
 async function createConnectionPool(dbConfig) {
     try {
-        await oracledb.createPool(dbConfig);
+        await oracledb.createPool({
+            user: dbConfig.user,
+            password: dbConfig.password,
+            connectString: dbConfig.connectString,
+        });
     } catch (err) {
 		console.error(err);
     }
