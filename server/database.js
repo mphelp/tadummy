@@ -23,13 +23,14 @@ async function processResults(res){
 function queryDB(sqlquery, bindings){
 	return new Promise(async function(resolve, reject){
 		let conn;
+        let rows = [];
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
 			let options = { outFormat: oracledb.OBJECT };
 			let result1 = await conn.execute(sqlquery, bindings, options);
 
-			resolve(result1.rows);
+            rows = result1.rows;
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -41,6 +42,7 @@ function queryDB(sqlquery, bindings){
 					console.error(err);
 				}
 			}
+			resolve(rows);
 		}
 	});
 }
