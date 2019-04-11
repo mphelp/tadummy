@@ -7,6 +7,7 @@ const dbAuth = require('./dbAuth.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
+const ldap = require('./ldap.js')
 
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
@@ -50,10 +51,12 @@ const cas = new CASAutentication({
 app.get('/', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
     let roles = dbAuth.authorize(netid);
+    let ldapData = ldap.getInfo(netid);
     console.log(roles);
     res.json({
         user: netid,
-        roles: roles
+        roles: roles,
+        ldap: ldapData
     });
 })
 
