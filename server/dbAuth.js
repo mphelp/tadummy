@@ -22,7 +22,7 @@ function authorize(netid) {
             console.log(user);
             for (index in USER_ROLES) {
                 role = USER_ROLES[index];
-                roles[index] = user[role];
+                roles[index] = user[role] || 0;
             }
         }
         done = true;

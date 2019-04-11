@@ -51,7 +51,10 @@ app.get('/', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
     let roles = dbAuth.authorize(netid);
     console.log(roles);
-    res.json(roles);
+    res.json({
+        user: netid,
+        roles: roles
+    });
 })
 
 app.get('/hi', cas.bounce, (req, res) => {
