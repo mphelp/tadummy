@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const config = require('./config.js')
 const database = require('./database.js')
-const dbAuth = require('./dbAuth.js')
+const auth = require('./authorization.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -48,42 +48,27 @@ const cas = new CASAutentication({
     dev_mode_user: config.casUser,
 });
 
-function authorize(roles = []) {
-    if (typeof roles === 'string') {
-        roles = [roles];
-    }
-    return [
-        (req, res, next) => {
-            let netid = req.session[cas.session_name];
-            let rolePromise = dbAuth.authorize(netid);
-            let ldapPromise = ldap.getInfo(netid);
-            Promise.all([rolePromise, ldapPromise]).then(values => {
-                console.log(values);
-                next();
-            }).catch(console.log);
-        }
-    ];
-};
+app.all('*', cas.bounce);
 
-app.get('/', cas.bounce, (req, res) => {
+app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
+    res.json(req.session);
+})
+
+app.get('/signup', (req, res) => {
     let netid = req.session[cas.session_name];
-    let rolePromise = dbAuth.authorize(netid);
-    let ldapPromise = ldap.getInfo(netid);
-    Promise.all([rolePromise, ldapPromise]).then(values => {
-        res.json({
-            user: netid,
-            roles: values[0],
-            ldap: values[1]
-        });
-    }).catch(console.log);
+    auth.getRoles(netid).then(roles => {
+        if (roles) {
+            res.redirect('/');
+            throw new Error(`{netid} is already a registered user`);
+        }
+    }).then( () => {
+        signup(req, res);
+    }).catch(() => {});
 })
 
-app.get('/hi', cas.bounce, (req, res) => {
-    let query = `select * from admin.users`;
-    database.queryDBSync(query, [], result => {
-        res.json({
-            cas_user : req.session[cas.session_name],
-            data: result
-        });
+function signup(req, res) {
+    let netid = req.session[cas.session_name];
+    ldap.getInfo(netid).then(info => {
+        res.json(info);
     });
-})
+}
