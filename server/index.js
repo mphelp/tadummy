@@ -48,16 +48,34 @@ const cas = new CASAutentication({
     dev_mode_user: config.casUser,
 });
 
+function authorize(roles = []) {
+    if (typeof roles === 'string') {
+        roles = [roles];
+    }
+    return [
+        (req, res, next) => {
+            let netid = req.session[cas.session_name];
+            let rolePromise = dbAuth.authorize(netid);
+            let ldapPromise = ldap.getInfo(netid);
+            Promise.all([rolePromise, ldapPromise]).then(values => {
+                console.log(values);
+                next();
+            }).catch(console.log);
+        }
+    ];
+};
+
 app.get('/', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-    let roles = dbAuth.authorize(netid);
-    let ldapData = ldap.getInfo(netid);
-    console.log(roles);
-    res.json({
-        user: netid,
-        roles: roles,
-        ldap: ldapData
-    });
+    let rolePromise = dbAuth.authorize(netid);
+    let ldapPromise = ldap.getInfo(netid);
+    Promise.all([rolePromise, ldapPromise]).then(values => {
+        res.json({
+            user: netid,
+            roles: values[0],
+            ldap: values[1]
+        });
+    }).catch(console.log);
 })
 
 app.get('/hi', cas.bounce, (req, res) => {

@@ -1,39 +1,32 @@
 const database = require('./database');
 const looping = require('deasync');
 
-const USER_ROLES = {
+const ROLES = {
     ADMIN:      'ISADMIN',
     STUDENT:    'isStudent',
     PROFESSOR:  'isProfessor',
     TA:         'isTA',
 };
 
-function authorize(netid) {
+function authorize(netid, callback) {
     let sql = `select netid, isAdmin from admin.users where netid = :id`;
-    let done = false;
-    let roles = {};
-    let result = database.queryDBSync(sql, [netid], (result) => {
-        console.log(result);
+    return database.queryDB(sql, [netid]).then(result => {
         if (result.length === 0) {
             console.log(`No user {netid} found!`);
+            return false;
         } else {
-            console.log(`user {netid} found!`);
             let user = result[0];
-            console.log(user);
-            for (index in USER_ROLES) {
-                role = USER_ROLES[index];
+            let roles = {}
+            for (index in ROLES) {
+                role = ROLES[index];
                 roles[index] = user[role] || 0;
             }
+            return roles;
         }
-        done = true;
     });
-
-    while (!done) {
-        looping.runLoopOnce();
-    }
-    return roles;
 }
 
 module.exports = {
-    authorize: authorize
+    authorize: authorize,
+    ROLES: ROLES
 }

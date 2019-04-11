@@ -15,19 +15,6 @@ async function createConnectionPool(dbConfig) {
     }
 }
 
-// SQL queries
-let sql1 = `SELECT * FROM admin.users`
-
-async function testQuery() {
-    try {
-		let result1 = await queryDB(sql1, []);
-		console.log("Results for this query: " + sql1)
-		processResults(result1);
-    } catch (err) {
-        console.log(err);
-    }
-}
-
 async function processResults(res){
 	console.log(res)
 }
@@ -35,7 +22,6 @@ async function processResults(res){
 // use connection pool to execute query
 function queryDB(sqlquery, bindings){
 	return new Promise(async function(resolve, reject){
-
 		let conn;
 		try {
 			// get connection from default pool
@@ -59,18 +45,7 @@ function queryDB(sqlquery, bindings){
 	});
 }
 
-function queryDBSync(sqlquery, bindings, callback) {
-    let resultPromise = queryDB(sqlquery, bindings);
-    resultPromise.then(result => {
-        callback(result);
-    }, function(err) {
-        console.log(err);
-    })
-}
-
 module.exports = {
     queryDB: queryDB,
-    queryDBSync: queryDBSync,
     createConnectionPool: createConnectionPool,
-    testQuery: testQuery
 }
