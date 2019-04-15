@@ -18,3 +18,6 @@ prompt *** Creating table TIMEGROUP ***
 
 prompt *** Creating table TIMEBLOCK ***
 @CRTtimeblock
+
+prompt *** Creating table PROFESSOR ***
+@CRTprofessor
