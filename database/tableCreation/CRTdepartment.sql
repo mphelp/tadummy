@@ -1,4 +1,4 @@
-drop table department;
+drop table department cascade constraints;
 
 create table department(
     department_id   number(3) PRIMARY KEY,

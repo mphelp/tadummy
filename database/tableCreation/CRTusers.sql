@@ -1,4 +1,4 @@
-drop table users;
+drop table users cascade constraints;
 
 create table users(
     netid   varchar2(16) PRIMARY KEY,

@@ -1,4 +1,4 @@
-drop table dorm;
+drop table dorm cascade constraints;
 
 create or replace sequence seq_dorm
     MINVALUE 1

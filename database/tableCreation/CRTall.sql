@@ -12,3 +12,12 @@ prompt *** Creating table DEPARTMENT ***
 
 prompt *** Creating table STUDENT ***
 @CRTstudent
+
+prompt *** Creating table TIMEGROUP ***
+@CRTtimegroup
+
+prompt *** Creating table TIMEBLOCK ***
+@CRTtimeblock
+
+prompt *** Creating table PROFESSOR ***
+@CRTprofessor
