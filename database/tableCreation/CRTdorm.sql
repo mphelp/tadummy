@@ -1,7 +1,12 @@
 drop table dorm;
 
+create or replace sequence seq_dorm
+    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    CACHE 10;
+
 create table dorm(
-    dorm_id     number(3) PRIMARY KEY,
+    dorm_id     number(3) PRIMARY KEY DEFAULT seq.dorm.nextval not null,
     dorm_name   varchar2(30),
-    quad        varchar2(20)
 );
