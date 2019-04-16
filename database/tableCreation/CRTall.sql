@@ -30,3 +30,12 @@ prompt *** Creating table COURSE ***
 
 prompt *** Creating table COURSETIME ***
 @CRTcoursetime
+
+prompt *** Creating table AVAILABILITY ***
+@CRTavailability
+
+prompt *** Creating table STUDENTFOR ***
+@CRTstudentfor
+
+prompt *** Creating table TAFOR ***
+@CRTtafor
