@@ -39,3 +39,12 @@ prompt *** Creating table STUDENTFOR ***
 
 prompt *** Creating table TAFOR ***
 @CRTtafor
+
+prompt *** Creating table PROFFOR ***
+@CRTproffor
+
+prompt *** Creating table PROFOFFICEHOURS ***
+@CRTprofofficehours
+
+prompt *** Creating table TAOFFICEHOURS ***
+@CRTtaofficehours
