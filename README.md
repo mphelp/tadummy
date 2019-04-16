@@ -23,6 +23,7 @@ $ npm i
 ### Configure server and db: Create **config.js** file in base directory
 ```
 module.exports = {
+    ip:     <YOUR SERVER IP>,
     port:   <YOUR SERVER PORT>,
     https:  null,
     casUser:<USERNAME>,
