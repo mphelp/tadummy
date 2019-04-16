@@ -1,0 +1,4 @@
+load data infile 'dorm.csv'
+insert into table dorm
+fields terminated by "," optionally enclosed by '"'
+(dorm_id SEQUENCE 1, dorm_name)
