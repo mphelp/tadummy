@@ -21,3 +21,6 @@ prompt *** Creating table TIMEBLOCK ***
 
 prompt *** Creating table PROFESSOR ***
 @CRTprofessor
+
+prompt *** Creating table SEMESTER ***
+@CRTsemester
