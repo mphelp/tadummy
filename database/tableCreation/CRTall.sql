@@ -24,3 +24,9 @@ prompt *** Creating table PROFESSOR ***
 
 prompt *** Creating table SEMESTER ***
 @CRTsemester
+
+prompt *** Creating table COURSE ***
+@CRTcourse
+
+prompt *** Creating table COURSETIME ***
+@CRTcoursetime
