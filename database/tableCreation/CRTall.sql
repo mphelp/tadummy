@@ -48,3 +48,6 @@ prompt *** Creating table PROFOFFICEHOURS ***
 
 prompt *** Creating table TAOFFICEHOURS ***
 @CRTtaofficehours
+
+prompt *** Creating table DEPARTMENTOFFERSCOURSE ***
+@CRTdepartmentofferscourse
