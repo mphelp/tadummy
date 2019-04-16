@@ -9,6 +9,8 @@ const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
 
+//const redirection = require('./redirection/index.html')
+
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
 
@@ -51,7 +53,8 @@ const cas = new CASAutentication({
 app.all('*', cas.bounce);
 
 app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
-    res.json(req.session);
+    //res.json(req.session);
+		res.sendfile('redirection/index.html');
 })
 
 app.get('/signup', (req, res) => {
