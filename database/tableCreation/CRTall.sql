@@ -51,3 +51,15 @@ prompt *** Creating table TAOFFICEHOURS ***
 
 prompt *** Creating table DEPARTMENTOFFERSCOURSE ***
 @CRTdepartmentofferscourse
+
+prompt *** Creating table APPLICATIONPROCESS ***
+@CRTapplicationprocess
+
+prompt *** Creating table APPLICATIONQUESTION ***
+@CRTapplicationquestion
+
+prompt *** Creating table APPLICATIONANSWER ***
+@CRTapplicationanswer
+
+prompt *** Creating table APPLICATIONSUBMISSION ***
+@CRTapplicationsubmission
