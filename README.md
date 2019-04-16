@@ -20,7 +20,7 @@ $ npm i
 ```
 $ npm i
 ```
-### Configure server and db: Create **config.js** file in base directory
+### Configure client, server, and db: Create **config.js** file in base directory AND client/src/
 ```
 module.exports = {
     ip:     <YOUR SERVER IP>,
