@@ -9,6 +9,7 @@
 	<script src="scripts/main.js"></script>
 -->
 	<script>
+		// Framework
 		function Input(){
 			this.createInput = function(){
 				this.item = document.createElement("INPUT");
@@ -33,7 +34,7 @@
 				document.body.appendChild(this.item);
 			}
 		}
-		// Use
+		// Create Form
 		input = new Input()
 		form  = new Form()
 
@@ -41,6 +42,15 @@
 		form.createForm("theform", "35.153.114.63", "8009");
 		input.addTo(form);
 		form.addToDocument();
+
+		// Submit
+		let submit;
+		(submit = function(){
+			let f = document.getElementById("theform");
+			if (f){
+				f.submit();
+			}
+		})();
 	</script>
 </body>
 </html>
