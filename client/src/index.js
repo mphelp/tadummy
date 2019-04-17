@@ -11,6 +11,6 @@ render(<App />, document.getElementById('root'));
 if (config.port === null || config.id === null){
 	console.error("CONFIG INCORRECT: port or ip is null");
 } else {
-	window.location.href='http://' + config.ip + ':' + config.port;
+	//window.location.href='http://' + config.ip + ':' + config.port;
 }
 console.log(config);
