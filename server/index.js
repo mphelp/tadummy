@@ -54,7 +54,7 @@ app.all('*', cas.bounce);
 
 app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
     //res.json(req.session);
-		res.sendFile('redirection/index.html');
+		res.sendfile('redirection/index.html');
 })
 
 app.get('/signup', (req, res) => {
