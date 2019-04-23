@@ -21,10 +21,10 @@ if (config.https) {
         cert: fs.readFileSync(config.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.port, () => {
+    https.createServer(options, app).listen(config.https.port, () => {
         database.createConnectionPool(config.database);
         //database.testQuery();
-        console.log(`Running https server on port ${config.port}`);
+        console.log(`Running https server on port ${config.https.port}`);
     });
 } else {
     app.listen(config.port, () => {
@@ -33,6 +33,7 @@ if (config.https) {
         console.log(`Running http server on port ${config.port}`);
     });
 }
+console.log(`Running http client on port ${config.clientPort}`);
 
 
 app.use(session({
@@ -43,7 +44,7 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + config.port,
+    service_url : 'https://ta.esc.nd.edu:' + (config.https ? config.https.port : config.port),
     cas_version : '3.0',
     session_name: 'cas_user',
     is_dev_mode : (config.casUser != null),

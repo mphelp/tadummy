@@ -43,8 +43,10 @@
 		input = new Input()
 		form  = new Form()
 
+        const config = require('./config.js');
+
 		input.createInput();
-		form.createForm("theform", "35.153.114.63", "8009");
+		form.createForm("theform", config.id, config.clientPort);
 		input.addTo(form);
 		form.addToDocument();
 
