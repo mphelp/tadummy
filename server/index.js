@@ -21,10 +21,10 @@ if (config.https) {
         cert: fs.readFileSync(config.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.port, () => {
+    https.createServer(options, app).listen(config.https.port, () => {
         database.createConnectionPool(config.database);
         //database.testQuery();
-        console.log(`Running https server on port ${config.port}`);
+        console.log(`Running https server on port ${config.https.port}`);
     });
 } else {
     app.listen(config.port, () => {
