@@ -9,6 +9,8 @@ const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
 
+//const redirection = require('./redirection/index.html')
+
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
 
@@ -19,10 +21,10 @@ if (config.https) {
         cert: fs.readFileSync(config.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.port, () => {
+    https.createServer(options, app).listen(config.https.port, () => {
         database.createConnectionPool(config.database);
         //database.testQuery();
-        console.log(`Running https server on port ${config.port}`);
+        console.log(`Running https server on port ${config.https.port}`);
     });
 } else {
     app.listen(config.port, () => {
@@ -31,7 +33,9 @@ if (config.https) {
         console.log(`Running http server on port ${config.port}`);
     });
 }
+console.log(`Running http client on port ${config.clientPort}`);
 
+app.set('view engine', 'pug');
 
 app.use(session({
     secret              : 'super secret key',
@@ -41,7 +45,7 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + config.port,
+    service_url : 'https://ta.esc.nd.edu:' + (config.https ? config.https.port : config.port),
     cas_version : '3.0',
     session_name: 'cas_user',
     is_dev_mode : (config.casUser != null),
@@ -51,7 +55,8 @@ const cas = new CASAutentication({
 app.all('*', cas.bounce);
 
 app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
-    res.json(req.session);
+    let netid = req.session[cas.session_name];
+	res.render('redirection', {port: config.clientPort, ip: config.ip, netid: netid});
 })
 
 app.get('/signup', (req, res) => {

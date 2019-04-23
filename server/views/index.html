@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CAS Redirection</title>
+
+</head>
+<body>
+<!--	<script src="scripts/redirection.js"></script>
+	<script src="scripts/main.js"></script>
+-->
+	<script>
+		// Framework
+		function Input(){
+			this.createInput = function(){
+				this.item = document.createElement("INPUT");
+				this.item.setAttribute("type", "hidden");
+
+				// Testing
+				this.item.setAttribute("name", "key");
+				this.item.setAttribute("value", "value");
+			}
+			this.addTo = function(node){
+				node.item.appendChild(this.item);
+			}
+		}
+		function Form(){
+			this.createForm = function(id, ip, port){
+				this.item = document.createElement("FORM");
+
+				let client = "http://"+ip+":"+port;
+
+				this.item.setAttribute("method", "get");
+				this.item.setAttribute("action", client);
+				this.item.setAttribute("id", id);
+
+			}
+
+			this.addToDocument = function(){
+				document.body.appendChild(this.item);
+			}
+		}
+		// Create Form
+		input = new Input()
+		form  = new Form()
+
+        const config = require('./config.js');
+
+		input.createInput();
+		form.createForm("theform", config.id, config.clientPort);
+		input.addTo(form);
+		form.addToDocument();
+
+		// Submit
+		let submit;
+		(submit = function(){
+			let f = document.getElementById("theform");
+			if (f){
+				f.submit();
+			}
+		})();
+	</script>
+</body>
+</html>

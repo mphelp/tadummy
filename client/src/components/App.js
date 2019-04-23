@@ -36,9 +36,21 @@ const BodyGeneral_s = {
 }
 
 export default class extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			search: null
+		};
+	}
+	componentDidMount = () => {
+		console.log(window.location.search);
+		let search = window.location.search;
+		this.setState({ search });
+	}
   render() {
 		return (
 			<BrowserRouter>
+								<header>Search is {this.state.search}</header>
                 <Navigation />
                 <div
                     style={BodyGeneral_s}
