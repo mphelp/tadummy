@@ -9,6 +9,6 @@ if (window.location.search == "?key=value"){
 } else if (config.port === null || config.ip === null){
 	console.error("CONFIG INCORRECT: port or ip is null");
 } else {
-	window.location.href='https://' + config.ip + ':' + config.https.port;
+	window.location.href=(config.https ? 'https://' : 'http://') + config.ip + ':' + (config.https ? config.https.port : config.port);
 }
 console.log(config);
