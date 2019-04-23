@@ -43,7 +43,7 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + config.port,
+    service_url : 'https://ta.esc.nd.edu:' + config.https.port,
     cas_version : '3.0',
     session_name: 'cas_user',
     is_dev_mode : (config.casUser != null),
