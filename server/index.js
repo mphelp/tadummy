@@ -8,34 +8,36 @@ const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
-
-//const redirection = require('./redirection/index.html')
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
 
-if (config.https) {
+if (config.server.https) {
     var options = {
         hostname: 'localhost',
-        key: fs.readFileSync(config.https.sslKeyPath),
-        cert: fs.readFileSync(config.https.sslCertPath)
+        key: fs.readFileSync(config.server.https.sslKeyPath),
+        cert: fs.readFileSync(config.server.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.https.port, () => {
-        database.createConnectionPool(config.database);
-        //database.testQuery();
-        console.log(`Running https server on port ${config.https.port}`);
+    https.createServer(options, app).listen(config.server.port, () => {
+        database.createConnectionPool(config.server.database);
+        console.log(`Running https server on port ${config.server.port}`);
     });
 } else {
-    app.listen(config.port, () => {
-        database.createConnectionPool(config.database);
-        //database.testQuery();
-        console.log(`Running http server on port ${config.port}`);
+    app.listen(config.server.port, () => {
+        database.createConnectionPool(config.server.database);
+        console.log(`Running http server on port ${config.server.port}`);
     });
 }
-console.log(`Running http client on port ${config.clientPort}`);
+console.log(`Running http client on port ${config.client.port}`);
 
 app.set('view engine', 'pug');
+
+app.use(bodyParser.json());
+
+app.use(cors());
 
 app.use(session({
     secret              : 'super secret key',
@@ -45,30 +47,27 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + (config.https ? config.https.port : config.port),
+    service_url : 'https://ta.esc.nd.edu:' + config.server.port,
     cas_version : '3.0',
-    session_name: 'cas_user',
+    session_name: 'netid',
     is_dev_mode : (config.casUser != null),
     dev_mode_user: config.casUser,
 });
 
-app.all('*', cas.bounce);
-
-app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
+app.get('/login', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-	res.render('redirection', {port: config.clientPort, ip: config.ip, netid: netid});
+	res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
 })
 
-app.get('/signup', (req, res) => {
-    let netid = req.session[cas.session_name];
+app.post('/authorize', (req, res) => {
+    console.log('authorizing');
+    let netid = req.body.netid;
+    console.log(netid);
     auth.getRoles(netid).then(roles => {
-        if (roles) {
-            res.redirect('/');
-            throw new Error(`{netid} is already a registered user`);
-        }
-    }).then( () => {
-        signup(req, res);
-    }).catch(() => {});
+        console.log('sending roles: ');
+        console.log(roles);
+        res.json(roles);
+    });
 })
 
 function signup(req, res) {

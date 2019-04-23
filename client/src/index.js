@@ -3,12 +3,27 @@ import { render } from 'react-dom';
 import App from './components/App';
 
 const config = require('./config.js')
+const $ = require('jquery');
+
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('netid')){
+let netid = urlParams.get('netid');
+if (netid){
+    console.log('AUTHORIZING');
+    let data = {netid: netid};
+    $.ajax({
+        type: "POST",
+        url: serverUrl+'/authorize',
+        data: JSON.stringify(data),
+        dataType: 'json',
+        complete: (res, status) => {
+            console.log(`${res} and status = ${status}`);
+        }
+    });
     render(<App />, document.getElementById('root'));
-} else if (config.port === null || config.ip === null){
+} else if (config.client.port === null || config.ip === null){
 	console.error("CONFIG INCORRECT: port or ip is null");
 } else {
-	window.location.href=(config.https ? 'https://' : 'http://') + config.ip + ':' + (config.https ? config.https.port : config.port);
+	window.location.href = serverUrl + '/login';
 }

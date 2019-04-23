@@ -5,7 +5,10 @@
   "dependencies": {
     "@blueprintjs/core": "^3.14.1",
     "@blueprintjs/select": "^3.7.0",
+    "ajax": "0.0.4",
+    "express-parameters": "^1.0.4",
     "flexboxgrid": "^6.3.1",
+    "jquery": "^3.4.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router-dom": "^5.0.0",
