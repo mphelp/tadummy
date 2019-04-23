@@ -1,0 +1,55 @@
+doctype html
+html(lang="en")
+    head
+        title="CAS Redirection"
+    body
+        script.
+            // Framework
+            function Input(){
+                this.createInput = function(){
+                    this.item = document.createElement("INPUT");
+                    this.item.setAttribute("type", "hidden");
+
+                    // Testing
+                    this.item.setAttribute("name", "netid");
+                    this.item.setAttribute("value", "#{netid}");
+                }
+                this.addTo = function(node){
+                    node.item.appendChild(this.item);
+                }
+            }
+            function Form(){
+                this.createForm = function(id, ip, port){
+                    this.item = document.createElement("FORM");
+
+                    let client = "http://"+ip+":"+port;
+
+                    this.item.setAttribute("method", "get");
+                    this.item.setAttribute("action", client);
+                    this.item.setAttribute("id", id);
+
+                }
+
+                this.addToDocument = function(){
+                    document.body.appendChild(this.item);
+                }
+            }
+            // Create Form
+            input = new Input()
+            form  = new Form()
+
+            input.createInput();
+            var ip = "#{ip}";
+            var port = #{port};
+            form.createForm("theform", ip, port);
+            input.addTo(form);
+            form.addToDocument();
+
+            // Submit
+            let submit;
+            (submit = function(){
+                let f = document.getElementById("theform");
+                if (f){
+                    f.submit();
+                }
+            })();

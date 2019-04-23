@@ -35,6 +35,7 @@ if (config.https) {
 }
 console.log(`Running http client on port ${config.clientPort}`);
 
+app.set('view engine', 'pug');
 
 app.use(session({
     secret              : 'super secret key',
@@ -54,8 +55,8 @@ const cas = new CASAutentication({
 app.all('*', cas.bounce);
 
 app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
-    //res.json(req.session);
-		res.sendfile('redirection/index.html');
+    let netid = req.session[cas.session_name];
+	res.render('redirection', {port: config.clientPort, ip: config.ip, netid: netid});
 })
 
 app.get('/signup', (req, res) => {
