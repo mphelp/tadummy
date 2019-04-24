@@ -9,6 +9,9 @@ const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
 
+// routes
+const tohblock = require('./routes/tohblock)
+
 //const redirection = require('./redirection/index.html')
 
 const session = require('express-session')
@@ -70,6 +73,9 @@ app.get('/signup', (req, res) => {
         signup(req, res);
     }).catch(() => {});
 })
+
+// Routes
+app.use('/tohblock', tohblock)
 
 function signup(req, res) {
     let netid = req.session[cas.session_name];
