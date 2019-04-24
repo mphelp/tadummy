@@ -1,0 +1,49 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Wed Apr 24 18:58:48 2019
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   major.ctl
+Data File:      major.csv
+  Bad File:     major.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table MAJOR, loaded from every logical record.
+Insert option in effect for this table: INSERT
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+MAJOR_ID                                                  SEQUENCE (1, 1)
+DEPARTMENT_ID                       FIRST     *   ,  O(") CHARACTER            
+MAJOR_NAME                           NEXT     *   ,  O(") CHARACTER            
+
+
+Table MAJOR:
+  1 Row successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                  34496 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:             1
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Wed Apr 24 18:58:48 2019
+Run ended on Wed Apr 24 18:58:49 2019
+
+Elapsed time was:     00:00:00.02
+CPU time was:         00:00:00.00
