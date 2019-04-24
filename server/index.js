@@ -77,6 +77,7 @@ app.post('/authorize', (req, res) => {
 
 app.post('/registerStudent', (req, res) => {
     console.log('registering student');
+    console.log(req.body);
     database.registerStudent(req.body).then( result => {
         console.log(result);
         res.sendStatus(201);

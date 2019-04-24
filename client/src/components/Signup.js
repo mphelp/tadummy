@@ -24,6 +24,9 @@ function handleSubmit(event) {
     fetch(serverURL, {
         method: 'POST',
         body: json,
+        headers:{
+            'Content-Type': 'application/json'
+        }
     });
 }
 
