@@ -27,12 +27,12 @@ function queryDB(sqlquery, bindings, type = QUERY){
 		let conn;
         let returnVal = null;
         let result1 = null;
+        console.log('run query: ' + sqlquery);
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
 			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
 			result1 = await conn.execute(sqlquery, bindings, options);
-            console.log('run query: ' + sqlquery);
             if (type === QUERY) {
                 returnVal = result1.rows;
             }
