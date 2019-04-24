@@ -4,6 +4,9 @@ import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+const config = require('../config.js');
+//const serverUrl = 'http'+(config.server.https ? 's':'')+'://'+config.ip
+
 // Styles
 const general_s = {
     margin: 20,
