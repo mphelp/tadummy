@@ -23,6 +23,7 @@ const HomeFaculty = (props) => (
         <input type="text" name="department" value={props.nddepartment}/><br/><br/>
         Office:<br />
         <input type="text" name="office" value={props.ndofficeaddress}/><br/><br/>
+        <input type="hidden" name="affiliation" value="Faculty" />
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
@@ -42,6 +43,7 @@ const HomeStudent = (props) => (
         <input type="text" name="major" /><br/><br/>
         Dorm (or type "Off Campus"):<br />
         <input type="text" name="dorm" /><br/><br/>
+        <input type="hidden" name="affiliation" value="Student" />
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
