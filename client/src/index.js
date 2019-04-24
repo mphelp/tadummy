@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './components/App';
+import Signup from './components/Signup';
 
 const config = require('./config.js')
 const $ = require('jquery');
@@ -10,18 +11,21 @@ const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + 
 const urlParams = new URLSearchParams(window.location.search);
 let netid = urlParams.get('netid');
 if (netid){
-    console.log('AUTHORIZING');
-    let data = {netid: netid};
-    $.ajax({
-        type: "POST",
-        url: serverUrl+'/authorize',
-        data: JSON.stringify(data),
-        dataType: 'json',
-        complete: (res, status) => {
-            console.log(`${res} and status = ${status}`);
+    let data = {netid: netid, roles:[]};
+    $.post({
+        url: serverUrl+"/authorize",
+        data: data,
+        dataType: "json",
+        success: (res, status) => {
+            if (res.authorized) {
+                render(<App />, document.getElementById('root'));
+            } else {
+                render(<Signup {...res} netid={netid} />, document.getElementById('root'));
+            }
+        }, error: (xhr, status) => {
+            console.log(xhr);
         }
     });
-    render(<App />, document.getElementById('root'));
 } else if (config.client.port === null || config.ip === null){
 	console.error("CONFIG INCORRECT: port or ip is null");
 } else {

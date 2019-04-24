@@ -35,9 +35,10 @@ console.log(`Running http client on port ${config.client.port}`);
 
 app.set('view engine', 'pug');
 
-app.use(bodyParser.json());
-
 app.use(cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
     secret              : 'super secret key',
@@ -50,8 +51,8 @@ const cas = new CASAutentication({
     service_url : 'https://ta.esc.nd.edu:' + config.server.port,
     cas_version : '3.0',
     session_name: 'netid',
-    is_dev_mode : (config.casUser != null),
-    dev_mode_user: config.casUser,
+    is_dev_mode : (config.netid != null),
+    dev_mode_user: config.netid,
 });
 
 app.get('/login', cas.bounce, (req, res) => {
@@ -60,15 +61,19 @@ app.get('/login', cas.bounce, (req, res) => {
 })
 
 app.post('/authorize', (req, res) => {
-    console.log('authorizing');
-    let netid = req.body.netid;
-    console.log(netid);
-    auth.getRoles(netid).then(roles => {
-        console.log('sending roles: ');
-        console.log(roles);
-        res.json(roles);
+    auth.authorize(req.body.netid, req.body.roles).then( letThemIn => {
+        if (letThemIn) {
+            res.json({authorized: true});
+        } else {
+            ldap.getInfo(req.body.netid).then( data => {
+                data['authorized'] = false;
+                res.json(data);
+            });
+        }
+    }).catch( err => {
+        res.json({authorized: false});
     });
-})
+});
 
 function signup(req, res) {
     let netid = req.session[cas.session_name];
