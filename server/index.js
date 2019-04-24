@@ -75,9 +75,24 @@ app.post('/authorize', (req, res) => {
     });
 });
 
-function signup(req, res) {
-    let netid = req.session[cas.session_name];
-    ldap.getInfo(netid).then(info => {
-        res.json(info);
+app.post('/registerStudent', (req, res) => {
+    console.log('registering student');
+    console.log(req.body);
+    database.registerStudent(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
     });
-}
+});
+
+app.post('/registerFaculty', (req, res) => {
+    console.log('registering faculty');
+    database.registerFaculty(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
+    });
+});
+
