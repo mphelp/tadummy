@@ -16,14 +16,14 @@ const HomeFaculty = (props) => (
         <br/>
         <form>
         Name:<br />
-        <input type="text" name="name" value={props.displayname}/><br/><br/>
+        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
         NetID:<br />
-        <input type="text" name="netid" value={props.netid}/><br/><br/>
+        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
         Department:<br />
-        <input type="text" name="department" value={props.nddepartment}/><br/><br/>
+        <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
         Office:<br />
-        <input type="text" name="office" value={props.ndofficeaddress}/><br/><br/>
-        <input type="hidden" name="affiliation" value="Faculty" />
+        <input type="text" name="office" defaultValue={props.ndofficeaddress} required="required"/><br/><br/>
+        <input type="hidden" name="affiliation" value="Faculty" required="required"/>
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
@@ -36,14 +36,14 @@ const HomeStudent = (props) => (
         <br />
         <form>
         Name:<br />
-        <input type="text" name="name" value={props.displayname}/><br/><br/>
+        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
         NetID:<br />
-        <input type="text" name="netid" value={props.netid}/><br/><br/>
+        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
         Major:<br />
-        <input type="text" name="major" /><br/><br/>
+        <input type="text" name="major" required="required"/><br/><br/>
         Dorm (or type "Off Campus"):<br />
-        <input type="text" name="dorm" /><br/><br/>
-        <input type="hidden" name="affiliation" value="Student" />
+        <input type="text" name="dorm" required="required"/><br/><br/>
+        <input type="hidden" name="affiliation" value="Student" required="required"/>
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
