@@ -1,14 +1,33 @@
 import React from 'react';
 import { render } from 'react-dom';
 import App from './components/App';
+import Signup from './components/Signup';
 
 const config = require('./config.js')
+const $ = require('jquery');
+
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('netid')){
-    render(<App />, document.getElementById('root'));
-} else if (config.port === null || config.ip === null){
+let netid = urlParams.get('netid');
+if (netid){
+    let data = {netid: netid, roles:[]};
+    $.post({
+        url: serverUrl+"/authorize",
+        data: data,
+        dataType: "json",
+        success: (res, status) => {
+            if (res.authorized) {
+                render(<App />, document.getElementById('root'));
+            } else {
+                render(<Signup {...res} netid={netid} />, document.getElementById('root'));
+            }
+        }, error: (xhr, status) => {
+            console.log(xhr);
+        }
+    });
+} else if (config.client.port === null || config.ip === null){
 	console.error("CONFIG INCORRECT: port or ip is null");
 } else {
-	window.location.href=(config.https ? 'https://' : 'http://') + config.ip + ':' + (config.https ? config.https.port : config.port);
+	window.location.href = serverUrl + '/login';
 }
