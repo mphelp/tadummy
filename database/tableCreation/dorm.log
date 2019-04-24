@@ -1,5 +1,5 @@
 
-SQL*Loader: Release 11.2.0.2.0 - Production on Wed Apr 24 18:54:32 2019
+SQL*Loader: Release 11.2.0.2.0 - Production on Wed Apr 24 22:40:25 2019
 
 Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
 
@@ -22,27 +22,26 @@ Insert option in effect for this table: INSERT
 
    Column Name                  Position   Len  Term Encl Datatype
 ------------------------------ ---------- ----- ---- ---- ---------------------
-DORM_ID                                                   SEQUENCE (1, 1)
 DORM_NAME                           FIRST     *   ,  O(") CHARACTER            
 
 
 Table DORM:
-  30 Rows successfully loaded.
+  31 Rows successfully loaded.
   0 Rows not loaded due to data errors.
   0 Rows not loaded because all WHEN clauses were failed.
   0 Rows not loaded because all fields were null.
 
 
-Space allocated for bind array:                  17984 bytes(64 rows)
+Space allocated for bind array:                  16512 bytes(64 rows)
 Read   buffer bytes: 1048576
 
 Total logical records skipped:          0
-Total logical records read:            30
+Total logical records read:            31
 Total logical records rejected:         0
 Total logical records discarded:        0
 
-Run began on Wed Apr 24 18:54:32 2019
-Run ended on Wed Apr 24 18:54:32 2019
+Run began on Wed Apr 24 22:40:25 2019
+Run ended on Wed Apr 24 22:40:25 2019
 
-Elapsed time was:     00:00:00.14
-CPU time was:         00:00:00.01
+Elapsed time was:     00:00:00.02
+CPU time was:         00:00:00.00
