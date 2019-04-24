@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar';
 import Apply from './Apply';
+import Calendar from './Calendar';
 
 // Framework CSS
 import "normalize.css";
@@ -15,13 +16,8 @@ import './App.css';
 
 const Home = () => (
     <h1>
-        This is Home.
+        This will be our Home sweet home.
     </h1>
-)
-const Calendar = () => (
-    <h2>
-        This will be a calendar.
-    </h2>
 )
 const Contact = () => (
     <p>

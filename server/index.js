@@ -9,6 +9,10 @@ const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
+
+// routes
+const tohblock = require('./routes/tohblock.js')
+
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
@@ -56,9 +60,10 @@ const cas = new CASAutentication({
     dev_mode_user: config.netid,
 });
 
+
 app.get('/login', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-	res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
+	 res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
 })
 
 app.post('/authorize', (req, res) => {
@@ -75,6 +80,9 @@ app.post('/authorize', (req, res) => {
         res.json({authorized: false});
     });
 });
+
+// Routes
+app.use('/tohblock', tohblock);
 
 app.post('/registerStudent', (req, res) => {
     console.log('registering student');
