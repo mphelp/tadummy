@@ -4,6 +4,7 @@ const app = express()
 const config = require('./config.js')
 const database = require('./database.js')
 const auth = require('./authorization.js')
+const api = require('./api.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -95,4 +96,11 @@ app.post('/registerFaculty', (req, res) => {
         res.sendStatus(400);
     });
 });
+
+
+app.get('/api/dorms', api.apiQuery(api.dorms));
+
+app.get('/api/departments', api.apiQuery(api.departments));
+
+app.get('/api/majors', api.apiQuery(api.majors));
 
