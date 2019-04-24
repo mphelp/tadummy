@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const jsonParser = require('body-parser').json()
 
-const database = require('../database.js)
+const database = require('../database.js')
 const SELECTtohblock  = require('../../database/queries/SELECTtohblock.js')
 
 
@@ -17,7 +17,9 @@ router.get('/', jsonParser, (req, res) => {
     //res.send('this is the response');
    
     let result = database.queryDB(SELECTtohblock, []);
+    res.render('index', result);
+    res.send('hi');
     console.log(result);
-}
+})
 
 module.exports = router

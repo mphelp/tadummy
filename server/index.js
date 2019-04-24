@@ -10,7 +10,7 @@ const fs = require('fs')
 const ldap = require('./ldap.js')
 
 // routes
-const tohblock = require('./routes/tohblock)
+const tohblock = require('./routes/tohblock.js')
 
 //const redirection = require('./redirection/index.html')
 
