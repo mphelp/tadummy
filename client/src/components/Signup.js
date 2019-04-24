@@ -33,7 +33,7 @@ const HomeFaculty = (props) => (
         NetID:<br />
         <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
         Department:<br />
-        <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
+        <input type="text" name="department_id" defaultValue={props.nddepartment} required="required"/><br/><br/>
         Office:<br />
         <input type="text" name="office" defaultValue={props.ndofficeaddress} required="required"/><br/><br/>
         <input type="hidden" name="affiliation" value="Faculty" required="required"/>
