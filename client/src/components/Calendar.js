@@ -17,8 +17,8 @@ export default class extends React.Component {
     // Retrieve TA office hour blocks
     retrieve = () => {
         console.log('in retrieve');
-        axios.get('./tohblock')
-            .then(res => console.log(res))
+        axios.get('https://ta.esc.nd.edu:8028/tohblock')
+            .then(res => console.log(res.data))
             .catch(err => console.error(err))
     }
     state = {

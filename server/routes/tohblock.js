@@ -16,10 +16,12 @@ router.get('/', jsonParser, (req, res) => {
     //res.render('index', { user: "Great User", title: "homepage" });
     //res.send('this is the response');
    
-    let result = database.queryDB(SELECTtohblock, []);
-    res.render('index', result);
-    res.send('hi');
-    console.log(result);
+    database.queryDB(SELECTtohblock.all, [])
+        .then(result => res.send(result))
+        .catch(err => res.send(err))
+    //res.render('index', result);
+    //res.send(result.toString());
+    //console.log(result);
 })
 
 module.exports = router

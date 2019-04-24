@@ -55,7 +55,7 @@ const cas = new CASAutentication({
     dev_mode_user: config.casUser,
 });
 
-app.all('*', cas.bounce);
+app.all('/', cas.bounce);
 
 app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
     let netid = req.session[cas.session_name];
