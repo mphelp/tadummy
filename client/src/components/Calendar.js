@@ -23,6 +23,9 @@ export default class extends React.Component {
     state = {
         events: [],
     }
+    componentDidMount(){
+        retrieve()
+    }
     render(){
         return (
             <div style={general_s}>
