@@ -1,3 +1,3 @@
-insert into course (course_id, course_name) values (500, 'Computer Architecture'); 
+insert into course (course_name) values ('Computer Architecture');
 
-insert into course (course_id, course_name) values (501, 'Operating Systems Principles'); 
+insert into course (course_name) values ('Operating Systems Principles');

@@ -8,3 +8,16 @@ create table course(
         FOREIGN KEY (semester_id)
         REFERENCES semester (semester_id)
 );
+
+drop SEQUENCE course_seq;
+create SEQUENCE course_seq start with 1;
+
+create or replace trigger course_trig
+    BEFORE INSERT ON course
+    FOR EACH ROW
+        BEGIN
+            SELECT course_seq.NEXTVAL
+            INTO :new.course_id
+            FROM dual;
+        END;
+/

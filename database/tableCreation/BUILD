@@ -1,17 +1,11 @@
 USER=admin
 PASS=tadummysecret
 
-sqlplus $USER/$PASS
+sqlplus $USER/$PASS @CRTall
 
-prompt ***** CREATING TABLES *****
-@CRTall
-
-prompt ***** ENTERING ADMIN USERS *****
-@INSusers
-
-exit
-
+sqlldr $USER/$PASS control=users.ctl
 sqlldr $USER/$PASS control=dorm.ctl
 sqlldr $USER/$PASS control=department.ctl
 sqlldr $USER/$PASS control=major.ctl
 
+sqlplus $USER/$PASS @insmock/INSall
