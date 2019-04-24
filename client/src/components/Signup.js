@@ -11,9 +11,10 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 import './App.css';
 
 const Home = (props) => (
-    <h1>
-    Hello {props.netid}, please sign up!
-    </h1>
+    <div>
+        <h1>Hello {props.netid}, please sign up!</h1>
+        {JSON.stringify(props)}
+    </div>
 )
 
 const BodyGeneral_s = {
