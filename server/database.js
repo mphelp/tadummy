@@ -26,11 +26,13 @@ function queryDB(sqlquery, bindings, type = QUERY){
 	return new Promise(async function(resolve, reject){
 		let conn;
         let returnVal = null;
+        let result1 = null;
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
 			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
-			let result1 = await conn.execute(sqlquery, bindings, options);
+			result1 = await conn.execute(sqlquery, bindings, options);
+            console.log('run query: ' + sqlquery);
             if (type === QUERY) {
                 returnVal = result1.rows;
             }
@@ -48,7 +50,8 @@ function queryDB(sqlquery, bindings, type = QUERY){
 					console.error(err);
 				}
 			}
-			resolve(returnVal);
+            if (returnVal) resolve(returnVal);
+            else reject(result1);
 		}
 	});
 }
@@ -62,8 +65,11 @@ function registerStudent (data) {
 }
 
 function registerFaculty (data) {
-    let sql = `select * from cat`;
-    return Promise.all([insertUser(data), queryDB(sql, [])]);
+    let sql = `
+        insert into admin.professor(netid, office, department_id)
+        values (:netid, :office, :department_id)
+    `;
+    return Promise.all([insertUser(data), queryDB(sql, [data.netid, data.office, data.department_id])]);
 }
 
 function insertUser(data) {

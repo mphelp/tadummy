@@ -79,14 +79,19 @@ app.post('/registerStudent', (req, res) => {
     console.log('registering student');
     database.registerStudent(req.body).then( result => {
         console.log(result);
-        res.sendStatus(200);
+        res.sendStatus(201);
     }, err => {
-        res.sendStatus(402);
+        res.sendStatus(400);
     });
 });
 
 app.post('/registerFaculty', (req, res) => {
     console.log('registering faculty');
-    database.registerFaculty(req.body);
+    database.registerFaculty(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
+    });
 });
 
