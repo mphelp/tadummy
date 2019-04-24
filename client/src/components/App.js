@@ -1,5 +1,4 @@
 import React from 'react';
-import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar';

@@ -16,7 +16,8 @@ const localizer = BigCalendar.momentLocalizer(moment)
 export default class extends React.Component {
     // Retrieve TA office hour blocks
     retrieve = () => {
-        axios.post('./tohblock')
+        console.log('in retrieve');
+        axios.get('./tohblock')
             .then(res => console.log(res))
             .catch(err => console.error(err))
     }
@@ -24,7 +25,7 @@ export default class extends React.Component {
         events: [],
     }
     componentDidMount(){
-        retrieve()
+        this.retrieve()
     }
     render(){
         return (
