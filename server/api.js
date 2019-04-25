@@ -1,15 +1,15 @@
 const database = require('./database.js')
 
 function getAllDorms() {
-    return database.queryDB('SELECT * FROM dorm', []);
+    return database.queryDB('SELECT * FROM admin.dorm', []);
 }
 
 function getAllMajors() {
-    return database.queryDB('SELECT * FROM major', []);
+    return database.queryDB('SELECT * FROM admin.major', []);
 }
 
 function getAllDepartments() {
-    return database.queryDB('SELECT * FROM department', []);
+    return database.queryDB('SELECT * FROM admin.department', []);
 }
 
 function apiQuery(func) {

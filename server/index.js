@@ -67,16 +67,14 @@ app.get('/login', cas.bounce, (req, res) => {
 })
 
 app.post('/authorize', (req, res) => {
-    auth.authorize(req.body.netid, req.body.roles).then( letThemIn => {
-        if (letThemIn) {
-            auth.getRoles(req.body.netid).then( roles => {
-                res.json({authorized: true, roles: roles});
+    auth.authorize(req.body.netid, req.body.roles).then( roles => {
+        if (!roles.authorized && req.body.ldap) {
+            ldap.getInfo(req.body.netid).then( data => {
+                roles['ldap'] = data;
+                res.json(roles);
             });
         } else {
-            ldap.getInfo(req.body.netid).then( data => {
-                data['authorized'] = false;
-                res.json(data);
-            });
+            res.json(roles);
         }
     }).catch( err => {
         res.json({authorized: false});

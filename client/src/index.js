@@ -11,7 +11,7 @@ const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + 
 const urlParams = new URLSearchParams(window.location.search);
 let netid = urlParams.get('netid');
 if (netid){
-    let data = {netid: netid, roles:[]};
+    let data = {netid: netid, roles: [], ldap: true};
     $.post({
         url: serverUrl+"/authorize",
         data: data,
@@ -20,7 +20,8 @@ if (netid){
             if (res.authorized) {
                 render(<App />, document.getElementById('root'));
             } else {
-                render(<Signup {...res} netid={netid} />, document.getElementById('root'));
+                console.log(res);
+                render(<Signup {...res.ldap} netid={netid} />, document.getElementById('root'));
             }
         }, error: (xhr, status) => {
             console.log(xhr);

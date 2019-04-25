@@ -2,8 +2,9 @@ const oracledb = require('oracledb')
 
 // Database functions go here:
 
-var QUERY = 0;
-var INSERT = 1;
+var QUERY_SINGLE = 0;
+var QUERY_MULTIPLE = 1
+var INSERT = 2;
 
 async function createConnectionPool(dbConfig) {
     try {
@@ -22,7 +23,7 @@ async function processResults(res){
 }
 
 // use connection pool to execute query
-function queryDB(sqlquery, bindings, type = QUERY){
+function queryDB(sqlquery, bindings, type = QUERY_MULTIPLE){
 	return new Promise(async function(resolve, reject){
 		let conn;
         let returnVal = null;
@@ -33,10 +34,11 @@ function queryDB(sqlquery, bindings, type = QUERY){
 			conn = await oracledb.getConnection();
 			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
 			result1 = await conn.execute(sqlquery, bindings, options);
-            if (type === QUERY) {
+            if (type === QUERY_SINGLE) {
+                returnVal = result1.rows[0];
+            } else if (type === QUERY_MULTIPLE) {
                 returnVal = result1.rows;
-            }
-            else if (type === INSERT) {
+            } else if (type === INSERT) {
                 returnVal = result1.rowsAffected;
             }
 		} catch (err) {
