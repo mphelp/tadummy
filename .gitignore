@@ -32,3 +32,6 @@
 
 # ignore config files (not editorconfig)
 config.js
+
+# log
+/database/tableCreation/*.log

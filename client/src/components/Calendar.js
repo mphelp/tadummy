@@ -5,29 +5,41 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const config = require('../config.js');
-//const serverUrl = 'http'+(config.server.https ? 's':'')+'://'+config.ip
+const serverAddr = 'http'+(config.server.https ? 's':'')+'://'+config.ip+':'+config.server.port;
 
 // Styles
 const general_s = {
     margin: 20,
     maxHeight: 600,
+    minWidth: 1000,
 }
 
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
 export default class extends React.Component {
-    // Retrieve TA office hour blocks
-    retrieve = () => {
-        console.log('in retrieve');
-        axios.get('https://ta.esc.nd.edu:8028/tohblock')
-            .then(res => console.log(res.data))
-            .catch(err => console.error(err))
-    }
     state = {
         events: [],
     }
-    componentDidMount(){
+    // Retrieve TA office hour blocks
+    retrieve = () => {
+        axios.get(serverAddr + '/tohblock')
+            .then(res => {
+                let events = [];
+                res.data.forEach(obj => {
+                    if (new Date(obj.start) <= new Date(obj.end)){
+                        events.push({
+                            start: new Date(obj.start),
+                            end:   new Date(obj.end),
+                            title: obj.title,
+                        })
+                    }
+                });
+                this.setState({ events }, () => console.log(this.state));
+            })
+            .catch(err => console.error(err))
+    }
+    componentWillMount(){
         this.retrieve()
     }
     render(){
@@ -35,7 +47,7 @@ export default class extends React.Component {
             <div style={general_s}>
                 <BigCalendar
                     localizer={localizer}
-                    events={[]}
+                    events={this.state.events}
                     startAccessor="start"
                     endAccessor="end"
                 />
