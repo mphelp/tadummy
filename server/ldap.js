@@ -1,5 +1,4 @@
 const request = require('request');
-const looping = require('deasync');
 
 function getInfo(netid){
     let done = false;

@@ -4,6 +4,7 @@ const app = express()
 const config = require('./config.js')
 const database = require('./database.js')
 const auth = require('./authorization.js')
+const api = require('./api.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
@@ -12,33 +13,37 @@ const ldap = require('./ldap.js')
 // routes
 const tohblock = require('./routes/tohblock.js')
 
-//const redirection = require('./redirection/index.html')
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const session = require('express-session')
 const CASAutentication = require('cas-authentication')
 
-if (config.https) {
+if (config.server.https) {
     var options = {
         hostname: 'localhost',
-        key: fs.readFileSync(config.https.sslKeyPath),
-        cert: fs.readFileSync(config.https.sslCertPath)
+        key: fs.readFileSync(config.server.https.sslKeyPath),
+        cert: fs.readFileSync(config.server.https.sslCertPath)
     };
 
-    https.createServer(options, app).listen(config.https.port, () => {
-        database.createConnectionPool(config.database);
-        //database.testQuery();
-        console.log(`Running https server on port ${config.https.port}`);
+    https.createServer(options, app).listen(config.server.port, () => {
+        database.createConnectionPool(config.server.database);
+        console.log(`Running https server on port ${config.server.port}`);
     });
 } else {
-    app.listen(config.port, () => {
-        database.createConnectionPool(config.database);
-        //database.testQuery();
-        console.log(`Running http server on port ${config.port}`);
+    app.listen(config.server.port, () => {
+        database.createConnectionPool(config.server.database);
+        console.log(`Running http server on port ${config.server.port}`);
     });
 }
-console.log(`Running http client on port ${config.clientPort}`);
+console.log(`Running http client on port ${config.client.port}`);
 
 app.set('view engine', 'pug');
+
+app.use(cors());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
     secret              : 'super secret key',
@@ -48,38 +53,62 @@ app.use(session({
 
 const cas = new CASAutentication({
     cas_url     : 'https://login-test.cc.nd.edu/cas',
-    service_url : 'https://ta.esc.nd.edu:' + (config.https ? config.https.port : config.port),
+    service_url : 'https://ta.esc.nd.edu:' + config.server.port,
     cas_version : '3.0',
-    session_name: 'cas_user',
-    is_dev_mode : (config.casUser != null),
-    dev_mode_user: config.casUser,
+    session_name: 'netid',
+    is_dev_mode : (config.netid != null),
+    dev_mode_user: config.netid,
 });
 
-app.all('/', cas.bounce);
 
-app.get('/', auth.authorize([auth.ROLES.ADMIN], cas), (req, res) => {
+app.get('/login', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-	res.render('redirection', {port: config.clientPort, ip: config.ip, netid: netid});
+	 res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
 })
 
-app.get('/signup', (req, res) => {
-    let netid = req.session[cas.session_name];
-    auth.getRoles(netid).then(roles => {
-        if (roles) {
-            res.redirect('/');
-            throw new Error(`{netid} is already a registered user`);
+app.post('/authorize', (req, res) => {
+    auth.authorize(req.body.netid, req.body.roles).then( letThemIn => {
+        if (letThemIn) {
+            res.json({authorized: true});
+        } else {
+            ldap.getInfo(req.body.netid).then( data => {
+                data['authorized'] = false;
+                res.json(data);
+            });
         }
-    }).then( () => {
-        signup(req, res);
-    }).catch(() => {});
-})
+    }).catch( err => {
+        res.json({authorized: false});
+    });
+});
 
 // Routes
-app.use('/tohblock', tohblock)
+app.use('/tohblock', tohblock);
 
-function signup(req, res) {
-    let netid = req.session[cas.session_name];
-    ldap.getInfo(netid).then(info => {
-        res.json(info);
+app.post('/registerStudent', (req, res) => {
+    console.log('registering student');
+    console.log(req.body);
+    database.registerStudent(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
     });
-}
+});
+
+app.post('/registerFaculty', (req, res) => {
+    console.log('registering faculty');
+    database.registerFaculty(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
+    });
+});
+
+
+app.get('/api/dorms', api.apiQuery(api.dorms));
+
+app.get('/api/departments', api.apiQuery(api.departments));
+
+app.get('/api/majors', api.apiQuery(api.majors));
+

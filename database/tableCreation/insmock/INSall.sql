@@ -12,3 +12,4 @@ prompt *** TA Office Hours ***
 
 prompt *** DONE ***
 
+exit
