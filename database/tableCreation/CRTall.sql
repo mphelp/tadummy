@@ -1,3 +1,5 @@
+prompt ********* CREATING ALL TABLES ************
+
 prompt *** Creating table USERS ***
 @CRTusers
 
@@ -63,3 +65,5 @@ prompt *** Creating table APPLICATIONANSWER ***
 
 prompt *** Creating table APPLICATIONSUBMISSION ***
 @CRTapplicationsubmission
+
+exit

@@ -2,6 +2,8 @@ const oracledb = require('oracledb')
 
 // Database functions go here:
 
+var QUERY = 0;
+var INSERT = 1;
 
 async function createConnectionPool(dbConfig) {
     try {
@@ -20,17 +22,23 @@ async function processResults(res){
 }
 
 // use connection pool to execute query
-function queryDB(sqlquery, bindings){
+function queryDB(sqlquery, bindings, type = QUERY){
 	return new Promise(async function(resolve, reject){
 		let conn;
-        let rows = [];
+        let returnVal = null;
+        let result1 = null;
+        console.log('run query: ' + sqlquery);
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
-			let options = { outFormat: oracledb.OBJECT };
-			let result1 = await conn.execute(sqlquery, bindings, options);
-
-            rows = result1.rows;
+			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
+			result1 = await conn.execute(sqlquery, bindings, options);
+            if (type === QUERY) {
+                returnVal = result1.rows;
+            }
+            else if (type === INSERT) {
+                returnVal = result1.rowsAffected;
+            }
 		} catch (err) {
 			console.error(err);
 		} finally {
@@ -42,12 +50,39 @@ function queryDB(sqlquery, bindings){
 					console.error(err);
 				}
 			}
-			resolve(rows);
+            if (returnVal) resolve(returnVal);
+            else reject(result1);
 		}
 	});
+}
+
+function registerStudent (data) {
+    let sql = `
+        insert into admin.student(netid, major, dorm)
+        values (:netid, :major, :dorm)
+    `;
+    return Promise.all([insertUser(data), queryDB(sql, [data.netid, data.major, data.dorm], INSERT)]);
+}
+
+function registerFaculty (data) {
+    let sql = `
+        insert into admin.professor(netid, office, department_id)
+        values (:netid, :office, :department_id)
+    `;
+    return Promise.all([insertUser(data), queryDB(sql, [data.netid, data.office, data.department_id])]);
+}
+
+function insertUser(data) {
+    let sql = `
+        insert into admin.users(netid, name, admin, datejoined)
+        values (:netid, :name, 0, SYSDATE)
+    `;
+    return queryDB(sql, [data.netid, data.name], INSERT);
 }
 
 module.exports = {
     queryDB: queryDB,
     createConnectionPool: createConnectionPool,
+    registerStudent: registerStudent,
+    registerFaculty: registerFaculty,
 }

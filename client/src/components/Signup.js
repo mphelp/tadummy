@@ -15,11 +15,18 @@ var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + co
 
 function handleSubmit(event) {
     event.preventDefault();
-    const data = new FormData(event.target);
-
+    const formData = new FormData(event.target);
+    var object = {};
+    formData.forEach(function(value, key){
+        object[key] = value;
+    });
+    var json = JSON.stringify(object);
     fetch(serverURL, {
         method: 'POST',
-        body: data,
+        body: json,
+        headers:{
+            'Content-Type': 'application/json'
+        }
     });
 }
 

@@ -4,10 +4,15 @@ const app = express()
 const config = require('./config.js')
 const database = require('./database.js')
 const auth = require('./authorization.js')
+const api = require('./api.js')
 const oracledb = require('oracledb')
 const https = require('https')
 const fs = require('fs')
 const ldap = require('./ldap.js')
+
+// routes
+const tohblock = require('./routes/tohblock.js')
+
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
@@ -55,9 +60,10 @@ const cas = new CASAutentication({
     dev_mode_user: config.netid,
 });
 
+
 app.get('/login', cas.bounce, (req, res) => {
     let netid = req.session[cas.session_name];
-	res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
+	 res.render('redirection', {port: config.client.port, ip: config.ip, netid: netid});
 })
 
 app.post('/authorize', (req, res) => {
@@ -75,9 +81,34 @@ app.post('/authorize', (req, res) => {
     });
 });
 
-function signup(req, res) {
-    let netid = req.session[cas.session_name];
-    ldap.getInfo(netid).then(info => {
-        res.json(info);
+// Routes
+app.use('/tohblock', tohblock);
+
+app.post('/registerStudent', (req, res) => {
+    console.log('registering student');
+    console.log(req.body);
+    database.registerStudent(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
     });
-}
+});
+
+app.post('/registerFaculty', (req, res) => {
+    console.log('registering faculty');
+    database.registerFaculty(req.body).then( result => {
+        console.log(result);
+        res.sendStatus(201);
+    }, err => {
+        res.sendStatus(400);
+    });
+});
+
+
+app.get('/api/dorms', api.apiQuery(api.dorms));
+
+app.get('/api/departments', api.apiQuery(api.departments));
+
+app.get('/api/majors', api.apiQuery(api.majors));
+
