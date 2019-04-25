@@ -82,52 +82,54 @@ const BodyGeneral_s = {
 
 export default class extends React.Component {
 	constructor(props){
+        //get dorms
+        var dormApi = serverUrl + "/api/dorms";
+        var dormsTemp = [];
+        var temp = [];
+        $.getJSON(dormApi, function(data){
+            dormsTemp = data;
+            for (var x = 0; x < dormsTemp.length; x++){
+                temp[x+1] = dormsTemp[x]['DORM_NAME'];
+            }
+        });
+
+        //get majors
+        var majorApi = serverUrl + "/api/majors";
+        var majorsTemp = [];
+        var temp2 = [];
+        $.getJSON(majorApi, function(data){
+            majorsTemp = data;
+            for (var x = 0; x < majorsTemp.length; x++){
+                temp2[x+1] = majorsTemp[x]['MAJOR_NAME'];
+            }
+        });
+
+        //get departments
+        var deptApi = serverUrl + "/api/departments";
+        var deptTemp = [];
+        var temp3 = [];
+        $.getJSON(deptApi, function(data){
+            deptTemp = data;
+            for (var x = 0; x < deptTemp.length; x++){
+                temp3[x+1] = deptTemp[x]['NAME'];
+            }
+        });
+
 		super(props);
 		this.state = {
 			search: null,
             error: null,
             isLoaded: false,
-            dorms: []
+            dorms: temp,
+            majors: temp2,
+            depts: temp3
 		};
-	}
-/*	componentDidMount = () => {
-}*/
-    componentDidMount () {
-    var dormApi = serverUrl + "/api/dorms";
-    var dorms = [];
-    $.getJSON(dormApi, function(data){
-        dorms = data;
-        /*$.each(data, function(thing){
-            console.log(thing);
-            //dorms[id] = name;
-        });*/
-        console.log(dorms);
-        console.log(dorms[1]['DORM_ID']);
-    });
-    }
-    /*fetch(dormApi)
-      .then(res => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            isLoaded: true,
-            dorms: result
-          });
-          console.log("A");
-          console.log(JSON.stringify(this.state.dorms));
-          console.log(this.state.dorms);
-          console.log("B");
 
-        },
-        (error) => {
-          this.setState({
-            isLoaded: true,
-            error
-          });
-        }
-        )
+
+	}
+    componentDidMount () {
+
     }
-    */
   render() {
 		return (
                 <div style={BodyGeneral_s}>
