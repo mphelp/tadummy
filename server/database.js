@@ -64,40 +64,9 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 	});
 }
 
-function registerStudent (data) {
-    let sql = `
-        insert into admin.student(netid, major, dorm)
-        values (:netid, :major, :dorm)
-    `;
-    return Promise.all([
-        insertUser(data),
-        queryDB(sql, [data.netid, data.major, data.dorm], QUERY.INSERT)
-    ]);
-}
-
-function registerFaculty (data) {
-    let sql = `
-        insert into admin.professor(netid, office, department_id)
-        values (:netid, :office, :department_id)
-    `;
-    return Promise.all([
-        insertUser(data),
-        queryDB(sql, [data.netid, data.office, data.department_id], QUERY.INSERT)
-    ]);
-}
-
-function insertUser(data) {
-    let sql = `
-        insert into admin.users(netid, name, admin, datejoined)
-        values (:netid, :name, 0, SYSDATE)
-    `;
-    return queryDB(sql, [data.netid, data.name], QUERY.INSERT);
-}
 
 module.exports = {
     queryDB: queryDB,
     createConnectionPool: createConnectionPool,
-    registerStudent: registerStudent,
-    registerFaculty: registerFaculty,
     QUERY: QUERY,
 }

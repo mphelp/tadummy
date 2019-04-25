@@ -11,9 +11,9 @@ const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + 
 const urlParams = new URLSearchParams(window.location.search);
 let netid = urlParams.get('netid');
 if (netid){
-    let data = {netid: netid, roles: [], ldap: true};
-    $.post({
-        url: serverUrl+"/authorize",
+    let data = {roles: [], ldap: true};
+    $.get({
+        url: serverUrl+"/users/roles/"+netid,
         data: data,
         dataType: "json",
         success: (res, status) => {
