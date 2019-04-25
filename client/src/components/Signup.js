@@ -10,8 +10,10 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 // My CSS
 import './App.css';
 
+const $ = require('jquery');
 const config = require('../config.js')
 var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 function handleSubmit(event) {
     event.preventDefault();
@@ -24,9 +26,6 @@ function handleSubmit(event) {
     fetch(serverURL, {
         method: 'POST',
         body: json,
-        headers:{
-            'Content-Type': 'application/json'
-        }
     });
 }
 
@@ -38,7 +37,7 @@ const HomeFaculty = (props) => (
         Name:<br />
         <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
         NetID:<br />
-        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
+        <input type="text" name="netid" value={props.netid} readOnly = "readOnly" required="required"/><br/><br/>
         Department:<br />
         <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
         Office:<br />
@@ -58,7 +57,7 @@ const HomeStudent = (props) => (
         Name:<br />
         <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
         NetID:<br />
-        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
+        <input type="text" name="netid" value={props.netid} readOnly = "readOnly" required="required"/><br/><br/>
         Major:<br />
         <input type="text" name="major" required="required"/><br/><br/>
         Dorm (or type "Off Campus"):<br />
@@ -85,11 +84,50 @@ export default class extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			search: null
+			search: null,
+            error: null,
+            isLoaded: false,
+            dorms: []
 		};
 	}
-	componentDidMount = () => {
-	}
+/*	componentDidMount = () => {
+}*/
+    componentDidMount () {
+    var dormApi = serverUrl + "/api/dorms";
+    var dorms = [];
+    $.getJSON(dormApi, function(data){
+        dorms = data;
+        /*$.each(data, function(thing){
+            console.log(thing);
+            //dorms[id] = name;
+        });*/
+        console.log(dorms);
+        console.log(dorms[1]['DORM_ID']);
+    });
+    }
+    /*fetch(dormApi)
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            dorms: result
+          });
+          console.log("A");
+          console.log(JSON.stringify(this.state.dorms));
+          console.log(this.state.dorms);
+          console.log("B");
+
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
+        }
+        )
+    }
+    */
   render() {
 		return (
                 <div style={BodyGeneral_s}>
