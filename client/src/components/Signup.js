@@ -117,6 +117,7 @@ export default class extends React.Component {
 
 		super(props);
 		this.state = {
+            ...props,
 			search: null,
             error: null,
             isLoaded: false,
@@ -136,17 +137,17 @@ export default class extends React.Component {
                 {   (() => {
                         if (this.props.ndprimaryaffiliation == "Faculty"){
                             return(
-                            <HomeFaculty {...this.props} />
+                            <HomeFaculty {...this.state} />
                             )
                         }
                         if (this.props.ndprimaryaffiliation == "Student"){
                             return(
-                            <HomeStudent {...this.props} />
+                            <HomeStudent {...this.state} />
                             )
                         }
                         else {
                             return(
-                            <HomeError {...this.props} />
+                            <HomeError {...this.state} />
                             )
                         }
                     })()
