@@ -1,3 +1,4 @@
+#!/bin/sh
 USER=admin
 PASS=tadummysecret
 
