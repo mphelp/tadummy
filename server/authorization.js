@@ -8,7 +8,7 @@ const ROLES = {
 };
 
 function getRoles(netid) {
-    let sql = `select netid, admin, student, professor from admin.userroles where netid = :id`;
+    let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     return database.queryDB(sql, [netid], database.QUERY.SINGLE);
 }
 
