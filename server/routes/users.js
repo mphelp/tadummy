@@ -9,8 +9,8 @@ const ROLES = {
     TA:         'TA',
 };
 
-router.post('/:netid', (req, res) => {
-    let netid = req.params.netid;
+router.post('/', (req, res) => {
+    let netid = req.body.netid;
     let affiliation = req.body.affiliation;
     let func;
     if (affiliation === ROLES.STUDENT) {

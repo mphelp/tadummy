@@ -21,7 +21,7 @@ function handleSubmit(event) {
         object[key] = value;
     });
     var json = JSON.stringify(object);
-    fetch(serverURL, {
+    fetch(serverURL+'/api/users', {
         method: 'POST',
         body: json,
         headers:{
@@ -95,13 +95,11 @@ export default class extends React.Component {
                 <div style={BodyGeneral_s}>
                 {   (() => {
                         if (this.props.ndprimaryaffiliation == "Faculty"){
-                            serverURL = serverURL + "/registerFaculty";
                             return(
                             <HomeFaculty {...this.props} />
                             )
                         }
                         if (this.props.ndprimaryaffiliation == "Student"){
-                            serverURL = serverURL + "/registerStudent";
                             return(
                             <HomeStudent {...this.props} />
                             )
