@@ -1,4 +1,0 @@
-with tohblock as 
-    (SELECT starttime "start", endtime "end", netid || ' at ' || location "title" FROM timeblock tb, taofficehours toh WHERE tb.timeblock_id = toh.timeblock_id)
-SELECT * from tohblock
-/

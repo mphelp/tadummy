@@ -23,16 +23,17 @@ export default class extends React.Component {
     }
     // Retrieve TA office hour blocks
     retrieve = () => {
-        console.log('in retrieve');
         axios.get(serverAddr + '/tohblock')
             .then(res => {
                 let events = [];
                 res.data.forEach(obj => {
-                    events.push({
-                        start: new Date(obj.start),
-                        end:   new Date(obj.end),
-                        title: obj.title,
-                    })
+                    if (new Date(obj.start) <= new Date(obj.end)){
+                        events.push({
+                            start: new Date(obj.start),
+                            end:   new Date(obj.end),
+                            title: obj.title,
+                        })
+                    }
                 });
                 this.setState({ events }, () => console.log(this.state));
             })
