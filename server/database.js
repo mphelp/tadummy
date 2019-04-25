@@ -2,9 +2,11 @@ const oracledb = require('oracledb')
 
 // Database functions go here:
 
-var QUERY_SINGLE = 0;
-var QUERY_MULTIPLE = 1
-var INSERT = 2;
+var QUERY = {
+    SINGLE: 0,
+    MULTIPLE: 1,
+    INSERT: 2,
+};
 
 async function createConnectionPool(dbConfig) {
     try {
@@ -23,22 +25,26 @@ async function processResults(res){
 }
 
 // use connection pool to execute query
-function queryDB(sqlquery, bindings, type = QUERY_MULTIPLE){
+function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 	return new Promise(async function(resolve, reject){
 		let conn;
         let returnVal = null;
         let result1 = null;
-        console.log('run query: ' + sqlquery);
+        console.log('running query: ' + sqlquery);
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
 			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
 			result1 = await conn.execute(sqlquery, bindings, options);
-            if (type === QUERY_SINGLE) {
-                returnVal = result1.rows[0];
-            } else if (type === QUERY_MULTIPLE) {
+            if (type === QUERY.SINGLE) {
+                if (result1.rows.length === 0) {
+                    returnVal = {};
+                } else {
+                    returnVal = result1.rows[0];
+                }
+            } else if (type === QUERY.MULTIPLE) {
                 returnVal = result1.rows;
-            } else if (type === INSERT) {
+            } else if (type === QUERY.INSERT) {
                 returnVal = result1.rowsAffected;
             }
 		} catch (err) {
@@ -52,7 +58,7 @@ function queryDB(sqlquery, bindings, type = QUERY_MULTIPLE){
 					console.error(err);
 				}
 			}
-            if (returnVal) resolve(returnVal);
+            if (returnVal !== null && returnVal !== undefined) resolve(returnVal);
             else reject(result1);
 		}
 	});
@@ -63,7 +69,10 @@ function registerStudent (data) {
         insert into admin.student(netid, major, dorm)
         values (:netid, :major, :dorm)
     `;
-    return Promise.all([insertUser(data), queryDB(sql, [data.netid, data.major, data.dorm], INSERT)]);
+    return Promise.all([
+        insertUser(data),
+        queryDB(sql, [data.netid, data.major, data.dorm], QUERY.INSERT)
+    ]);
 }
 
 function registerFaculty (data) {
@@ -71,7 +80,10 @@ function registerFaculty (data) {
         insert into admin.professor(netid, office, department_id)
         values (:netid, :office, :department_id)
     `;
-    return Promise.all([insertUser(data), queryDB(sql, [data.netid, data.office, data.department_id])]);
+    return Promise.all([
+        insertUser(data),
+        queryDB(sql, [data.netid, data.office, data.department_id], QUERY.INSERT)
+    ]);
 }
 
 function insertUser(data) {
@@ -79,7 +91,7 @@ function insertUser(data) {
         insert into admin.users(netid, name, admin, datejoined)
         values (:netid, :name, 0, SYSDATE)
     `;
-    return queryDB(sql, [data.netid, data.name], INSERT);
+    return queryDB(sql, [data.netid, data.name], QUERY.INSERT);
 }
 
 module.exports = {
@@ -87,4 +99,5 @@ module.exports = {
     createConnectionPool: createConnectionPool,
     registerStudent: registerStudent,
     registerFaculty: registerFaculty,
+    QUERY: QUERY,
 }

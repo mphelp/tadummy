@@ -9,13 +9,7 @@ const ROLES = {
 
 function getRoles(netid) {
     let sql = `select netid, admin, student, professor from admin.userroles where netid = :id`;
-    return database.queryDB(sql, [netid]).then(result => {
-        if (result.length === 0) {
-            return {};
-        } else {
-            return result;
-        }
-    });
+    return database.queryDB(sql, [netid], database.QUERY.SINGLE);
 }
 
 // This tutorial came in CLUTCH with authorization:
@@ -28,7 +22,7 @@ function authorize(netid, validRoles = []) {
         return data;
     }
     return getRoles(netid).then(userRoles => {
-        if (!userRoles) {
+        if (Object.keys(userRoles).length === 0) {
             return {authorized: false};
         }
         userRoles['authorized'] = true;
