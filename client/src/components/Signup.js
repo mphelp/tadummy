@@ -117,6 +117,7 @@ export default class extends React.Component {
 
 		super(props);
 		this.state = {
+            ...props,
 			search: null,
             error: null,
             isLoaded: false,
@@ -137,18 +138,18 @@ export default class extends React.Component {
                         if (this.props.ndprimaryaffiliation == "Faculty"){
                             serverURL = serverURL + "/registerFaculty";
                             return(
-                            <HomeFaculty {...this.props} />
+                            <HomeFaculty {...this.state} />
                             )
                         }
                         if (this.props.ndprimaryaffiliation == "Student"){
                             serverURL = serverURL + "/registerStudent";
                             return(
-                            <HomeStudent {...this.props} />
+                            <HomeStudent {...this.state} />
                             )
                         }
                         else {
                             return(
-                            <HomeError {...this.props} />
+                            <HomeError {...this.state} />
                             )
                         }
                     })()
