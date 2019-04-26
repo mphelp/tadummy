@@ -60,6 +60,7 @@ export default class extends React.Component {
                         'Content-Type': 'application/json'
                     }
 			});
+            window.location.href = "/?netid=" + object['netid'];
 	}
 
 	initializeSignup = () => {
