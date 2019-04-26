@@ -113,6 +113,14 @@ export default class extends React.Component {
 				 onClick={handleClick}
 		 />
 	)
+	dormRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.DORM_ID}
+				 label={item.DORM_NAME}
+				 onClick={handleClick}
+		 />
+	)
   render() {
 		const { ndprimaryaffiliation, displayname, netid } = this.props;
 		const { majors, major, depts, dept, dorms, dorm } = this.state;
