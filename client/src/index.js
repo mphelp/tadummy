@@ -13,7 +13,7 @@ let netid = urlParams.get('netid');
 if (netid){
     let data = {roles: [], ldap: true};
     $.get({
-        url: serverUrl+"/api/user/"+netid,
+        url: serverUrl+"/api/users/"+netid,
         data: data,
         dataType: "json",
         success: (res, status) => {
