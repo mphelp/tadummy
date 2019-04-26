@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {
     FormGroup,
@@ -30,9 +31,17 @@ const BodyGeneral_s = {
 }
 
 export default class extends React.Component {
-	constructor(props){
-		super(props);
-	}
+	state = {
+		search: null,
+		error: null,
+		isLoaded: false,
+		dorms: [],
+		majors: [],
+		depts: [],
+		major: null,
+		dorm: null,
+		dept: null,
+	};
 
 	handleSubmit = (event) => {
 			event.preventDefault();
@@ -48,44 +57,37 @@ export default class extends React.Component {
 			});
 	}
 
+	initializeSignup = () => {
+		// server routes
+		let dormApi = serverUrl + "/api/dorms";
+		let majorApi = serverUrl + "/api/majors";
+		let deptApi = serverUrl + "/api/departments";
 
-	initialize = () => {
-		// dorm, major, dept setup
-		var dormApi = serverUrl + "/api/dorms";
-		var majorApi = serverUrl + "/api/majors";
-		var deptApi = serverUrl + "/api/departments";
-		var dormsTemp = [];
-		var majorsTemp = [];
-		var deptTemp = [];
-
-		// callbacks ensure requests are completed
-		$.getJSON(dormApi, function(dorms){
-				dormsTemp = dorms;
-				$.getJSON(majorApi, function(majors){
-						majorsTemp = majors;
-						$.getJSON(deptApi, function(dept){
-								deptTemp = dept;
-
-								// Now valid to set state
-								console.log(majorsTemp);
-								this.state = {
-										search: null,
-										error: null,
-										isLoaded: false,
-										dorms: dormsTemp,
-										majors: majorsTemp,
-										depts: deptTemp,
-										major: "",
-								};
-						});
-				});
-		});
+		// make requests to routes
+		axios.get(dormApi)
+			.then(res => {
+				this.setState({ dorms: res.data })
+			})
+			.catch(err => console.error(err))
+		axios.get(majorApi)
+			.then(res => {
+				this.setState({ majors: res.data })
+			})
+			.catch(err => console.error(err))
+		axios.get(deptApi)
+			.then(res => {
+				this.setState({ depts: res.data })
+			})
+			.catch(err => console.error(err))
 	}
-	componentWillMount () {
-		this.initialize()
+	componentWillMount() {
+		this.initializeSignup()
 	}
 	handleMajorSelectClick = (major) => {
-			this.setState(state => ({ major: major }))
+			this.setState({ major })
+	}
+	handleDormSelectClick = (dorm) => {
+			this.setState({ dorm })
 	}
 	majorRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
@@ -95,26 +97,53 @@ export default class extends React.Component {
 				 onClick={handleClick}
 		 />
 	)
+	dormRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.DORM_ID}
+				 label={item.DORM_NAME}
+				 onClick={handleClick}
+		 />
+	)
   render() {
-		console.log(this.state);
+		const { ndprimaryaffiliation, displayname, netid } = this.props;
+		const { majors, major, depts, dept, dorms, dorm } = this.state;
+
 		return (
-                <div style={BodyGeneral_s}>
-                {   (() => {
-                        if (this.props.ndprimaryaffiliation == "Faculty"){
-                            serverURL = serverURL + "/registerFaculty";
-                            return(
-                            <HomeFaculty />
-                            )
-                        }
-                        if (this.props.ndprimaryaffiliation == "Student"){
-                            serverURL = serverURL + "/registerStudent";
-                            return(
-                            	<HomeStudent />
-                            )
-                        }
-                    })()
-                }
-                </div>
+				<div style={BodyGeneral_s}>
+				{
+						(() => {
+								if (ndprimaryaffiliation == "Faculty"){
+										serverURL = serverURL + "/registerFaculty";
+										return(
+											<HomeFaculty 
+												netid 	     = {netid}
+												displayname  = {displayname}
+												handleSubmit = {this.handleSubmit}
+											/>
+										)
+								}
+								if (ndprimaryaffiliation == "Student"){
+										serverURL = serverURL + "/registerStudent";
+										return(
+											<HomeStudent 
+												netid 			 = {netid}
+												displayname  = {displayname}
+												majors 			 = {majors}
+												major        = {major}
+												dorms        = {dorms}
+												dorm         = {dorm}
+												handleSubmit           = {this.handleSubmit}
+												handleMajorSelectClick = {this.handleMajorSelectClick}
+												handleDormSelectClick  = {this.handleDormSelectClick}
+												majorRenderer          = {this.majorRenderer}
+												dormRenderer           = {this.dormRenderer}
+											/>
+									 )
+								}
+						})()
+				}
+				</div>
     );
   }
 }
