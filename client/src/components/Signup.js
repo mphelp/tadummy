@@ -17,11 +17,7 @@ import HomeFaculty from "./forms/HomeFaculty";
 
 const $ = require('jquery');
 const config = require('../config.js')
-const serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
-
-// Server register routes
-const registerFacultyURL = serverURL + "/registerFaculty";
-const registerStudentURL = serverURL + "/registerStudent";
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 const BodyGeneral_s = {
     display: "flex",
@@ -50,7 +46,7 @@ export default class extends React.Component {
 					object[key] = value;
 			});
 			var json = JSON.stringify(object);
-			fetch(serverURL+'/api/users', {
+			fetch(serverUrl+'/api/users', {
 					method: 'POST',
 					body: json,
 			});
@@ -146,14 +142,14 @@ export default class extends React.Component {
 			return normalizedDept.indexOf(normalizedQuery) >= 0;
 		}
 	}
-  
+
   render() {
-		const { 
-			ndprimaryaffiliation, 
-			displayname, 
+		const {
+			ndprimaryaffiliation,
+			displayname,
 			netid,
 			nddepartment,
-			ndofficeaddress, 
+			ndofficeaddress,
 		} = this.props;
 		const { majors, major, depts, dept, dorms, dorm } = this.state;
 
@@ -163,7 +159,7 @@ export default class extends React.Component {
 						(() => {
 								if (ndprimaryaffiliation === "Faculty"){
 										return(
-											<HomeFaculty 
+											<HomeFaculty
 												netid 	     = {netid}
 												displayname  = {displayname}
 												depts        = {depts}
@@ -179,7 +175,7 @@ export default class extends React.Component {
 								}
 								if (ndprimaryaffiliation === "Student"){
 										return(
-											<HomeStudent 
+											<HomeStudent
 												netid 			 = {netid}
 												displayname  = {displayname}
 												majors 			 = {majors}
@@ -191,7 +187,7 @@ export default class extends React.Component {
 												handleDormSelectClick  = {this.handleDormSelectClick}
 												majorRenderer          = {this.majorRenderer}
 												dormRenderer           = {this.dormRenderer}
-												filterMajor            = {this.filterMajor}	
+												filterMajor            = {this.filterMajor}
 												filterDorm             = {this.filterDorm}
 											/>
 									 )
