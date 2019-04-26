@@ -93,7 +93,7 @@ export default class extends React.Component {
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
 				 key={item.MAJOR_ID}
-				 label={item.MAJOR_NAME}
+				 text={item.MAJOR_NAME}
 				 onClick={handleClick}
 		 />
 	)
@@ -101,7 +101,7 @@ export default class extends React.Component {
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
 				 key={item.DORM_ID}
-				 label={item.DORM_NAME}
+				 text={item.DORM_NAME}
 				 onClick={handleClick}
 		 />
 	)
