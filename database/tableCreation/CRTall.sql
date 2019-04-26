@@ -66,4 +66,7 @@ prompt *** Creating table APPLICATIONANSWER ***
 prompt *** Creating table APPLICATIONSUBMISSION ***
 @CRTapplicationsubmission
 
+prompt *** Creating view USERROLES***
+@CRTuserroles
+
 exit
