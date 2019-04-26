@@ -26,11 +26,16 @@ async function processResults(res){
 
 // use connection pool to execute query
 function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
+    if (typeof queryDB.count == 'undefined') {
+        queryDB.count = 0;
+    }
 	return new Promise(async function(resolve, reject){
 		let conn;
         let returnVal = null;
         let result1 = null;
-        console.log('running query: ' + sqlquery);
+        queryDB.count++;
+        queryNum = queryDB.count;
+        console.log('Running query ['+queryNum+']: ' + sqlquery);
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
@@ -58,6 +63,7 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 					console.error(err);
 				}
 			}
+            console.log('Done running query ['+queryNum+']!');
             if (returnVal !== null && returnVal !== undefined) resolve(returnVal);
             else reject(result1);
 		}
