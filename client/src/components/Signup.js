@@ -23,21 +23,6 @@ const config = require('../config.js')
 var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
-function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    var object = {};
-    formData.forEach(function(value, key){
-        object[key] = value;
-    });
-    var json = JSON.stringify(object);
-    fetch(serverURL, {
-        method: 'POST',
-        body: json,
-    });
-}
-
-
 const BodyGeneral_s = {
     display: "flex",
     flexDirection: "row",
@@ -46,87 +31,85 @@ const BodyGeneral_s = {
 
 export default class extends React.Component {
 	constructor(props){
-        //get dorms
-        var dormApi = serverUrl + "/api/dorms";
-        var dormsTemp = [];
-        var temp = [];
-        $.getJSON(dormApi, function(data){
-            dormsTemp = data;
-            for (var x = 0; x < dormsTemp.length; x++){
-                temp[x+1] = dormsTemp[x]['DORM_NAME'];
-            }
-        });
-
-        //get majors
-        var majorApi = serverUrl + "/api/majors";
-        var majorsTemp = [];
-        var temp2 = [];
-        $.getJSON(majorApi, function(data){
-            majorsTemp = data;
-            for (var x = 0; x < majorsTemp.length; x++){
-                temp2[x+1] = majorsTemp[x]['MAJOR_NAME'];
-            }
-        });
-
-        //get departments
-        var deptApi = serverUrl + "/api/departments";
-        var deptTemp = [];
-        var temp3 = [];
-
-
-        $.getJSON(deptApi, function(data){
-            deptTemp = data;
-            for (var x = 0; x < deptTemp.length; x++){
-                temp3[x+1] = deptTemp[x]['NAME'];
-            }
-        });
-
-
 		super(props);
-		this.state = {
-            ...props,
-			search: null,
-            error: null,
-            isLoaded: false,
-            dorms: dormsTemp,
-            majors: majorsTemp,
-            depts: deptTemp,
-            major: "",
-            handleSubmit: handleSubmit,
-            majorRenderer: this.majorRenderer,
-            handleMajorSelectClick: this.handleMajorSelectClick
-		};
-
-
 	}
-    componentDidMount () {
 
-    }
-    handleMajorSelectClick = (major) => {
-        this.setState(state => ({ major: major }))
-    }
-    majorRenderer = (item, { handleClick, isActive }) => (
-       <MenuItem
-           className={ isActive ? Classes.ACTIVE : "" }
-           key={item.MAJOR_ID}
-           label={item.MAJOR_NAME}
-           onClick={handleClick}
-       />
-   )
+	handleSubmit = (event) => {
+			event.preventDefault();
+			const formData = new FormData(event.target);
+			var object = {};
+			formData.forEach(function(value, key){
+					object[key] = value;
+			});
+			var json = JSON.stringify(object);
+			fetch(serverURL, {
+					method: 'POST',
+					body: json,
+			});
+	}
+
+
+	initialize = () => {
+		// dorm, major, dept setup
+		var dormApi = serverUrl + "/api/dorms";
+		var majorApi = serverUrl + "/api/majors";
+		var deptApi = serverUrl + "/api/departments";
+		var dormsTemp = [];
+		var majorsTemp = [];
+		var deptTemp = [];
+
+		// callbacks ensure requests are completed
+		$.getJSON(dormApi, function(dorms){
+				dormsTemp = dorms;
+				$.getJSON(majorApi, function(majors){
+						majorsTemp = majors;
+						$.getJSON(deptApi, function(dept){
+								deptTemp = dept;
+
+								// Now valid to set state
+								console.log(majorsTemp);
+								this.state = {
+										search: null,
+										error: null,
+										isLoaded: false,
+										dorms: dormsTemp,
+										majors: majorsTemp,
+										depts: deptTemp,
+										major: "",
+								};
+						});
+				});
+		});
+	}
+	componentWillMount () {
+		this.initialize()
+	}
+	handleMajorSelectClick = (major) => {
+			this.setState(state => ({ major: major }))
+	}
+	majorRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.MAJOR_ID}
+				 label={item.MAJOR_NAME}
+				 onClick={handleClick}
+		 />
+	)
   render() {
+		console.log(this.state);
 		return (
                 <div style={BodyGeneral_s}>
                 {   (() => {
                         if (this.props.ndprimaryaffiliation == "Faculty"){
                             serverURL = serverURL + "/registerFaculty";
                             return(
-                            <HomeFaculty {...this.state} />
+                            <HomeFaculty />
                             )
                         }
                         if (this.props.ndprimaryaffiliation == "Student"){
                             serverURL = serverURL + "/registerStudent";
                             return(
-                            <HomeStudent {...this.state} />
+                            	<HomeStudent />
                             )
                         }
                     })()
