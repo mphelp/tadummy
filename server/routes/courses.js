@@ -1,5 +1,6 @@
 const router = require('express').Router()
 const db = require('../database');
+const users = require('./users');
 
 /* Required fields:
  * netid:   netid of professor teaching course
@@ -9,11 +10,14 @@ const db = require('../database');
  */
 router.post('/', (req, res) => {
     let {netid, name, dept, semester} = req.body;
-    insertCourse(netid, name, dept, semester).then( result => {
-        res.sendStatus(201);
-    }, err => {
-        console.log(err);
-        res.sendStatus(400);
+    users.getRoles(netid).then ( roles => {
+        console.log(roles);
+        insertCourse(netid, name, dept, semester).then( result => {
+            res.sendStatus(201);
+        }, err => {
+            console.log(err);
+            res.sendStatus(400);
+        });
     });
 });
 

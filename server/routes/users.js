@@ -116,3 +116,4 @@ function insertUser(netid, name) {
 }
 
 module.exports = router;
+module.exports.getRoles = getRoles;
