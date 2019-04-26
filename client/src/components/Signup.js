@@ -1,6 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-
+import {
+    FormGroup,
+    InputGroup,
+    Classes,
+    MenuItem,
+    Button
+} from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
 // Framework CSS
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
@@ -8,7 +15,8 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 // My CSS
-import './App.css';
+import HomeStudent from "./forms/HomeStudent";
+import HomeFaculty from "./forms/HomeFaculty";
 
 const $ = require('jquery');
 const config = require('../config.js')
@@ -29,51 +37,6 @@ function handleSubmit(event) {
     });
 }
 
-const HomeFaculty = (props) => (
-    <div>
-        <h1>Hello Professor {props.displayname}, please sign up!</h1>
-        <br/>
-        <form onSubmit={handleSubmit}>
-        Name:<br />
-        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
-        NetID:<br />
-        <input type="text" name="netid" value={props.netid} readOnly = "readOnly" required="required"/><br/><br/>
-        Department:<br />
-        <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
-        Office:<br />
-        <input type="text" name="office" defaultValue={props.ndofficeaddress} required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="PROFESSOR" required="required"/>
-        <input type="submit" value="Submit" />
-        </form>
-        {/*JSON.stringify(props)*/}
-    </div>
-)
-
-const HomeStudent = (props) => (
-    <div>
-        <h1>Hello {props.displayname}, please sign up!</h1>
-        <br />
-        <form onSubmit={handleSubmit}>
-        Name:<br />
-        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
-        NetID:<br />
-        <input type="text" name="netid" value={props.netid} readOnly = "readOnly" required="required"/><br/><br/>
-        Major:<br />
-        <input type="text" name="major" required="required"/><br/><br/>
-        Dorm (or type "Off Campus"):<br />
-        <input type="text" name="dorm" required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="STUDENT" required="required"/>
-        <input type="submit" value="Submit" />
-        </form>
-        {/*JSON.stringify(props)*/}
-    </div>
-)
-
-const HomeError = (props) => (
-    <div>
-        <h1>Error: No student or faculty member found with NetID {props.netid}.</h1>
-    </div>
-)
 const BodyGeneral_s = {
     display: "flex",
     flexDirection: "row",
@@ -108,6 +71,8 @@ export default class extends React.Component {
         var deptApi = serverUrl + "/api/departments";
         var deptTemp = [];
         var temp3 = [];
+
+
         $.getJSON(deptApi, function(data){
             deptTemp = data;
             for (var x = 0; x < deptTemp.length; x++){
@@ -115,15 +80,20 @@ export default class extends React.Component {
             }
         });
 
+
 		super(props);
 		this.state = {
             ...props,
 			search: null,
             error: null,
             isLoaded: false,
-            dorms: temp,
-            majors: temp2,
-            depts: temp3
+            dorms: dormsTemp,
+            majors: majorsTemp,
+            depts: deptTemp,
+            major: "",
+            handleSubmit: handleSubmit,
+            majorRenderer: this.majorRenderer,
+            handleMajorSelectClick: this.handleMajorSelectClick
 		};
 
 
@@ -131,6 +101,17 @@ export default class extends React.Component {
     componentDidMount () {
 
     }
+    handleMajorSelectClick = (major) => {
+        this.setState(state => ({ major: major }))
+    }
+    majorRenderer = (item, { handleClick, isActive }) => (
+       <MenuItem
+           className={ isActive ? Classes.ACTIVE : "" }
+           key={item.MAJOR_ID}
+           label={item.MAJOR_NAME}
+           onClick={handleClick}
+       />
+   )
   render() {
 		return (
                 <div style={BodyGeneral_s}>
@@ -143,11 +124,6 @@ export default class extends React.Component {
                         if (this.props.ndprimaryaffiliation == "Student"){
                             return(
                             <HomeStudent {...this.state} />
-                            )
-                        }
-                        else {
-                            return(
-                            <HomeError {...this.state} />
                             )
                         }
                     })()
