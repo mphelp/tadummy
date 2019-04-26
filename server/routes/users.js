@@ -13,6 +13,10 @@ router.post('/', (req, res) => {
     let netid = req.body.netid;
     let affiliation = req.body.affiliation;
     console.log('netid: '+netid+', aff: ' + affiliation);
+    console.log('major: '+req.body.major);
+    console.log('dept: '+req.body.department);
+    console.log(req.body);
+
     let func;
     if (affiliation === ROLES.STUDENT) {
         func = insertStudent;
