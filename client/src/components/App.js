@@ -4,6 +4,7 @@ import Navigation from './Navigation';
 import Sidebar from './Sidebar';
 import Apply from './Apply';
 import Calendar from './Calendar';
+import CourseRegistration from './CourseRegistration';
 
 // Framework CSS
 import "normalize.css";
@@ -56,6 +57,7 @@ export default class extends React.Component {
                         <Route exact path="/" component={Home}/>
                         <Route path="/apply" component={Apply}/>
                         <Route path="/calendar" component={Calendar}/>
+                        <Route path="/course_creation" component={CourseRegistration}/>
                         <Route path="/contact" component={Contact}/>
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
