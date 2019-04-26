@@ -15,9 +15,6 @@ const general_s = {
 
 class HomeStudent extends React.Component {
 	render(){
-		//const { props } = this.props
-		//console.log(this);
-		//console.log(this.props);
 		const { 
 			displayname,
 			netid,

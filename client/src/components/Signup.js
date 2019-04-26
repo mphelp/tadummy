@@ -194,7 +194,7 @@ export default class extends React.Component {
 												majorRenderer          = {this.majorRenderer}
 												dormRenderer           = {this.dormRenderer}
 												filterMajor            = {this.filterMajor}	
-												filterDorm             = {this.filterDorm}	
+												filterDorm             = {this.filterDorm}
 											/>
 									 )
 								}

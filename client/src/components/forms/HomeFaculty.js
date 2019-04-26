@@ -12,6 +12,9 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 const general_s = {
 	margin: 30,
 }
+const office_s = {
+	minWidth: 500,
+}
 
 class HomeStudent extends React.Component {
 	render(){
@@ -45,12 +48,11 @@ class HomeStudent extends React.Component {
 							onItemSelect={handleDeptSelectClick}
 					>
 							<Button rightIcon="caret-down"
-									defaultValue={nddepartment}
-									text={dept ? dept.ABBREV : "(No selection)" }
+									text={dept ? dept.ABBREV : nddepartment}
 							/>
 					</Select><br /><br />
 					Office:<br />
-					<input type="text" name="department" defaultValue={ndofficeaddress} required="required"/><br /><br />
+					<input style={office_s} type="text" name="office" defaultValue={ndofficeaddress} required="required"/><br /><br />
 					<input type="hidden" name="affiliation" value="Student" required="required"/>
 					<input type="submit" value="Submit" />
 					</form>
