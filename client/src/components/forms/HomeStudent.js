@@ -9,35 +9,65 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
+const general_s = {
+	margin: 30,
+}
 
-const HomeStudent = (props) => (
-    <div>
-        <h1>Hello {props.displayname}, please sign up!</h1>
-        <br />
-        <form onSubmit={props.handleSubmit}>
-        Name:<br />
-        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
-        NetID:<br />
-        <input type="text" name="netid" value={props.netid} readOnly = "readOnly" required="required"/><br/><br/>
-        Major:<br />
-        <input type="text" name="major" required="required"/><br/><br/>
-        Dorm (or type "Off Campus"):<br />
-        <input type="text" name="dorm" required="required"/><br/><br/>
-        Major dropdown:<br />
-        <Select
-            items={props.majors}
-            itemRenderer={props.majorRenderer}
-            onItemSelect={props.handleMajorSelectClick}
-        >
-            <Button rightIcon="caret-down"
-                text={props.major ? props.major.MAJOR_NAME : "(No selection)" }
-            />
-        </Select>
-        <input type="hidden" name="affiliation" value="Student" required="required"/>
-        <input type="submit" value="Submit" />
-        </form>
-        {/*JSON.stringify(props)*/}
-    </div>
-)
+class HomeStudent extends React.Component {
+	render(){
+		const { 
+			displayname,
+			netid,
+			major,
+			dorm,
+			majors,
+			dorms,
+			majorRenderer,
+			dormRenderer,
+			handleMajorSelectClick,
+			handleDormSelectClick,
+			handleSubmit,
+			filterMajor,
+			filterDorm,
+		} = this.props;
+
+		return (
+			<div style={general_s}>
+					<h1>Hello {displayname}, please sign up!</h1>
+					<br />
+					<form onSubmit={handleSubmit}>
+					Name:<br />
+					<input type="text" name="name" defaultValue={displayname} required="required"/><br/><br/>
+					NetID:<br />
+					<input type="text" name="netid" value={netid} readOnly = "readOnly" required="required"/><br/><br/>
+					Major dropdown:<br />
+					<Select
+							items={majors}
+							itemPredicate={filterMajor}
+							itemRenderer={majorRenderer}
+							onItemSelect={handleMajorSelectClick}
+					>
+							<Button rightIcon="caret-down"
+									text={major ? major.MAJOR_NAME : "(No selection)" }
+							/>
+					</Select><br /><br />
+					Dorm dropdown:<br />
+					<Select
+							items={dorms}
+							itemPredicate={filterDorm}
+							itemRenderer={dormRenderer}
+							onItemSelect={handleDormSelectClick}
+					>
+							<Button rightIcon="caret-down"
+									text={dorm ? dorm.DORM_NAME : "(No selection)" }
+							/>
+					</Select><br /><br />
+					<input type="hidden" name="affiliation" value="Student" required="required"/>
+					<input type="submit" value="Submit" />
+					</form>
+			</div>
+		)
+	}
+}
 
 export default HomeStudent;

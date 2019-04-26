@@ -29,10 +29,10 @@
 
 *.swp
 *.swo
+*.buf
 
 # ignore config files (not editorconfig)
 config.js
-*.buf
 
 # log
 /database/tableCreation/*.log
