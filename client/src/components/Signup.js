@@ -12,8 +12,8 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 // My Components
-import HomeStudent from "./forms/HomeStudent";
-import HomeFaculty from "./forms/HomeFaculty";
+import StudentSignup from "./forms/StudentSignup";
+import ProfessorSignup from "./forms/ProfessorSignup";
 
 const $ = require('jquery');
 const config = require('../config.js')
@@ -49,6 +49,9 @@ export default class extends React.Component {
 			fetch(serverUrl+'/api/users', {
 					method: 'POST',
 					body: json,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
 			});
 	}
 
@@ -159,7 +162,7 @@ export default class extends React.Component {
 						(() => {
 								if (ndprimaryaffiliation === "Faculty"){
 										return(
-											<HomeFaculty
+											<ProfessorSignup
 												netid 	     = {netid}
 												displayname  = {displayname}
 												depts        = {depts}
@@ -175,7 +178,7 @@ export default class extends React.Component {
 								}
 								if (ndprimaryaffiliation === "Student"){
 										return(
-											<HomeStudent
+											<StudentSignup
 												netid 			 = {netid}
 												displayname  = {displayname}
 												majors 			 = {majors}
