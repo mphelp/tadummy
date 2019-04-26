@@ -13,7 +13,7 @@ const general_s = {
 	margin: 30,
 }
 const office_s = {
-	minWidth: 500,
+	minWidth: 400,
 }
 
 class HomeStudent extends React.Component {
