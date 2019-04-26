@@ -15,9 +15,9 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 import HomeStudent from "./forms/HomeStudent";
 import HomeFaculty from "./forms/HomeFaculty";
 
+const $ = require('jquery');
 const config = require('../config.js')
-var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
-const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
+const serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 // Server register routes
 const registerFacultyURL = serverURL + "/registerFaculty";
@@ -50,7 +50,7 @@ export default class extends React.Component {
 					object[key] = value;
 			});
 			var json = JSON.stringify(object);
-			fetch(serverURL, {
+			fetch(serverURL+'/api/users', {
 					method: 'POST',
 					body: json,
 			});
@@ -146,7 +146,7 @@ export default class extends React.Component {
 			return normalizedDept.indexOf(normalizedQuery) >= 0;
 		}
 	}
-
+  
   render() {
 		const { 
 			ndprimaryaffiliation, 
@@ -162,7 +162,6 @@ export default class extends React.Component {
 				{
 						(() => {
 								if (ndprimaryaffiliation === "Faculty"){
-										serverURL = registerFacultyURL;
 										return(
 											<HomeFaculty 
 												netid 	     = {netid}
@@ -179,7 +178,6 @@ export default class extends React.Component {
 										)
 								}
 								if (ndprimaryaffiliation === "Student"){
-										serverURL = registerStudentURL;
 										return(
 											<HomeStudent 
 												netid 			 = {netid}

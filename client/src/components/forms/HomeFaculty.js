@@ -56,7 +56,6 @@ class HomeStudent extends React.Component {
 					<input type="hidden" name="affiliation" value="Student" required="required"/>
 					<input type="submit" value="Submit" />
 					</form>
-					{/*JSON.stringify(props)*/}
 			</div>
 		)
 	}
