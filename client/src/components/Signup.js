@@ -21,7 +21,7 @@ function handleSubmit(event) {
         object[key] = value;
     });
     var json = JSON.stringify(object);
-    fetch(serverURL, {
+    fetch(serverURL+'/api/users', {
         method: 'POST',
         body: json,
         headers:{
@@ -43,7 +43,7 @@ const HomeFaculty = (props) => (
         <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
         Office:<br />
         <input type="text" name="office" defaultValue={props.ndofficeaddress} required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="Faculty" required="required"/>
+        <input type="hidden" name="affiliation" value="PROFESSOR" required="required"/>
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
@@ -63,7 +63,7 @@ const HomeStudent = (props) => (
         <input type="text" name="major" required="required"/><br/><br/>
         Dorm (or type "Off Campus"):<br />
         <input type="text" name="dorm" required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="Student" required="required"/>
+        <input type="hidden" name="affiliation" value="STUDENT" required="required"/>
         <input type="submit" value="Submit" />
         </form>
         {/*JSON.stringify(props)*/}
@@ -95,13 +95,11 @@ export default class extends React.Component {
                 <div style={BodyGeneral_s}>
                 {   (() => {
                         if (this.props.ndprimaryaffiliation == "Faculty"){
-                            serverURL = serverURL + "/registerFaculty";
                             return(
                             <HomeFaculty {...this.props} />
                             )
                         }
                         if (this.props.ndprimaryaffiliation == "Student"){
-                            serverURL = serverURL + "/registerStudent";
                             return(
                             <HomeStudent {...this.props} />
                             )
