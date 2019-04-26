@@ -11,17 +11,16 @@ const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + 
 const urlParams = new URLSearchParams(window.location.search);
 let netid = urlParams.get('netid');
 if (netid){
-    let data = {roles: [], ldap: true};
-    $.get({
-        url: serverUrl+"/api/users/"+netid,
+    let data = {netid: netid, roles:[]};
+    $.post({
+        url: serverUrl+"/authorize",
         data: data,
         dataType: "json",
         success: (res, status) => {
             if (res.authorized) {
                 render(<App />, document.getElementById('root'));
             } else {
-                console.log(res);
-                render(<Signup {...res.ldap} netid={netid} />, document.getElementById('root'));
+                render(<Signup {...res} netid={netid} />, document.getElementById('root'));
             }
         }, error: (xhr, status) => {
             console.log(xhr);
