@@ -104,11 +104,11 @@ function insertStudent (netid, data) {
 function insertProfessor (netid, data) {
     let sql = `
         insert into admin.professor(netid, office, department_id)
-        values (:netid, :office, :department_id)
+        values (:netid, :office, :dept)
     `;
     return Promise.all([
         insertUser(netid, data.name),
-        db.queryDB(sql, [data.netid, data.office, data.department_id], db.QUERY.INSERT)
+        db.queryDB(sql, [data.netid, data.office, data.dept], db.QUERY.INSERT)
     ]);
 }
 

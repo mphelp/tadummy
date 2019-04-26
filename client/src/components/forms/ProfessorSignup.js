@@ -48,7 +48,7 @@ class ProfessorSignup extends React.Component {
 							onItemSelect={handleDeptSelectClick}
 					>
 							<Button rightIcon="caret-down"
-									text={dept ? dept.ABBREV : nddepartment}
+									text={dept ? dept.ABBREV : "(No selection)"}
 							/>
 					</Select><br /><br />
 					Office:<br />

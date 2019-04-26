@@ -45,6 +45,13 @@ export default class extends React.Component {
 			formData.forEach(function(value, key){
 					object[key] = value;
 			});
+            if (object['affiliation'] == "STUDENT"){
+                object['dorm'] = this.state.dorm.DORM_ID;
+                object['major'] = this.state.major.MAJOR_ID;
+            }
+            else {
+                object['dept'] = this.state.dept.DEPARTMENT_ID;
+            }
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/users', {
 					method: 'POST',
