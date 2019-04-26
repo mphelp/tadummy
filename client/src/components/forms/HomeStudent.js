@@ -30,9 +30,10 @@ class HomeStudent extends React.Component {
 			handleMajorSelectClick,
 			handleDormSelectClick,
 			handleSubmit,
+			filterMajor,
+			filterDorm,
 		} = this.props;
-		console.log('netid is '+netid);
-		console.log(majors);
+
 		return (
 			<div style={general_s}>
 					<h1>Hello {displayname}, please sign up!</h1>
@@ -45,6 +46,7 @@ class HomeStudent extends React.Component {
 					Major dropdown:<br />
 					<Select
 							items={majors}
+							itemPredicate={filterMajor}
 							itemRenderer={majorRenderer}
 							onItemSelect={handleMajorSelectClick}
 					>
@@ -55,6 +57,7 @@ class HomeStudent extends React.Component {
 					Dorm dropdown:<br />
 					<Select
 							items={dorms}
+							itemPredicate={filterDorm}
 							itemRenderer={dormRenderer}
 							onItemSelect={handleDormSelectClick}
 					>

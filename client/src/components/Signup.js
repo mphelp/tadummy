@@ -1,14 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import {
-    FormGroup,
-    InputGroup,
     Classes,
     MenuItem,
-    Button
 } from "@blueprintjs/core";
-import { Select } from "@blueprintjs/select";
 
 // Framework CSS
 import "normalize.css";
@@ -24,6 +19,10 @@ const config = require('../config.js')
 var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
+// Server register routes
+const registerFacultyURL = serverURL + "/registerFaculty";
+const registerStudentURL = serverURL + "/registerStudent";
+
 const BodyGeneral_s = {
     display: "flex",
     flexDirection: "row",
@@ -38,8 +37,8 @@ export default class extends React.Component {
 		dorms: [],
 		majors: [],
 		depts: [],
-		major: null,
 		dorm: null,
+		major: null,
 		dept: null,
 	};
 
@@ -89,6 +88,9 @@ export default class extends React.Component {
 	handleDormSelectClick = (dorm) => {
 			this.setState({ dorm })
 	}
+	handleDeptSelectClick = (dept) => {
+			this.setState({ dept })
+	}
 	majorRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
@@ -105,27 +107,79 @@ export default class extends React.Component {
 				 onClick={handleClick}
 		 />
 	)
-	
+	deptRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.DEPARTMENT_ID}
+				 text={item.NAME}
+				 label={item.ABBREV}
+				 onClick={handleClick}
+		 />
+	)
+	filterMajor = (query, major, _index, exactMatch) => {
+		const normalizedMajor  = major.MAJOR_NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedMajor === normalizedQuery;
+		} else {
+			return normalizedMajor.indexOf(normalizedQuery) >= 0;
+		}
+	}
+	filterDorm = (query, dorm, _index, exactMatch) => {
+		const normalizedDorm  = dorm.DORM_NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedDorm === normalizedQuery;
+		} else {
+			return normalizedDorm.indexOf(normalizedQuery) >= 0;
+		}
+	}
+	filterDept = (query, dept, _index, exactMatch) => {
+		const normalizedDept  = dept.NAME.toLowerCase() + '  ' + dept.ABBREV.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedDept === normalizedQuery;
+		} else {
+			return normalizedDept.indexOf(normalizedQuery) >= 0;
+		}
+	}
+
   render() {
-		const { ndprimaryaffiliation, displayname, netid } = this.props;
+		const { 
+			ndprimaryaffiliation, 
+			displayname, 
+			netid,
+			nddepartment,
+			ndofficeaddress, 
+		} = this.props;
 		const { majors, major, depts, dept, dorms, dorm } = this.state;
 
 		return (
 				<div style={BodyGeneral_s}>
 				{
 						(() => {
-								if (ndprimaryaffiliation == "Faculty"){
-										serverURL = serverURL + "/registerFaculty";
+								if (ndprimaryaffiliation === "Faculty"){
+										serverURL = registerFacultyURL;
 										return(
 											<HomeFaculty 
 												netid 	     = {netid}
 												displayname  = {displayname}
+												depts        = {depts}
+												dept         = {dept}
+												nddepartment = {nddepartment}
+												ndofficeaddress = {ndofficeaddress}
 												handleSubmit = {this.handleSubmit}
+												handleDeptSelectClick = {this.handleDeptSelectClick}
+												deptRenderer = {this.deptRenderer}
+												filterDept = {this.filterDept}
 											/>
 										)
 								}
-								if (ndprimaryaffiliation == "Student"){
-										serverURL = serverURL + "/registerStudent";
+								if (ndprimaryaffiliation === "Student"){
+										serverURL = registerStudentURL;
 										return(
 											<HomeStudent 
 												netid 			 = {netid}
@@ -139,6 +193,8 @@ export default class extends React.Component {
 												handleDormSelectClick  = {this.handleDormSelectClick}
 												majorRenderer          = {this.majorRenderer}
 												dormRenderer           = {this.dormRenderer}
+												filterMajor            = {this.filterMajor}	
+												filterDorm             = {this.filterDorm}	
 											/>
 									 )
 								}
