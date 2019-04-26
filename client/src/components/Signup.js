@@ -9,17 +9,17 @@ import {
     Button
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
+
 // Framework CSS
 import "normalize.css";
 import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
-// My CSS
+// My Components
 import HomeStudent from "./forms/HomeStudent";
 import HomeFaculty from "./forms/HomeFaculty";
 
-const $ = require('jquery');
 const config = require('../config.js')
 var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
@@ -105,22 +105,7 @@ export default class extends React.Component {
 				 onClick={handleClick}
 		 />
 	)
-	dormRenderer = (item, { handleClick, isActive }) => (
-		 <MenuItem
-				 className={ isActive ? Classes.ACTIVE : "" }
-				 key={item.DORM_ID}
-				 label={item.DORM_NAME}
-				 onClick={handleClick}
-		 />
-	)
-	dormRenderer = (item, { handleClick, isActive }) => (
-		 <MenuItem
-				 className={ isActive ? Classes.ACTIVE : "" }
-				 key={item.DORM_ID}
-				 label={item.DORM_NAME}
-				 onClick={handleClick}
-		 />
-	)
+	
   render() {
 		const { ndprimaryaffiliation, displayname, netid } = this.props;
 		const { majors, major, depts, dept, dorms, dorm } = this.state;
