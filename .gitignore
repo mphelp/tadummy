@@ -29,6 +29,7 @@
 
 *.swp
 *.swo
+*.buf
 
 # ignore config files (not editorconfig)
 config.js
