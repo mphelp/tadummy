@@ -11,13 +11,16 @@ const users = require('./users');
 router.post('/', (req, res) => {
     let {netid, name, dept, semester} = req.body;
     users.getRoles(netid).then ( roles => {
-        console.log(roles);
-        insertCourse(netid, name, dept, semester).then( result => {
-            res.sendStatus(201);
-        }, err => {
-            console.log(err);
-            res.sendStatus(400);
-        });
+        if (roles.PROFESSOR) {
+            insertCourse(netid, name, dept, semester).then( result => {
+                res.sendStatus(201);
+            }, err => {
+                console.log(err);
+                res.sendStatus(400);
+            });
+        } else {
+            res.status(401).send('user ' + netid + ' is not a professor!');
+        }
     });
 });
 
