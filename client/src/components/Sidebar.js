@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tag, Card } from '@blueprintjs/core'
+import { Tag } from '@blueprintjs/core'
 import TAs from './TAs'
 
 // CSS

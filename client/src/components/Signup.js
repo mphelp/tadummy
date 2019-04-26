@@ -1,5 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
+import {
+    Classes,
+    MenuItem,
+} from "@blueprintjs/core";
 
 // Framework CSS
 import "normalize.css";
@@ -7,74 +11,18 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
-// My CSS
-import './App.css';
+// My Components
+import HomeStudent from "./forms/HomeStudent";
+import HomeFaculty from "./forms/HomeFaculty";
 
 const config = require('../config.js')
 var serverURL = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
-function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    var object = {};
-    formData.forEach(function(value, key){
-        object[key] = value;
-    });
-    var json = JSON.stringify(object);
-    fetch(serverURL, {
-        method: 'POST',
-        body: json,
-        headers:{
-            'Content-Type': 'application/json'
-        }
-    });
-}
+// Server register routes
+const registerFacultyURL = serverURL + "/registerFaculty";
+const registerStudentURL = serverURL + "/registerStudent";
 
-const HomeFaculty = (props) => (
-    <div>
-        <h1>Hello Professor {props.displayname}, please sign up!</h1>
-        <br/>
-        <form onSubmit={handleSubmit}>
-        Name:<br />
-        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
-        NetID:<br />
-        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
-        Department:<br />
-        <input type="text" name="department" defaultValue={props.nddepartment} required="required"/><br/><br/>
-        Office:<br />
-        <input type="text" name="office" defaultValue={props.ndofficeaddress} required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="Faculty" required="required"/>
-        <input type="submit" value="Submit" />
-        </form>
-        {/*JSON.stringify(props)*/}
-    </div>
-)
-
-const HomeStudent = (props) => (
-    <div>
-        <h1>Hello {props.displayname}, please sign up!</h1>
-        <br />
-        <form onSubmit={handleSubmit}>
-        Name:<br />
-        <input type="text" name="name" defaultValue={props.displayname} required="required"/><br/><br/>
-        NetID:<br />
-        <input type="text" name="netid" value={props.netid} readonly = "readonly" required="required"/><br/><br/>
-        Major:<br />
-        <input type="text" name="major" required="required"/><br/><br/>
-        Dorm (or type "Off Campus"):<br />
-        <input type="text" name="dorm" required="required"/><br/><br/>
-        <input type="hidden" name="affiliation" value="Student" required="required"/>
-        <input type="submit" value="Submit" />
-        </form>
-        {/*JSON.stringify(props)*/}
-    </div>
-)
-
-const HomeError = (props) => (
-    <div>
-        <h1>Error: No student or faculty member found with NetID {props.netid}.</h1>
-    </div>
-)
 const BodyGeneral_s = {
     display: "flex",
     flexDirection: "row",
@@ -82,38 +30,177 @@ const BodyGeneral_s = {
 }
 
 export default class extends React.Component {
-	constructor(props){
-		super(props);
-		this.state = {
-			search: null
-		};
+	state = {
+		search: null,
+		error: null,
+		isLoaded: false,
+		dorms: [],
+		majors: [],
+		depts: [],
+		dorm: null,
+		major: null,
+		dept: null,
+	};
+
+	handleSubmit = (event) => {
+			event.preventDefault();
+			const formData = new FormData(event.target);
+			var object = {};
+			formData.forEach(function(value, key){
+					object[key] = value;
+			});
+			var json = JSON.stringify(object);
+			fetch(serverURL, {
+					method: 'POST',
+					body: json,
+			});
 	}
-	componentDidMount = () => {
+
+	initializeSignup = () => {
+		// server routes
+		let dormApi = serverUrl + "/api/dorms";
+		let majorApi = serverUrl + "/api/majors";
+		let deptApi = serverUrl + "/api/departments";
+
+		// make requests to routes
+		axios.get(dormApi)
+			.then(res => {
+				this.setState({ dorms: res.data })
+			})
+			.catch(err => console.error(err))
+		axios.get(majorApi)
+			.then(res => {
+				this.setState({ majors: res.data })
+			})
+			.catch(err => console.error(err))
+		axios.get(deptApi)
+			.then(res => {
+				this.setState({ depts: res.data })
+			})
+			.catch(err => console.error(err))
 	}
+	componentWillMount() {
+		this.initializeSignup()
+	}
+	handleMajorSelectClick = (major) => {
+			this.setState({ major })
+	}
+	handleDormSelectClick = (dorm) => {
+			this.setState({ dorm })
+	}
+	handleDeptSelectClick = (dept) => {
+			this.setState({ dept })
+	}
+	majorRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.MAJOR_ID}
+				 text={item.MAJOR_NAME}
+				 onClick={handleClick}
+		 />
+	)
+	dormRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.DORM_ID}
+				 text={item.DORM_NAME}
+				 onClick={handleClick}
+		 />
+	)
+	deptRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.DEPARTMENT_ID}
+				 text={item.NAME}
+				 label={item.ABBREV}
+				 onClick={handleClick}
+		 />
+	)
+	filterMajor = (query, major, _index, exactMatch) => {
+		const normalizedMajor  = major.MAJOR_NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedMajor === normalizedQuery;
+		} else {
+			return normalizedMajor.indexOf(normalizedQuery) >= 0;
+		}
+	}
+	filterDorm = (query, dorm, _index, exactMatch) => {
+		const normalizedDorm  = dorm.DORM_NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedDorm === normalizedQuery;
+		} else {
+			return normalizedDorm.indexOf(normalizedQuery) >= 0;
+		}
+	}
+	filterDept = (query, dept, _index, exactMatch) => {
+		const normalizedDept  = dept.NAME.toLowerCase() + '  ' + dept.ABBREV.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedDept === normalizedQuery;
+		} else {
+			return normalizedDept.indexOf(normalizedQuery) >= 0;
+		}
+	}
+
   render() {
+		const { 
+			ndprimaryaffiliation, 
+			displayname, 
+			netid,
+			nddepartment,
+			ndofficeaddress, 
+		} = this.props;
+		const { majors, major, depts, dept, dorms, dorm } = this.state;
+
 		return (
-                <div style={BodyGeneral_s}>
-                {   (() => {
-                        if (this.props.ndprimaryaffiliation == "Faculty"){
-                            serverURL = serverURL + "/registerFaculty";
-                            return(
-                            <HomeFaculty {...this.props} />
-                            )
-                        }
-                        if (this.props.ndprimaryaffiliation == "Student"){
-                            serverURL = serverURL + "/registerStudent";
-                            return(
-                            <HomeStudent {...this.props} />
-                            )
-                        }
-                        else {
-                            return(
-                            <HomeError {...this.props} />
-                            )
-                        }
-                    })()
-                }
-                </div>
+				<div style={BodyGeneral_s}>
+				{
+						(() => {
+								if (ndprimaryaffiliation === "Faculty"){
+										serverURL = registerFacultyURL;
+										return(
+											<HomeFaculty 
+												netid 	     = {netid}
+												displayname  = {displayname}
+												depts        = {depts}
+												dept         = {dept}
+												nddepartment = {nddepartment}
+												ndofficeaddress = {ndofficeaddress}
+												handleSubmit = {this.handleSubmit}
+												handleDeptSelectClick = {this.handleDeptSelectClick}
+												deptRenderer = {this.deptRenderer}
+												filterDept = {this.filterDept}
+											/>
+										)
+								}
+								if (ndprimaryaffiliation === "Student"){
+										serverURL = registerStudentURL;
+										return(
+											<HomeStudent 
+												netid 			 = {netid}
+												displayname  = {displayname}
+												majors 			 = {majors}
+												major        = {major}
+												dorms        = {dorms}
+												dorm         = {dorm}
+												handleSubmit           = {this.handleSubmit}
+												handleMajorSelectClick = {this.handleMajorSelectClick}
+												handleDormSelectClick  = {this.handleDormSelectClick}
+												majorRenderer          = {this.majorRenderer}
+												dormRenderer           = {this.dormRenderer}
+												filterMajor            = {this.filterMajor}	
+												filterDorm             = {this.filterDorm}
+											/>
+									 )
+								}
+						})()
+				}
+				</div>
     );
   }
 }
