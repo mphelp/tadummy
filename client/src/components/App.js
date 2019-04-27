@@ -47,8 +47,7 @@ export default class extends React.Component {
   render() {
 		return (
 			<BrowserRouter>
-								<header>Search is {this.state.search}</header>
-                <Navigation />
+                <Navigation netid={this.props.netid}/>
                 <div
                     style={BodyGeneral_s}
                 >
