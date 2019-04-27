@@ -142,5 +142,7 @@ function insertUser(netid, name) {
     return db.queryDB(sql, [netid, name], db.QUERY.INSERT);
 }
 
-module.exports = router;
-module.exports.getRoles = getRoles;
+module.exports = {
+    router: router,
+    getRoles: getRoles
+};

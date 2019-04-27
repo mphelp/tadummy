@@ -2,13 +2,18 @@ const router = require('express').Router();
 
 const database = require('../database.js')
 
+module.exports = {
+    router: router,
+    query: apiQuery
+};
+
 router.get('/', (req, res) => {
     res.sendStatus(404);
-})
+});
 
-router.use('/users', require('./users.js'));
+router.use('/users', require('./users.js').router);
 
-router.use('/courses', require('./courses.js'));
+router.use('/courses', require('./courses.js').router);
 
 router.get('/dorms', apiQuery(getAllDorms));
 
@@ -34,9 +39,9 @@ function getAllSemesters() {
     return database.queryDB('SELECT * FROM admin.semester', [], database.QUERY.MULTIPLE);
 }
 
-function apiQuery(func, ...params) {
+function apiQuery(func) {
     return (req, res) => {
-        func(...params).then( data => {
+        func(req).then( data => {
             res.json(data);
         }, err => {
             res.status(400).send(err);
@@ -44,4 +49,4 @@ function apiQuery(func, ...params) {
     };
 }
 
-module.exports = router;
+

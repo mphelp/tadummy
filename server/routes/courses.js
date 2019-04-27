@@ -29,25 +29,23 @@ router.post('/', (req, res) => {
     });
 });
 
-/*
-module.exports.query = apiQuery;
 router.get('/', api.query(getAllCourses));
 
-router.get('/:cid', (req, res) => {
-    let cid = req.params.cid;
-    return apiQuery(getCourse, cid);
-});
-*/
+router.get('/:cid', api.query(getCourseReq));
 
 function getAllCourses() {
     return db.queryDB("SELECT * FROM admin.course", [], db.QUERY.MULTIPLE);
+}
+
+function getCourseReq(req) {
+    return getCourse(req.params.cid);
 }
 
 function getCourse(cid) {
     let sql = `
         select *
         from admin.course
-        where cid = :cid
+        where course_id = :cid
     `;
     return db.queryDB(sql, [cid], db.QUERY.SINGLE);
 }
@@ -81,4 +79,6 @@ function insertCourse(netid, name, dept, semester) {
         });
 }
 
-module.exports = router;
+module.exports = {
+    router:router,
+};
