@@ -10,6 +10,20 @@ const ROLES = {
     TA:         'TA',
 };
 
+/* Required fields:
+ * ALL USERS
+ *      netid (string)
+ *      name (string)
+ *      affiliation (STUDENT/PROFESSOR)
+ *
+ * STUDENT
+ *      dorm (id)
+ *      major (id)
+ *
+ * PROFESSOR
+ *      office (string)
+ *      dept (id)
+ */
 router.post('/', (req, res) => {
     if (missingKeys(req.body, ['netid', 'affiliation'], req, res).length) {
         return;

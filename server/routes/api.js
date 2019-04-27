@@ -34,12 +34,12 @@ function getAllSemesters() {
     return database.queryDB('SELECT * FROM admin.semester', [], database.QUERY.MULTIPLE);
 }
 
-function apiQuery(func) {
+function apiQuery(func, ...params) {
     return (req, res) => {
-        func().then( data => {
+        func(...params).then( data => {
             res.json(data);
         }, err => {
-            res.sendStatus(400);
+            res.status(400).send(err);
         })
     };
 }

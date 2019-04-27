@@ -2,6 +2,7 @@ const router = require('express').Router()
 const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
+const api = require('./api');
 
 /* Required fields:
  * netid:   netid of professor teaching course
@@ -10,7 +11,7 @@ const missingKeys = require('../missingKeys')
  * semester:id of semester course is offered
  */
 router.post('/', (req, res) => {
-    if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res)) {
+    if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
         return;
     }
     let {netid, name, dept, semester} = req.body;
@@ -28,11 +29,28 @@ router.post('/', (req, res) => {
     });
 });
 
+/*
+module.exports.query = apiQuery;
+router.get('/', api.query(getAllCourses));
+
 router.get('/:cid', (req, res) => {
     let cid = req.params.cid;
-    res.sendStatus(419);
+    return apiQuery(getCourse, cid);
 });
+*/
 
+function getAllCourses() {
+    return db.queryDB("SELECT * FROM admin.course", [], db.QUERY.MULTIPLE);
+}
+
+function getCourse(cid) {
+    let sql = `
+        select *
+        from admin.course
+        where cid = :cid
+    `;
+    return db.queryDB(sql, [cid], db.QUERY.SINGLE);
+}
 
 function insertCourse(netid, name, dept, semester) {
     let sqlInsert1 = `
