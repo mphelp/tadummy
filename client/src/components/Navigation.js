@@ -33,6 +33,9 @@ export default class extends React.PureComponent {
                     <Link to="/calendar" style={subtleLink_s}>
                         <AnchorButton text="CALENDAR" rightIcon="timeline-events"/>
                     </Link>
+                    <Link to="/student_enroll" style={subtleLink_s}>
+                        <AnchorButton text="ENROLL IN A COURSE" rightIcon="applications"/>
+                    </Link>
                     <Link to="/course_creation" style={subtleLink_s}>
                         <AnchorButton text="CREATE A COURSE" rightIcon="applications"/>
                     </Link>
