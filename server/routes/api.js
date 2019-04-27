@@ -15,6 +15,8 @@ router.use('/users', require('./users.js').router);
 
 router.use('/courses', require('./courses.js').router);
 
+router.use('/students', require('./students.js').router);
+
 router.get('/dorms', apiQuery(getAllDorms));
 
 router.get('/departments', apiQuery(getAllDepartments));

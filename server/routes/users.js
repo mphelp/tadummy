@@ -3,6 +3,14 @@ const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
 
+module.exports = {
+    router: router,
+    addUser: addUser,
+    getRoles: getRoles
+};
+
+const students = require('./students');
+
 const ROLES = {
     ADMIN:      'ADMIN',
     STUDENT:    'STUDENT',
@@ -32,13 +40,12 @@ router.post('/', (req, res) => {
     let affiliation = req.body.affiliation;
     let func;
     if (affiliation === ROLES.STUDENT) {
-        func = insertStudent;
+        func = students.addStudent;
     } else if (affiliation === ROLES.PROFESSOR) {
         func = insertProfessor;
     } else {
         res.status(400).send('invalid affiliation: ' + affiliation);
     }
-    console.log('processing...');
     func(netid, req.body).then( result => {
         console.log(result);
         res.sendStatus(201);
@@ -110,21 +117,6 @@ function authorizeUser(netid, validRoles = []) {
     }).catch(console.log);
 };
 
-function insertStudent (netid, data) {
-    let missing = missingKeys(data, ['netid', 'major', 'dorm']);
-    if (missing.length) {
-        return Promise.reject(missing);
-    }
-    let sql = `
-        insert into admin.student(netid, major, dorm)
-        values (:netid, :major, :dorm)
-    `;
-    return Promise.all([
-        insertUser(netid, data.name),
-        db.queryDB(sql, [netid, data.major, data.dorm], db.QUERY.INSERT)
-    ]);
-}
-
 function insertProfessor (netid, data) {
     let missing = missingKeys(data, ['netid', 'office', 'dept']);
     if (missing.length) {
@@ -140,15 +132,10 @@ function insertProfessor (netid, data) {
     ]);
 }
 
-function insertUser(netid, name) {
+function addUser(netid, name) {
     let sql = `
         insert into admin.users(netid, name, admin, datejoined)
         values (:netid, :name, 0, SYSDATE)
     `;
     return db.queryDB(sql, [netid, name], db.QUERY.INSERT);
 }
-
-module.exports = {
-    router: router,
-    getRoles: getRoles
-};
