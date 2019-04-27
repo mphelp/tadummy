@@ -34,17 +34,11 @@ router.get('/', api.query(getAllCourses));
 router.get('/:cid', api.query(getCourseReq));
 
 router.post('/enroll', (req, res) => {
-    if (missingKeys(req.body, ['netid', 'courses'], req, res).length) {
+    if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
         return;
     }
-    let {netid, courses} = req.body;
-    let promises = [];
-    for (i in courses) {
-        let cid = courses[i];
-        console.log(cid);
-        promises.push(enrollCourse(cid, netid));
-    }
-    return Promise.all(promises).then( (result) => {
+    let {netid, cid} = req.body;
+    enrollCourse(cid, netid).then( (result) => {
         console.log(result);
         res.sendStatus(201);
     }, (err) => {

@@ -27,8 +27,10 @@ function getStudent(netid) {
         where s.netid = :netid
     `;
     let sqlCourses = `
-        select c.course_id as cid, c.course_name as name, c.semester_id as semester
-        from studentfor sf JOIN course c ON (sf.course_id = c.course_id)
+        select c.course_id as cid, c.course_name as name, s.name as semester
+        from studentfor sf
+            JOIN course c ON (sf.course_id = c.course_id)
+            JOIN semesterinfo s ON (c.semester_id = s.sid)
         where netid = :netid
     `;
     return Promise.all([

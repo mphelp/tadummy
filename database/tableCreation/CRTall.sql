@@ -69,4 +69,7 @@ prompt *** Creating table APPLICATIONSUBMISSION ***
 prompt *** Creating view USERROLES***
 @CRTuserroles
 
+prompt *** Creating view SEMESTERINFO***
+@CRTsemesterinfo
+
 exit

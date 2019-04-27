@@ -38,7 +38,7 @@ function getAllDepartments() {
 }
 
 function getAllSemesters() {
-    return database.queryDB('SELECT * FROM admin.semester', [], database.QUERY.MULTIPLE);
+    return database.queryDB('SELECT * FROM admin.semesterinfo', [], database.QUERY.MULTIPLE);
 }
 
 function apiQuery(func) {
