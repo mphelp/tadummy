@@ -50,7 +50,7 @@ export default class extends React.Component {
             object['cid'] = this.state.course.COURSE_ID;
             object['netid'] = this.props.netid;
 			var json = JSON.stringify(object);
-			fetch(serverUrl+'/api/enroll/', {
+			fetch(serverUrl+'/api/courses/enroll/', {
 					method: 'POST',
 					body: json,
                     headers: {

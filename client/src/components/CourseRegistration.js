@@ -50,7 +50,7 @@ export default class extends React.Component {
 					object[key] = value;
 			});
             object['dept'] = this.state.dept.DEPARTMENT_ID;
-            object['semester'] = this.state.sem.SEMESTER_ID;
+            object['semester'] = this.state.sem.SID;
             object['netid'] = this.props.netid;
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/courses', {
