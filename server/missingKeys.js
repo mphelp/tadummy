@@ -1,12 +1,17 @@
-function missingKeys(data, keys, res=undefined, path=undefined) {
+function missingKeys(data, keys, req, res) {
     let missing = [];
-    for (prop in data) {
-        if (!keys.includes(prop)) {
+    for (i in keys) {
+        let prop = keys[i];
+        if (!data[prop]) {
             missing.push(prop);
         }
     }
-    if (invalidKeys.length) {
-        let msg = 'Missing keys ' + (path ? ('for '+path) : '') + ': ' + JSON.stringify(missing);
+    if (missing.length) {
+        let msg = 'Missing keys';
+        if (req) {
+            msg += " for '"+req.originalUrl+"' ("+req.method+")";
+        }
+        msg += ': '+JSON.stringify(missing);
         console.log(msg);
         if (res) {
             res.status(400).send(msg);

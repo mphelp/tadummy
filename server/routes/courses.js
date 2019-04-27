@@ -10,7 +10,9 @@ const missingKeys = require('../missingKeys')
  * semester:id of semester course is offered
  */
 router.post('/', (req, res) => {
-    missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], res, 'courses POST');
+    if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res)) {
+        return;
+    }
     let {netid, name, dept, semester} = req.body;
     users.getRoles(netid).then ( roles => {
         if (roles.PROFESSOR) {
