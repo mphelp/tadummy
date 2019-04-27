@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const db = require('../database');
 const users = require('./users');
+const missingKeys = require('../missingKeys')
 
 /* Required fields:
  * netid:   netid of professor teaching course
@@ -9,6 +10,7 @@ const users = require('./users');
  * semester:id of semester course is offered
  */
 router.post('/', (req, res) => {
+    missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], res, 'courses POST');
     let {netid, name, dept, semester} = req.body;
     users.getRoles(netid).then ( roles => {
         if (roles.PROFESSOR) {
