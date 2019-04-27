@@ -18,7 +18,7 @@ if (netid){
         dataType: "json",
         success: (res, status) => {
             if (res.authorized) {
-                render(<App />, document.getElementById('root'));
+                render(<App netid={netid}/>, document.getElementById('root'));
             } else {
                 render(<Signup {...res.ldap} netid={netid} />, document.getElementById('root'));
             }
