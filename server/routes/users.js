@@ -61,14 +61,15 @@ router.get('/:netid', (req, res) => {
     } catch (err) {
         doLdap = false;
     }
-    authorizeUser(netid, validRoles).then( roles => {
+    Promise.all([getUser(netid), authorizeUser(netid, validRoles)]).then( data => {
+        let userData = {...data[0], ...data[1]};
         if (doLdap) {
             ldap.getInfo(netid).then( data => {
-                roles['ldap'] = data;
-                res.json(roles);
+                userData['ldap'] = data;
+                res.json(userData);
             });
         } else {
-            res.json(roles);
+            res.json(userData);
         }
     }).catch( err => {
         res.json({authorized: false});
@@ -77,6 +78,11 @@ router.get('/:netid', (req, res) => {
 
 function getRoles(netid) {
     let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
+    return db.queryDB(sql, [netid], db.QUERY.SINGLE);
+}
+
+function getUser(netid) {
+    let sql = `select netid, name, dateJoined from admin.users where netid = :id`;
     return db.queryDB(sql, [netid], db.QUERY.SINGLE);
 }
 
