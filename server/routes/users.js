@@ -1,6 +1,7 @@
 const router = require('express').Router()
 const db = require('../database');
 const ldap = require('../ldap');
+const missingKeys = require('../missingKeys');
 
 const ROLES = {
     ADMIN:      'ADMIN',
@@ -9,14 +10,26 @@ const ROLES = {
     TA:         'TA',
 };
 
+/* Required fields:
+ * ALL USERS
+ *      netid (string)
+ *      name (string)
+ *      affiliation (STUDENT/PROFESSOR)
+ *
+ * STUDENT
+ *      dorm (id)
+ *      major (id)
+ *
+ * PROFESSOR
+ *      office (string)
+ *      dept (id)
+ */
 router.post('/', (req, res) => {
+    if (missingKeys(req.body, ['netid', 'affiliation'], req, res).length) {
+        return;
+    }
     let netid = req.body.netid;
     let affiliation = req.body.affiliation;
-    console.log('netid: '+netid+', aff: ' + affiliation);
-    console.log('major: '+req.body.major);
-    console.log('dept: '+req.body.department);
-    console.log(req.body);
-
     let func;
     if (affiliation === ROLES.STUDENT) {
         func = insertStudent;
@@ -25,11 +38,12 @@ router.post('/', (req, res) => {
     } else {
         res.status(400).send('invalid affiliation: ' + affiliation);
     }
+    console.log('processing...');
     func(netid, req.body).then( result => {
         console.log(result);
         res.sendStatus(201);
     }, err => {
-        res.sendStatus(400);
+        res.status(400).send('Missing keys: '+err);
     });
 });
 
@@ -91,6 +105,10 @@ function authorizeUser(netid, validRoles = []) {
 };
 
 function insertStudent (netid, data) {
+    let missing = missingKeys(data, ['netid', 'major', 'dorm']);
+    if (missing.length) {
+        return Promise.reject(missing);
+    }
     let sql = `
         insert into admin.student(netid, major, dorm)
         values (:netid, :major, :dorm)
@@ -102,6 +120,10 @@ function insertStudent (netid, data) {
 }
 
 function insertProfessor (netid, data) {
+    let missing = missingKeys(data, ['netid', 'office', 'dept']);
+    if (missing.length) {
+        return Promise.reject(missing);
+    }
     let sql = `
         insert into admin.professor(netid, office, department_id)
         values (:netid, :office, :dept)
@@ -121,3 +143,4 @@ function insertUser(netid, name) {
 }
 
 module.exports = router;
+module.exports.getRoles = getRoles;

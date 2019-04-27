@@ -7,6 +7,9 @@ prompt *** Timeblocks ***
 prompt *** Students ***
 @insmock/INSstudent
 
+prompt *** Professors ***
+@insmock/INSprof
+
 prompt *** TA Office Hours ***
 @insmock/INStaofficehours
 
