@@ -19,6 +19,7 @@ const office_s = {
 class CourseSignup extends React.Component {
 	render(){
 		const {
+            netid,
 			dept,
 			depts,
 			deptRenderer,
@@ -45,6 +46,7 @@ class CourseSignup extends React.Component {
 									text={dept ? dept.ABBREV : "(No selection)"}
 							/>
 					</Select><br /><br />
+                    <input type="hidden" name="netid" value={netid} required="required"/>
 					<input type="submit" value="Submit" />
 					</form>
 			</div>

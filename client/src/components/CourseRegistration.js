@@ -32,6 +32,7 @@ export default class extends React.Component {
 		search: null,
 		error: null,
 		isLoaded: false,
+        netid: "",
 		dorms: [],
 		majors: [],
 		depts: [],
@@ -97,16 +98,17 @@ export default class extends React.Component {
 
   render() {
 		const {
+            netid,
 			nddepartment,
 		} = this.props;
 		const { depts, dept} = this.state;
-
 		return (
 				<div style={BodyGeneral_s}>
 				{
 						(() => {
 									return(
 										<CourseSignup
+                                            netid        = {netid}
 											depts        = {depts}
 											dept         = {dept}
 											handleSubmit = {this.handleSubmit}
