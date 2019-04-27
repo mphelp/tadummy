@@ -22,10 +22,15 @@ class CourseSignup extends React.Component {
             netid,
 			dept,
 			depts,
+            sems,
+            sem,
 			deptRenderer,
 			handleDeptSelectClick,
 			handleSubmit,
 			filterDept,
+            semRenderer,
+			handleSemSelectClick,
+			filterSem,
 		} = this.props;
 
 		return (
@@ -46,7 +51,17 @@ class CourseSignup extends React.Component {
 									text={dept ? dept.ABBREV : "(No selection)"}
 							/>
 					</Select><br /><br />
-                    <input type="hidden" name="netid" value={netid} required="required"/>
+                    Semester:<br />
+                    <Select
+							items={sems}
+							itemPredicate={filterSem}
+							itemRenderer={semRenderer}
+							onItemSelect={handleSemSelectClick}
+					>
+							<Button rightIcon="caret-down"
+									text={sem ? sem.STARTDATE : "(No selection)"}
+							/>
+					</Select><br /><br />
 					<input type="submit" value="Submit" />
 					</form>
 			</div>
