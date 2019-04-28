@@ -2,6 +2,7 @@ const router = require('express').Router()
 const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
+const api = require('./api');
 
 module.exports = {
     router: router,
@@ -84,6 +85,8 @@ router.get('/:netid', (req, res) => {
     });
 });
 
+router.get('/courses/:netid', api.query(getUserCoursesReq));
+
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     let sql = `select * from userroles where netid = :id`;
@@ -93,6 +96,30 @@ function getRoles(netid) {
 function getUser(netid) {
     let sql = `select netid, name, dateJoined from admin.users where netid = :id`;
     return db.queryDB(sql, [netid], db.QUERY.SINGLE);
+}
+
+function getUserCoursesReq(req) {
+    return getUserCourses(req.params.netid);
+}
+
+function getUserCourses(netid) {
+    let sqlCourses = `
+        SELECT sf.course_id AS id
+        FROM studentfor sf
+        WHERE netid = :netid
+    `;
+    let courses = [];
+    return db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE).then( data => {
+        let courseIds = [];
+        for (i in data) {
+            let cid = data[i].ID;
+            courseIds.push(cid);
+        }
+        return courseIds;
+    }).then( courseIds => {
+        courses = courseIds;
+        return courses;
+    });
 }
 
 // This tutorial came in CLUTCH with authorization:

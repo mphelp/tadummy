@@ -31,7 +31,7 @@ router.post('/', (req, res) => {
 
 router.get('/', api.query(getCoursesReq));
 
-router.get('/:cid', api.query(getCoursesReq));
+router.get('/:cid', api.query(getSingleCourseReq));
 
 router.post('/enroll', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
@@ -81,14 +81,14 @@ function getCourses({cid=null, students=false, tas=false, professor=false}) {
     let sqlWhere = 'WHERE 1=1';
     let params = [];
     if (cid) {
-        sqlWhere += ' AND c.course_id = :cid';
+        sqlWhere += ' AND c.course_id = :cid_';
         params.push(cid);
     }
     let sql = sqlSelect + ' ' + sqlFrom + ' ' + sqlWhere;
     let courses;
     let extra = [];
-    return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( courseData => {
-        courses = courseData;
+    return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( data => {
+        courses = data;
     }).then( () => {
         let promises = [];
         if (students) {
@@ -146,7 +146,11 @@ function getCourses({cid=null, students=false, tas=false, professor=false}) {
 }
 
 function getCoursesReq(req) {
-    return getCourses({...req.params, ...req.query});
+    return getCourses({...req.query});
+}
+
+function getSingleCourseReq(req) {
+    return getCourses({cid: req.params.cid, ...req.query});
 }
 
 function insertCourse(netid, name, dept, semester) {
