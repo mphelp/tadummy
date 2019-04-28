@@ -75,7 +75,7 @@ function enrollTACourse(cid, netid) {
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
 
-function getCourses({cid=null, students=false, tas=false}) {
+function getCourses({cid=null, students=false, tas=false, professor=false}) {
     let sqlSelect = 'SELECT c.course_id AS id, c.course_name AS name, sem.name AS semester';
     let sqlFrom = 'FROM course c JOIN semesterinfo sem ON (c.semester_id = sem.sid)';
     let sqlWhere = 'WHERE 1=1';
@@ -86,25 +86,60 @@ function getCourses({cid=null, students=false, tas=false}) {
     }
     let sql = sqlSelect + ' ' + sqlFrom + ' ' + sqlWhere;
     let courses;
+    let extra = [];
     return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( courseData => {
         courses = courseData;
     }).then( () => {
         let promises = [];
-        for (i in courses) {
-            let course = courses[i];
-            if (students) {
+        if (students) {
+            extra.push('students');
+            for (i in courses) {
+                let course = courses[i];
                 let sqlStudents = `
-                    SELECT sf.netid
+                    SELECT sf.netid, u.name
                     FROM studentfor sf
+                        JOIN users u ON (sf.netid = u.netid)
                     WHERE sf.course_id = :cid
                 `;
                 promises.push(db.queryDB(sqlStudents, [course.ID], db.QUERY.MULTIPLE));
             }
         }
+        if (tas) {
+            extra.push('tas');
+            for (i in courses) {
+                let course = courses[i];
+                let sqlTas = `
+                    SELECT taf.netid, u.name, taf.status, avail.avail_desc as availability
+                    FROM tafor taf
+                        JOIN users u ON (taf.netid = u.netid)
+                        JOIN availability avail ON (taf.avail_id = avail.avail_id)
+                    WHERE taf.course_id = :cid
+                `;
+                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.MULTIPLE));
+            }
+        }
+        if (professor) {
+            extra.push('professor');
+            for (i in courses) {
+                let course = courses[i];
+                let sqlTas = `
+                    SELECT pf.netid, u.name, prof.office, pf.status, avail.avail_desc as availability
+                    FROM proffor pf
+                        JOIN professor prof ON (pf.netid = prof.netid)
+                        JOIN users u ON (pf.netid = u.netid)
+                        JOIN availability avail ON (pf.avail_id = avail.avail_id)
+                    WHERE pf.course_id = :cid
+                `;
+                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.MULTIPLE));
+            }
+        }
         return Promise.all(promises);
-    }).then ( data => {
+    }).then( data => {
+        let numCourses = courses.length;
         for (i in data) {
-            courses[i]['data'] = data[i];
+            let key = extra[Math.floor(i / numCourses)];
+            let courseIndex = i % numCourses;
+            courses[courseIndex][key] = data[i];
         }
         return cid ? courses[0] : courses;
     });
