@@ -29,9 +29,9 @@ router.post('/', (req, res) => {
     });
 });
 
-router.get('/', api.query(getAllCourses));
+router.get('/', api.query(getCoursesReq));
 
-router.get('/:cid', api.query(getCourseReq));
+router.get('/:cid', api.query(getCoursesReq));
 
 router.post('/enroll', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
@@ -75,21 +75,43 @@ function enrollTACourse(cid, netid) {
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
 
-function getAllCourses() {
-    return db.queryDB("SELECT * FROM admin.course", [], db.QUERY.MULTIPLE);
+function getCourses({cid=null, students=false, tas=false}) {
+    let sqlSelect = 'SELECT c.course_id AS id, c.course_name AS name, sem.name AS semester';
+    let sqlFrom = 'FROM course c JOIN semesterinfo sem ON (c.semester_id = sem.sid)';
+    let sqlWhere = 'WHERE 1=1';
+    let params = [];
+    if (cid) {
+        sqlWhere += ' AND c.course_id = :cid';
+        params.push(cid);
+    }
+    let sql = sqlSelect + ' ' + sqlFrom + ' ' + sqlWhere;
+    let courses;
+    return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( courseData => {
+        courses = courseData;
+    }).then( () => {
+        let promises = [];
+        for (i in courses) {
+            let course = courses[i];
+            if (students) {
+                let sqlStudents = `
+                    SELECT sf.netid
+                    FROM studentfor sf
+                    WHERE sf.course_id = :cid
+                `;
+                promises.push(db.queryDB(sqlStudents, [course.ID], db.QUERY.MULTIPLE));
+            }
+        }
+        return Promise.all(promises);
+    }).then ( data => {
+        for (i in data) {
+            courses[i]['data'] = data[i];
+        }
+        return cid ? courses[0] : courses;
+    });
 }
 
-function getCourseReq(req) {
-    return getCourse(req.params.cid);
-}
-
-function getCourse(cid) {
-    let sql = `
-        select *
-        from admin.course
-        where course_id = :cid
-    `;
-    return db.queryDB(sql, [cid], db.QUERY.SINGLE);
+function getCoursesReq(req) {
+    return getCourses({...req.params, ...req.query});
 }
 
 function insertCourse(netid, name, dept, semester) {
