@@ -34,7 +34,7 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
         let returnVal = null;
         let result1 = null;
         queryDB.count++;
-        queryNum = queryDB.count;
+        let queryNum = queryDB.count;
         console.log('Running query ['+queryNum+']: ' + sqlquery);
 		try {
 			// get connection from default pool

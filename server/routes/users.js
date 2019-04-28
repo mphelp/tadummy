@@ -63,28 +63,30 @@ router.get('/:netid', (req, res) => {
         validRoles = [];
     }
     let doLdap = false;
+    let authorize = false;
     try {
         doLdap = JSON.parse(req.query.ldap);
-    } catch (err) {
-        doLdap = false;
-    }
-    Promise.all([getUser(netid), authorizeUser(netid, validRoles)]).then( data => {
+    } catch (err) {}
+    try {
+        authorize = JSON.parse(req.query.authorize);
+    } catch (err) {}
+    let promises = [getUser(netid)];
+    promises.push(authorize ? authorizeUser(netid, validRoles) : Promise.resolve(undefined));
+    promises.push(doLdap ? ldap.getInfo(netid) : Promise.resolve(undefined));
+    Promise.all(promises).then( data => {
         let userData = {...data[0], ...data[1]};
-        if (doLdap) {
-            ldap.getInfo(netid).then( data => {
-                userData['ldap'] = data;
-                res.json(userData);
-            });
-        } else {
-            res.json(userData);
-        }
+        let authData = data[1];
+        let ldapData = data[2];
+        userData['ldap'] = ldapData;
+        res.json(userData);
     }).catch( err => {
-        res.json({authorized: false});
+        res.json({});
     });
 });
 
 function getRoles(netid) {
-    let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
+    //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
+    let sql = `select * from userroles where netid = :id`;
     return db.queryDB(sql, [netid], db.QUERY.SINGLE);
 }
 
@@ -100,7 +102,7 @@ function authorizeUser(netid, validRoles = []) {
         validRoles = [validRoles];
     }
     if (!netid) {
-        return data;
+        return {authorized: false};
     }
     return getRoles(netid).then(userRoles => {
         if (Object.keys(userRoles).length === 0) {
