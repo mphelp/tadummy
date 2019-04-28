@@ -35,6 +35,7 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
         let result1 = null;
         queryDB.count++;
         let queryNum = queryDB.count;
+        let startTime = Date.now();
         console.log('Running query ['+queryNum+']: ' + sqlquery);
 		try {
 			// get connection from default pool
@@ -63,7 +64,9 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 					console.error(err);
 				}
 			}
-            console.log('Done running query ['+queryNum+']!');
+            let endTime = Date.now();
+            let timeTaken = (endTime - startTime) / 1000;
+            console.log('Done running query ['+queryNum+'] in '+timeTaken+' seconds!');
             if (returnVal !== null && returnVal !== undefined) resolve(returnVal);
             else reject(result1);
 		}
