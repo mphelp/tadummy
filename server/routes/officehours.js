@@ -8,8 +8,8 @@ const api = require('./api');
  * netid:   netid office hour owner
  * cid:     course_id for course
  * times: array of times for office hours with following properties
- *      start
- *      end
+ *      starttime
+ *      endtime
  *      location
  */
 router.post('/', (req, res) => {

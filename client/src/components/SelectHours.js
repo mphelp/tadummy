@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {
+    Tag,
     Button,
     FormGroup,
     InputGroup,
@@ -44,9 +45,17 @@ const bottom_s = {
 }
 const days_s = {
     height: 30,
-    width: 300,
+    width: "100%",
     background: '#DDDDEE',
-    margin: 15,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    padding: 5,
+    marginBottom: 10,
+}
+const day_s = {
+    display: 'flex',
+    marginRight: 5,
 }
 
 export default class extends React.Component {
@@ -64,6 +73,9 @@ export default class extends React.Component {
     timesChosen: [],
 	};
 
+  removeTimesChosen = () => {
+      this.setState({ timesChosen: [] })
+  }
 	handleSubmit = (event) => {
       event.preventDefault();
       const { course, timesChosen } = this.state;
@@ -75,17 +87,20 @@ export default class extends React.Component {
       timesChosen.forEach(time => {
           axios.post(serverUrl + '/api/officehours', {
               netid: this.props.netid,
-              cid: course.ID,
+              cid: course.CID,
               starttime: time.starttime,
               endtime: time.endtime,
               location: time.location,
-          }).then(res => console.log(res))
+          }).then(res => {
+              console.log(res);
+              this.removeTimesChosen();
+          })
             .catch(err => console.error(err));
       });
 	}
   handleAddHours = () => {
-    let properStart = this.state.start;
-    let properEnd   = this.state.end;
+    let properStart = this.state.start.clone();
+    let properEnd   = this.state.end.clone();
     if (!this.state.day || !this.state.end || !this.state.start || !this.state.location){
       return;
     }
@@ -96,13 +111,19 @@ export default class extends React.Component {
       starttime: properStart,
       endtime:   properEnd,
       location: this.state.location,
+      id: properStart.format()+properEnd.format()
     };
-    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    if (this.state.timesChosen.find(time => {
+        const { starttime, endtime } = time;
+        return properStart.isBetween(starttime, endtime, null, '[]') || properEnd.isBetween(starttime, endtime, null, '[]');
+    }) === undefined){
+      this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    }
   }
 
 	initialize = () => {
 		// server routes
-		let courseApi = serverUrl + "/api/courses";
+		let courseApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
 
 		// make requests to routes
 		axios.get(courseApi)
@@ -133,8 +154,8 @@ export default class extends React.Component {
 	courseRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
-				 key={item.ID}
-				 text={item.NAME}
+				 key={item.CID}
+				 text={item.CNAME}
 				 onClick={handleClick}
 		 />
 	)
@@ -147,7 +168,7 @@ export default class extends React.Component {
 		 />
 	)
 	filterCourse = (query, course, _index, exactMatch) => {
-		const normalizedCourse  = course.NAME.toLowerCase();
+		const normalizedCourse  = course.CNAME.toLowerCase();
 		const normalizedQuery = query.toLowerCase();
 
 		if (exactMatch){
@@ -157,7 +178,7 @@ export default class extends React.Component {
 		}
 	}
 		render(){
-				const { coursesList, course, day } = this.state;
+				const { coursesList, course, day, timesChosen } = this.state;
         return (
             <div style={general_s}>
 								<form onSubmit={this.handleSubmit}>
@@ -170,7 +191,7 @@ export default class extends React.Component {
 												onItemSelect={this.handleCourseSelectClick}
 										>
 												<Button rightIcon="caret-down"
-														text={course ? course.NAME : "(No selection)"}
+														text={course ? course.CNAME : "(No selection)"}
 												/>
 										</Select><br /><br />
                     <div style={timeblock_s}>
@@ -210,10 +231,36 @@ export default class extends React.Component {
                             >
                                 Add hours
                             </Button>
-                            <div style={{ width: 0 }}></div>
+                            <Button
+                                onClick={this.removeTimesChosen.bind(this)}
+                            >
+                                Remove hours
+                            </Button>
                         </div>
                     </div>
-                    <div style={days_s}>Days</div>
+                    <div style={days_s}>
+                        {timesChosen.map(time => (
+                            <div key={time.id} style={day_s}>
+                                { (() => {
+                                    if(time.starttime.day() === 0){
+                                        return <Tag>Su</Tag>
+                                    } else if (time.starttime.day() === 1){
+                                        return <Tag>Mo</Tag>
+                                    } else if (time.starttime.day() === 2){
+                                        return <Tag>Tu</Tag>
+                                    } else if (time.starttime.day() === 3){
+                                        return <Tag>We</Tag>
+                                    } else if (time.starttime.day() === 4){
+                                        return <Tag>Th</Tag>
+                                    } else if (time.starttime.day() === 5){
+                                        return <Tag>Fr</Tag>
+                                    } else {
+                                        return <Tag>Sa</Tag>
+                                    }
+                                })()}    
+                            </div>
+                        ))}
+                    </div>
 										<input type="submit" value="Submit" />
 								</form>
 						</div>

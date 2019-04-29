@@ -14,6 +14,14 @@ const general_s = {
     minWidth: 1000,
 }
 
+const customEvent = event => {
+  return (
+    <span>
+      {event.title}<br />
+      Location: {event.event.location}<br />
+    </span>
+  )
+}
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -23,15 +31,18 @@ export default class extends React.Component {
     }
     // Retrieve TA office hour blocks
     retrieve = () => {
-        axios.get(serverAddr + '/tohblock')
+        let calendarApi = serverAddr + '/api/students/' + this.props.netid + '/calendar';
+        axios.get(calendarApi)
             .then(res => {
                 let events = [];
                 res.data.forEach(obj => {
-                    if (new Date(obj.start) <= new Date(obj.end)){
+                    if (new Date(obj.STARTTIME) <= new Date(obj.ENDTIME)){
                         events.push({
-                            start: new Date(obj.start),
-                            end:   new Date(obj.end),
-                            title: obj.title,
+                            start: new Date(obj.STARTTIME),
+                            end:   new Date(obj.ENDTIME),
+                            title: obj.TYPE,
+                            tooltip: "Tooltip",
+                            location: obj.LOCATION,
                         })
                     }
                 });
@@ -50,6 +61,8 @@ export default class extends React.Component {
                     events={this.state.events}
                     startAccessor="start"
                     endAccessor="end"
+                    tooltipAccessor="tooltip"
+                    components={{ event: customEvent }}
                 />
             </div>
         )
