@@ -42,7 +42,7 @@ class StudentCourseEnrollSignup extends React.Component {
 							onItemSelect={handleCourseSelectClick}
 					>
                     <Button rightIcon="caret-down"
-                            text={course ? course.COURSE_NAME : "(No selection)"}
+                            text={course ? course.NAME : "(No selection)"}
                             />
 					</Select><br /><br />
 					<input type="submit" value="Submit" />

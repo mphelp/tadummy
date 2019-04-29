@@ -47,7 +47,7 @@ export default class extends React.Component {
 			formData.forEach(function(value, key){
 					object[key] = value;
 			});
-            object['cid'] = this.state.course.COURSE_ID;
+            object['cid'] = this.state.course.ID;
             object['netid'] = this.props.netid;
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/courses/enroll/', {
