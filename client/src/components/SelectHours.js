@@ -73,6 +73,9 @@ export default class extends React.Component {
     timesChosen: [],
 	};
 
+  removeTimesChosen = () => {
+      this.setState({ timesChosen: [] })
+  }
 	handleSubmit = (event) => {
       event.preventDefault();
       const { course, timesChosen } = this.state;
@@ -88,7 +91,10 @@ export default class extends React.Component {
               starttime: time.starttime,
               endtime: time.endtime,
               location: time.location,
-          }).then(res => console.log(res))
+          }).then(res => {
+              console.log(res);
+              this.removeTimesChosen();
+          })
             .catch(err => console.error(err));
       });
 	}
@@ -107,10 +113,11 @@ export default class extends React.Component {
       location: this.state.location,
       id: properStart.format()+properEnd.format()
     };
-    if (!this.state.timesChosen.find(time => {
-        return time.starttime.isBetween(properStart, properEnd) || time.endtime.isBetween(properStart, properEnd);
-        })){
-        this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    if (this.state.timesChosen.find(time => {
+        const { starttime, endtime } = time;
+        return properStart.isBetween(starttime, endtime, null, '[]') || properEnd.isBetween(starttime, endtime, null, '[]');
+    }) === undefined){
+      this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
     }
   }
 
@@ -224,7 +231,11 @@ export default class extends React.Component {
                             >
                                 Add hours
                             </Button>
-                            <div style={{ width: 0 }}></div>
+                            <Button
+                                onClick={this.removeTimesChosen.bind(this)}
+                            >
+                                Remove hours
+                            </Button>
                         </div>
                     </div>
                     <div style={days_s}>
