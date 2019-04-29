@@ -13,6 +13,8 @@ import moment from 'moment';
 import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 
+const DaysOfWeek = require('./DaysOfWeek.js');
+console.log(DaysOfWeek);
 const nowMoment = moment().hour(0).minute(0);
 const format = 'h:mm a';
 const config = require('../config.js')
@@ -51,9 +53,15 @@ export default class extends React.Component {
 	state = {
 		error: null,
 		isLoaded: false,
-        netid: "",
+    netid: "",
 		coursesList: [],
-		course: null   
+		course: null,
+
+    day: null,
+    start: null,
+    end: null,
+    location: null,
+    timesChosen: [],
 	};
 
 	handleSubmit = (event) => {
@@ -77,6 +85,31 @@ export default class extends React.Component {
 			});
       */
 	}
+  handleAddHours = () => {
+    let properStart = this.state.start;
+    let properEnd   = this.state.end;
+    if (!this.state.day || !this.state.end || !this.state.start || !this.state.location){
+      return;
+    }
+    // combine time and day of week
+    console.log(properStart);
+    console.log(this.state);
+    console.log(this.state.day.MOMENT.day());
+    properStart.day(this.state.day.MOMENT.day());
+    console.log(properStart);
+    properEnd.day(this.state.day.MOMENT.day());
+    let newBlock = {
+      START: properStart,
+      END:   properEnd,
+      LOCATION: this.state.location,
+    };
+    console.log(newBlock);
+    //if (!this.state.timesChosen.find(obj => {
+    //  return obj.START.isBefore(properEnd) || properStart.isBefore(obj.END); 
+    //})){
+      this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    //}
+  }
 
 	initialize = () => {
 		// server routes
@@ -93,14 +126,34 @@ export default class extends React.Component {
 		this.initialize();
 	}
 
+  handleChangeLocation = event => {
+      this.setState({ location: event.target.value });
+  }
 	handleCourseSelectClick = (course) => {
 			this.setState({ course });
 	}
+	handleDaySelectClick = day => {
+			this.setState({ day });
+	}
+  handleDayStart = start => {
+      this.setState({ start });    
+  }
+  handleDayEnd = end => {
+      this.setState({ end });    
+  }
 	courseRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
 				 key={item.ID}
 				 text={item.NAME}
+				 onClick={handleClick}
+		 />
+	)
+  dayRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.TITLE}
+				 text={item.TITLE}
 				 onClick={handleClick}
 		 />
 	)
@@ -115,7 +168,7 @@ export default class extends React.Component {
 		}
 	}
 		render(){
-				const { coursesList, course } = this.state;
+				const { coursesList, course, day } = this.state;
         return (
             <div style={general_s}>
 								<form onSubmit={this.handleSubmit}>
@@ -135,21 +188,25 @@ export default class extends React.Component {
                         Select desired Office Hours:<br />
                         <div style={bottom_s}>
                             <TimePicker
+                                onChange={this.handleDayStart}
                                 showSecond={false}
                                 defaultValue={nowMoment}
                                 format={format}
                                 use12Hours
                             />
                             <Select
-                                items={[]}
+                                items={DaysOfWeek}
+                                itemRenderer={this.dayRenderer}
+                                onItemSelect={this.handleDaySelectClick}
                             >
                                 <Button
-                                    text={"Day"}
+                                    text={day ? day.TITLE : "(Choose Day)"}
                                 />
                             </Select>
                             <div style={{ width: 0 }}></div>
                         </div>
                         <TimePicker
+                            onChange={this.handleDayEnd}
                             showSecond={false}
                             defaultValue={nowMoment}
                             format={format}
@@ -158,8 +215,10 @@ export default class extends React.Component {
                         <br /><br />
                         Location:<br /><br />
                         <div style={bottom_s}>
-                            <InputGroup id="location" placeholder="Your Location" />
-                            <Button>
+                            <InputGroup id="location" placeholder="Your Location" onChange={this.handleChangeLocation.bind(this)} />
+                            <Button
+                                onClick={this.handleAddHours.bind(this)}
+                            >
                                 Add hours
                             </Button>
                             <div style={{ width: 0 }}></div>
