@@ -165,7 +165,8 @@ function addUser(netid, name) {
     return db.queryDB(sql, [netid, name], db.QUERY.INSERT);
 }
 
-function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false, professor=false) {
+function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
+                    professor=false, students=false) {
     let userPromise = db.queryDB(sqlUser, [netid], db.QUERY.SINGLE);
     let coursePromise;
     if (courses) {
@@ -183,7 +184,12 @@ function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false, profe
                 let cid = courseIds[i].ID;
                 courseIds[i] = cid;
             }
-            promise = courseFuncs.getCourses({ids: courseIds, tas: tas, professor: professor});
+            promise = courseFuncs.getCourses({
+                ids: courseIds,
+                tas: tas,
+                professor: professor,
+                students: students,
+            });
         } else {
             promise = Promise.resolve(undefined);
         }

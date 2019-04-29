@@ -34,7 +34,7 @@ function getStudent({netid, courses=false, tas=false, professor=false}) {
         from studentfor sf
         where netid = :netid
     `;
-    return users.getUserPlus(sqlStudent, sqlCourses, netid, courses, tas, professor);
+    return users.getUserPlus(sqlStudent, sqlCourses, netid, courses, tas, professor, false);
 }
 
 function getStudentReq(req) {

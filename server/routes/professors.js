@@ -13,7 +13,7 @@ router.get('/:netid', users.authParam(users.ROLES.PROFESSOR), api.query(getProfe
  *
  * courses: [bool] do get courses of professor
  */
-function getProfessor({netid, courses=false}) {
+function getProfessor({netid, courses=false, tas=false, students=false}) {
     let sqlProfessor = `
         select u.netid, u.name, u.datejoined, p.office,
             dep.abbrev as dept, dep.college as college
@@ -27,7 +27,7 @@ function getProfessor({netid, courses=false}) {
         from proffor pf
         where netid = :netid
     `;
-    return users.getUserPlus(sqlProfessor, sqlCourses, netid, courses, false);
+    return users.getUserPlus(sqlProfessor, sqlCourses, netid, courses, tas, false, students);
 }
 
 function getProfessorReq(req) {

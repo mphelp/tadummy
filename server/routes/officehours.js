@@ -16,7 +16,7 @@ router.post('/', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
         return;
     }
-    let {netid, cid, start, end, location} = req.body;
+    let {netid, cid, starttime, endtime, location} = req.body;
     return addOfficehour(start, end, location, netid, cid).then ( result => {
         res.sendStatus(201);
     }, err => {
