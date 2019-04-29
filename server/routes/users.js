@@ -129,7 +129,7 @@ function insertProfessor (netid, data) {
         values (:netid, :office, :dept)
     `;
     return Promise.all([
-        insertUser(netid, data.name),
+        addUser(netid, data.name),
         db.queryDB(sql, [data.netid, data.office, data.dept], db.QUERY.INSERT)
     ]);
 }
