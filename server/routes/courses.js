@@ -3,6 +3,14 @@ const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
 const api = require('./api');
+
+module.exports = {
+    router:router,
+    getCourses: getCourses,
+    getCourseTimes: getCourseTimes,
+    getCourseSemester: getCourseSemester,
+};
+
 const officehours = require('./officehours');
 
 /* Create a new course (with no time blocks)
@@ -33,7 +41,6 @@ router.get('/', api.query(getCoursesReq));
 router.get('/:cid', api.query(getSingleCourseReq));
 
 router.get('/:cid/times', api.query(getCourseTimesReq));
-
 
 // STUDENT enroll in a course
 router.post('/enroll', (req, res) => {
@@ -190,6 +197,16 @@ function getSingleCourseReq(req) {
     return getCourses({cid: req.params.cid, ...req.query});
 }
 
+function getCourseSemester(cid) {
+    let sql = `
+        select s.startdate, s.enddate
+        from course c
+            JOIN semester s ON (c.semester_id = s.semester_id)
+        where c.course_id = :cid
+    `;
+    return db.queryDB(sql, [cid], db.QUERY.SINGLE);
+}
+
 function addCourse(netid, name, dept, semester) {
     let sqlInsert1 = `
         insert into admin.course(course_name, semester_id)
@@ -256,9 +273,3 @@ function getCourseTimes(cid) {
 function getCourseTimesReq(req) {
     return getCourseTimes(req.params.cid);
 }
-
-module.exports = {
-    router:router,
-    getCourses: getCourses,
-    getCourseTimes: getCourseTimes,
-};

@@ -3,6 +3,8 @@ const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
 const api = require('./api');
+const courseFuncs = require('./courses');
+const momentTime = require('../momentTime');
 
 /* Required fields:
  * netid:   netid office hour owner
@@ -29,6 +31,27 @@ router.get('/:netid', api.query(getOfficehoursReq));
 router.get('/:netid/courses', api.query(getCoursesReq));
 
 router.put('/status', api.query(setStatusReq));
+
+function addTimeblocks(start, end, loc, cid) {
+    let tids = [];
+    let starttime = new Date(start);
+    let startH = starttime.getHours();
+    let startM = starttime.getMinutes();
+    let endtime = new Date(end);
+    let endH = endtime.getHours();
+    let endM = endtime.getMinutes();
+    return courseFuncs.getCourseSemester(cid).then ( sem => {
+        return momentTime.getWeeklyTimes(start, end, sem);
+    }).then ( dates => {
+        let promises = [];
+        for (i in dates) {
+            let blockStart = new Date(dates[i]).setHours(startH, startM);
+            let blockEnd = new Date(dates[i]).setHours(endH, endM);
+            promises.push(addTimeblock(blockStart, blockEnd, loc));
+        }
+        return Promise.all(promises);
+    });
+}
 
 function addTimeblock(start, end, loc) {
     let sql = `
@@ -65,23 +88,28 @@ function getType(netid, table='') {
 }
 
 function addOfficehour(start, end, loc, netid, cid) {
-    let starttime = new Date(start);
-    let endtime = new Date(end);
     let promises = [
-        addTimeblock(start, end, loc),
+        addTimeblocks(start, end, loc, cid),
         getType(netid, 'OFFICEHOURS')
     ];
     return Promise.all(promises).then( data => {
-        let timeblockid = data[0];
+        let timeblockids = data[0];
         let table = data[1];
+        console.log(data);
         if (!table) {
             return null;
         }
-        let sql =  `
-            insert into `+table+`(timeblock_id, netid, course_id)
-            values (:timeblockid, :netid, :cid)
-        `;
-        return db.queryDB(sql, [timeblockid, netid, cid], db.QUERY.INSERT);
+        let promises = [];
+        console.log(timeblockids);
+        for (i in timeblockids) {
+            let tbid = timeblockids[i];
+            let sql =  `
+                insert into `+table+`(timeblock_id, netid, course_id)
+                values (:tbid, :netid, :cid)
+            `;
+            promises.push(db.queryDB(sql, [tbid, netid, cid], db.QUERY.INSERT));
+        }
+        return Promise.all(promises);
     });
 }
 

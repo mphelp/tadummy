@@ -20,6 +20,8 @@
 		"express-parameters": "^1.0.4",
 		"express-session": "^1.15.6",
 		"jade": "^1.11.0",
+		"moment": "^2.24.0",
+		"moment-recur": "^1.0.7",
 		"oracledb": "^3.1.1",
 		"pug": "^2.0.3",
 		"request": "^2.88.0"
