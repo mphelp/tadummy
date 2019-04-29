@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
 
         } else if (roles.PROFESSOR) {
 
-        else {
+        } else {
             res.status(401).send('user ' + netid + ' is not a ta or professor!');
         }
     });
