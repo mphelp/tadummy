@@ -45,9 +45,17 @@ const bottom_s = {
 }
 const days_s = {
     height: 30,
-    width: 300,
+    width: "100%",
     background: '#DDDDEE',
-    margin: 15,
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'row',
+    padding: 5,
+    marginBottom: 10,
+}
+const day_s = {
+    display: 'flex',
+    marginRight: 5,
 }
 
 export default class extends React.Component {
@@ -87,8 +95,6 @@ export default class extends React.Component {
   handleAddHours = () => {
     let properStart = this.state.start.clone();
     let properEnd   = this.state.end.clone();
-    console.log('Before before: ');
-    console.log(this.state.timesChosen);
     if (!this.state.day || !this.state.end || !this.state.start || !this.state.location){
       return;
     }
@@ -101,10 +107,7 @@ export default class extends React.Component {
       location: this.state.location,
       id: properStart.format()+properEnd.format()
     };
-    console.log('Before: ');
-    console.log(this.state.timesChosen);
-    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] },
-      () => { console.log('After: '); console.log(this.state.timesChosen); })
+    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
   }
 
 	initialize = () => {
@@ -220,28 +223,26 @@ export default class extends React.Component {
                             <div style={{ width: 0 }}></div>
                         </div>
                     </div>
-                    <div>
+                    <div style={days_s}>
                         {timesChosen.map(time => (
-                            <div key={time.id}>
-                            { (() => {
-                                if(time.starttime.day() === 0){
-                                    return <Tag>"Su"</Tag>
-                                } else if (time.starttime.day() === 1){
-                                    return <Tag>"Mo"</Tag>
-                                } else if (time.starttime.day() === 2){
-                                    return <Tag>"Tu"</Tag>
-                                } else if (time.starttime.day() === 3){
-                                    return <Tag>"We"</Tag>
-                                } else if (time.starttime.day() === 4){
-                                    return <Tag>"Th"</Tag>
-                                } else if (time.starttime.day() === 5){
-                                    return <Tag>"Fr"</Tag>
-                                } else {
-                                    return <Tag>"Sa"</Tag>
-                                }
-                            
-                            
-                            })()}    
+                            <div key={time.id} style={day_s}>
+                                { (() => {
+                                    if(time.starttime.day() === 0){
+                                        return <Tag>Su</Tag>
+                                    } else if (time.starttime.day() === 1){
+                                        return <Tag>Mo</Tag>
+                                    } else if (time.starttime.day() === 2){
+                                        return <Tag>Tu</Tag>
+                                    } else if (time.starttime.day() === 3){
+                                        return <Tag>We</Tag>
+                                    } else if (time.starttime.day() === 4){
+                                        return <Tag>Th</Tag>
+                                    } else if (time.starttime.day() === 5){
+                                        return <Tag>Fr</Tag>
+                                    } else {
+                                        return <Tag>Sa</Tag>
+                                    }
+                                })()}    
                             </div>
                         ))}
                     </div>
