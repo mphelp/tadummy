@@ -46,6 +46,7 @@ function getStudentTas(netid) {
             for (j in course.TAS) {
                 let ta = course.TAS[j];
                 ta['COURSE_ID'] = course.ID;
+                ta['COURSE_NAME'] = course.NAME;
                 tas.push(ta);
             }
         }
