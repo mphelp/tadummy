@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
     FormGroup,
     InputGroup,
@@ -45,8 +46,24 @@ export default class extends React.Component {
 	}
     state = {
         netid: "",
-		avail: avails[1],
+		avail: null,
+        course: null,
+        courseList: []
 	};
+    initializeSignup = () => {
+		// server routes
+		let courseApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
+
+		// make requests to routes
+		axios.get(courseApi)
+			.then(res => {
+				this.setState({ coursesList: res.data })
+			})
+			.catch(err => console.error(err))
+	}
+	componentWillMount() {
+		this.initializeSignup();
+	}
 
     handleSelectClick = (avail) => {
         this.setState(state => ({ avail: avail }))
@@ -61,6 +78,7 @@ export default class extends React.Component {
 			});
             object['avail_id'] = this.state.avail.id;
             object['netid'] = this.props.netid;
+            object['cid'] = this.state.course.CID;
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/officehours/status', {
 					method: 'PUT',
@@ -79,9 +97,46 @@ export default class extends React.Component {
             onClick={handleClick}
         />
     )
+    handleCourseSelectClick = (course) => {
+			this.setState({ course });
+            this.setState(state => ({ statue: course.STATUS }));
+            if (course.AVAIL_ID == 2){
+                this.setState(state => ({ avail: avails[0] }));
+            }
+            else if (course.AVAIL_ID == 4){
+                this.setState(state => ({ avail: avails[1] }));
+            }
+            else if (course.AVAIL_ID == 5){
+                this.setState(state => ({ avail: avails[2] }));
+            }
+
+	}
+
+
+	courseRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.CID}
+				 text={item.CNAME}
+				 onClick={handleClick}
+		 />
+	)
+	filterCourse = (query, coursez, _index, exactMatch) => {
+		const normalizedCourse  = coursez.NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedCourse === normalizedQuery;
+		} else {
+			return normalizedCourse.indexOf(normalizedQuery) >= 0;
+		}
+	}
+
     render(){
         const {
-            avail
+            avail,
+            course,
+            courseList
         } = this.state
 
         return (
@@ -89,6 +144,16 @@ export default class extends React.Component {
 					<h1>TAs: Update your status below.</h1>
 					<br />
 					<form onSubmit={this.handleSubmit}>
+                    Course:<br />
+					<Select
+							items={courseList}
+							itemRenderer={this.courseRenderer}
+							onItemSelect={this.handleCourseSelectClick}
+					>
+							<Button rightIcon="caret-down"
+									text={avail ? avail.text : "(No selection)"}
+							/>
+					</Select><br /><br />
 					Status (40 character max):<br />
 					<input type="text" name="status" maxLength ="40" /><br/><br/>
 					Availability:<br />
