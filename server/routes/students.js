@@ -1,21 +1,15 @@
 const router = require('express').Router()
 const db = require('../database');
 const missingKeys = require('../missingKeys');
+const api = require('./api');
 
 const users = require('./users');
 
 
-router.get('/:netid', (req, res) => {
-    let netid = req.params.netid;
-    getStudent(netid).then( data => {
-        res.json(data);
-    }).catch( err => {
-        res.send(err);
-    });
-});
+router.get('/:netid', api.query(getStudentReq));
 
 
-function getStudent(netid) {
+function getStudent({netid, courses=false}) {
     let sqlStudent = `
         select s.netid, u.name, u.datejoined, m.major_name, d.dorm_name,
             dep.abbrev as dept, dep.college as college
@@ -27,23 +21,31 @@ function getStudent(netid) {
         where s.netid = :netid
     `;
     let sqlCourses = `
-        select c.course_id as cid, c.course_name as name, s.name as semester
+        select c.course_id as id
         from studentfor sf
-            JOIN course c ON (sf.course_id = c.course_id)
-            JOIN semesterinfo s ON (c.semester_id = s.sid)
         where netid = :netid
     `;
-    return Promise.all([
-        db.queryDB(sqlStudent, [netid], db.QUERY.SINGLE),
-        db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE)
-    ]).then( data => {
-        let userData = data[0];
-        let courses = data[1];
-        userData['courses'] = courses;
-        return userData;
+    let studentPromise = db.queryDB(sqlStudent, [netid], db.QUERY.SINGLE);
+    let coursePromise;
+    if (courses) {
+        coursePromise = db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE);
+    } else {
+        coursePromise = Promise.resolve(null);
+    }
+    return Promise.all([studentPromise, coursePromise]).then( data => {
+        let studentData = data[0];
+        let courseIds = data[1];
+        for (i in courseIds) { // get actual id of course
+            let cid = data[i].ID;
+            courseIds[i] = cid;
+        }
+        return studentData;
     });
 }
 
+function getStudentReq(req) {
+    return getStudent({netid: req.params.netid, ...req.query});
+}
 
 function addStudent (netid, data) {
     let missing = missingKeys(data, ['netid', 'major', 'dorm']);

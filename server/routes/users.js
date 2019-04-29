@@ -2,6 +2,8 @@ const router = require('express').Router()
 const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
+const api = require('./api');
+const courses = require('./courses');
 
 module.exports = {
     router: router,
@@ -84,6 +86,7 @@ router.get('/:netid', (req, res) => {
     });
 });
 
+
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     let sql = `select * from userroles where netid = :id`;
@@ -129,7 +132,7 @@ function insertProfessor (netid, data) {
         values (:netid, :office, :dept)
     `;
     return Promise.all([
-        insertUser(netid, data.name),
+        addUser(netid, data.name),
         db.queryDB(sql, [data.netid, data.office, data.dept], db.QUERY.INSERT)
     ]);
 }

@@ -9,6 +9,9 @@ var QUERY = {
 };
 
 async function createConnectionPool(dbConfig) {
+    oracledb.poolMin = oracledb.poolMax;
+    oracledb.poolIncrement = 0;
+    oracledb.fetchArraySize = 20;
     try {
         await oracledb.createPool({
             user: dbConfig.user,
