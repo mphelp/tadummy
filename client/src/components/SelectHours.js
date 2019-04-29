@@ -107,7 +107,11 @@ export default class extends React.Component {
       location: this.state.location,
       id: properStart.format()+properEnd.format()
     };
-    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    if (!this.state.timesChosen.find(time => {
+        return time.starttime.isBefore(properEnd) || time.endtime.isAfter(properStart);
+        })){
+        this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    }
   }
 
 	initialize = () => {
