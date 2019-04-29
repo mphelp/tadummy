@@ -63,7 +63,7 @@ export default class extends React.Component {
             object['netid'] = this.props.netid;
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/officehours/status', {
-					method: 'POST',
+					method: 'PUT',
 					body: json,
                     headers: {
                         'Content-Type': 'application/json'

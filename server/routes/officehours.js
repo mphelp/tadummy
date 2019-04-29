@@ -24,6 +24,8 @@ router.post('/', (req, res) => {
     });
 });
 
+router.put('/status', api.query(setStatusReq));
+
 function addTimeblock(start, end, loc) {
     let sql = `
         insert into timeblock(starttime, endtime, location)
@@ -34,12 +36,12 @@ function addTimeblock(start, end, loc) {
     return db.queryDB(sql, [starttime, endtime, loc], db.QUERY.INSERT);
 }
 
-function getType(netid) {
+function getType(netid, table='') {
     return users.getRoles(netid).then( roles => {
         if (roles.TA) {
-            return 'TA';
+            return 'TA' + table;
         } else if (roles.PROFESSOR) {
-            return 'PROF';
+            return 'PROF' + table;
         } else {
             return null;
         }
@@ -60,11 +62,11 @@ function addOfficehour(start, end, loc, netid, cid) {
     let promises = [
         addTimeblock(start, end, loc),
         db.queryDB(timeblocksql, [starttime, endtime, loc], db.QUERY.SINGLE),
-        getType(netid)
+        getType(netid, 'OFFICEHOURS')
     ];
     return Promise.all(promises).then( data => {
         let timeblockid = data[1].ID;
-        let table = data[2] + 'OFFICEHOURS';
+        let table = data[2];
         if (!table) {
             return null;
         }
@@ -78,7 +80,6 @@ function addOfficehour(start, end, loc, netid, cid) {
 
 // for courses NETID is TAing / teaching
 function getOfficehours(netid) {
-    console.log('office hours for ' + netid);
     let officeType;
     return getType(netid).then(  type => {
         if (!type) {
@@ -105,6 +106,26 @@ function getOfficehours(netid) {
         }
         return Promise.all(promises);
     });
+}
+
+function setStatus(netid, cid, avail_id, status) {
+    return getType(netid, 'FOR').then( table => {
+        let sql = `
+            update `+table+`
+            set avail_id = :avail_id, status = :status
+            where netid = :netid AND course_id = :cid
+        `;
+        return db.queryDB(sql, [avail_id, status, netid, cid], db.QUERY.UPDATE);
+    });
+}
+
+function setStatusReq(req) {
+    let missing = missingKeys(req.body, ['netid', 'cid', 'avail_id', 'status'], req);
+    if (missing.length) {
+        return Promise.reject('Missing keys: ' + JSON.stringify(missing));
+    }
+    let {netid, cid, avail_id, status} = req.body;
+    return setStatus(netid, cid, avail_id, status);
 }
 
 module.exports = {

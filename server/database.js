@@ -6,6 +6,7 @@ var QUERY = {
     SINGLE: 0,
     MULTIPLE: 1,
     INSERT: 2,
+    UPDATE: 3,
 };
 
 async function createConnectionPool(dbConfig) {
@@ -54,6 +55,8 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
             } else if (type === QUERY.MULTIPLE) {
                 returnVal = result1.rows;
             } else if (type === QUERY.INSERT) {
+                returnVal = result1.rowsAffected;
+            } else if (type === QUERY.UPDATE) {
                 returnVal = result1.rowsAffected;
             }
 		} catch (err) {
