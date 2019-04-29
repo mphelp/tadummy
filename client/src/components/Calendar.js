@@ -1,4 +1,8 @@
 import React from 'react';
+import {
+  FormGroup,
+  Switch
+} from "@blueprintjs/core";
 import axios from 'axios';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
@@ -13,7 +17,19 @@ const general_s = {
     maxHeight: 600,
     minWidth: 1000,
 }
-
+const categories_s = {
+    width: 350,
+    marginTop: 20,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+}
+const category_s = {
+    display: 'flex',
+}
+const label_s = {
+    margin: "-6px 0px 0px 0px"
+}
 const customEvent = event => {
   const { type } = event.event;
   if (type === "TA"){
@@ -81,6 +97,15 @@ export default class extends React.Component {
     componentWillMount(){
         this.retrieve()
     }
+    onTAClick = () => {
+    
+    }
+    onPROFClick = () => {
+    
+    }
+    onCOURSESClick = () => {
+    
+    }
     render(){
         return (
             <div style={general_s}>
@@ -97,6 +122,11 @@ export default class extends React.Component {
                         },
                     })}
                 />
+                <div style={categories_s}>
+                    <Switch labelElement={<h3 style={label_s}>TA</h3>} large={true} style={category_s}/>
+                    <Switch labelElement={<h3 style={label_s}>PROF</h3>} large={true} style={category_s}/>
+                    <Switch labelElement={<h3 style={label_s}>COURSES</h3>} large={true} style={category_s}/>
+                </div>
             </div>
         )
     }

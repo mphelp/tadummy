@@ -21,8 +21,7 @@ const SidebarGeneral_s = {
 }
 const Status_s = {
 		alignSelf: "flex-end",
-		marginRight: "auto",
-
+		marginRight: 8,
 }
 const header_s = {
     margin: 20,
@@ -68,8 +67,11 @@ export default class extends React.Component {
 									<h3 style={header_s}>Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
+                              { TA.NAME }<br />
 															<div style={TagContent_s}>
-																	{ TA.NAME }
+                                  <div>
+                                  {TA.COURSE_NAME}
+                                  </div>
 																	<div>
 																			{ (() => {
 																				if(TA.AVAILABILITY == "active") {
@@ -107,12 +109,9 @@ export default class extends React.Component {
 																			}
 																	</div>
 															</div>
-                                                            <div>
-                                                            {TA.COURSE_NAME}
-                                                            </div>
-                                                            <div style={TagContent_sColumn}>
-                                                            {TA.STATUS}
-                                                            </div>
+                              <div style={TagContent_sColumn}>
+                              {TA.STATUS}
+                              </div>
 													</Tag>
 											))}
             </div>
