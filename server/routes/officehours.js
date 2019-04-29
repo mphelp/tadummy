@@ -13,27 +13,22 @@ const api = require('./api');
  *      location
  */
 router.post('/', (req, res) => {
-    if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
+    if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
         return;
     }
-    let {netid, name, dept, semester} = req.body;
+    let {netid, cid} = req.body;
     users.getRoles(netid).then ( roles => {
-        if (roles.PROFESSOR) {
-            insertCourse(netid, name, dept, semester).then( result => {
-                res.sendStatus(201);
-            }, err => {
-                console.log(err);
-                res.sendStatus(400);
-            });
-        } else {
-            res.status(401).send('user ' + netid + ' is not a professor!');
+        if (roles.TA) {
+
+        } else if (roles.PROFESSOR) {
+
+        else {
+            res.status(401).send('user ' + netid + ' is not a ta or professor!');
         }
     });
 });
 
-router.get('/', api.query(getCoursesReq));
-
-router.get('/:cid', api.query(getSingleCourseReq));
+router.get('/netid:cid', api.query(getSingleCourseReq));
 
 router.post('/enroll', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
