@@ -15,7 +15,7 @@ const SidebarGeneral_s = {
     height: "100%",
     backgroundColor: "#e1e1f1",
     width: "20%",
-    minWidth: "200px",
+    minWidth: "300px",
     display: "flex",
     flexDirection: "column",
 }
