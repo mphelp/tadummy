@@ -1,14 +1,15 @@
 import React from 'react';
 import axios from 'axios';
 import {
+    Button,
     FormGroup,
     InputGroup,
     Switch,
     Classes,
     MenuItem,
-    Button
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
+import { TimePicker } from "@blueprintjs/datetime";
 
 const config = require('../config.js')
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
@@ -92,7 +93,6 @@ export default class extends React.Component {
 				const { coursesList, course } = this.state;
         return (
             <div style={general_s}>
-								<form onSubmit={this.handleSubmit}>
 								<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
 								<Select
 										items={coursesList}
@@ -104,8 +104,15 @@ export default class extends React.Component {
 												text={course ? course.NAME : "(No selection)"}
 										/>
 								</Select><br /><br />
+								<form onSubmit={this.handleSubmit}>
 								Select desired Office Hours:<br />
-								<h3>Placeholder for inputing times</h3><br />
+                <TimePicker
+                    useAmPm={true}
+                    showArrowButtons={true}
+                    selectAllOnFocus={true}
+                />
+						    	
+
 								Location:<br /><br />
 								<input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/><br/><br/>
 								<input type="submit" value="Submit" />
