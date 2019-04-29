@@ -28,7 +28,7 @@ const BodyGeneral_s = {
 //department name ~ id
 
 export default class extends React.Component {
-    constructor(props){
+	constructor(props){
 		super(props);
 	}
 	state = {
