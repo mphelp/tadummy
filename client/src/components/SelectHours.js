@@ -108,7 +108,7 @@ export default class extends React.Component {
       id: properStart.format()+properEnd.format()
     };
     if (!this.state.timesChosen.find(time => {
-        return time.starttime.isBefore(properEnd) || time.endtime.isAfter(properStart);
+        return time.starttime.isBetween(properStart, properEnd) || time.endtime.isBetween(properStart, properEnd);
         })){
         this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
     }
