@@ -9,6 +9,9 @@ var QUERY = {
 };
 
 async function createConnectionPool(dbConfig) {
+    oracledb.poolMin = oracledb.poolMax;
+    oracledb.poolIncrement = 0;
+    oracledb.fetchArraySize = 20;
     try {
         await oracledb.createPool({
             user: dbConfig.user,
@@ -40,7 +43,7 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 		try {
 			// get connection from default pool
 			conn = await oracledb.getConnection();
-			let options = { outFormat: oracledb.OBJECT, autoCommit: true, fetchArraySize: 10};
+			let options = { outFormat: oracledb.OBJECT, autoCommit: true};
 			result1 = await conn.execute(sqlquery, bindings, options);
             if (type === QUERY.SINGLE) {
                 if (result1.rows.length === 0) {

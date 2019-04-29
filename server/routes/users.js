@@ -86,7 +86,6 @@ router.get('/:netid', (req, res) => {
     });
 });
 
-router.get('/courses/:netid', api.query(getUserCoursesReq));
 
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
@@ -97,28 +96,6 @@ function getRoles(netid) {
 function getUser(netid) {
     let sql = `select netid, name, dateJoined from admin.users where netid = :id`;
     return db.queryDB(sql, [netid], db.QUERY.SINGLE);
-}
-
-function getUserCoursesReq(req) {
-    return getUserCourses(req.params.netid);
-}
-
-function getUserCourses(netid) {
-    let sqlCourses = `
-        SELECT sf.course_id AS id
-        FROM studentfor sf
-        WHERE netid = :netid
-    `;
-    return db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE).then( data => {
-        console.log(data);
-        let courseIds = [];
-        for (i in data) {
-            let cid = data[i].ID;
-            courseIds.push(cid);
-        }
-        console.log(courseIds);
-        return courses.getCourses({ids: courseIds});
-    });
 }
 
 // This tutorial came in CLUTCH with authorization:

@@ -29,6 +29,13 @@ router.post('/', (req, res) => {
     });
 });
 
+/* Optional parameters (most also apply for single course route)
+ *
+ * ids: array of course ids (default to all courses)
+ * students: [bool] do include students in course
+ * tas:      [bool] do include tas in course
+ * professor:[bool] do include professor information
+ */
 router.get('/', api.query(getCoursesReq));
 
 router.get('/:cid', api.query(getSingleCourseReq));
@@ -85,6 +92,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             ids = JSON.parse(ids);
         } catch (err) {}
     }
+    let courses = null;
     if (cid) {
         courses = [cid];
     } else if (ids) {
