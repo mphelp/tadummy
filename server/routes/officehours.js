@@ -83,32 +83,41 @@ function addOfficehour(start, end, loc, netid, cid) {
 }
 
 // for courses NETID is TAing / teaching
-function getOfficehours(netid) {
+function getOfficehours(netid, cid) {
+    console.log('Getting office hour time blocks for ' + netid + ' course ' + cid);
     let officeType;
+    let tableOH;
     return getType(netid).then(  type => {
         if (!type) {
             return null;
         }
         officeType = type;
-        let table = type+'OFFICEHOURS';
+        tableOH = type+'OFFICEHOURS';
         let sql = `
             select timeblock_id as ID
-            from `+table+`
-            where netid = :netid
+            from `+tableOH+`
+            where netid = :netid AND course_id = :cid
         `;
-        return db.queryDB(sql, [netid], db.QUERY.MULTIPLE);
+        return db.queryDB(sql, [netid, cid], db.QUERY.MULTIPLE);
     }).then( ids => {
         let promises = [];
         let sqltime = `
-            select timeblock_id AS id, location, starttime, endtime, '`+officeType+`' AS "TYPE"
-            from timeblock
-            where timeblock_id = :id
+            select tb.timeblock_id AS id, tb.location, tb.starttime, tb.endtime,
+                '`+officeType+`' AS "TYPE", c.course_id AS CID, c.course_name AS CNAME,
+                oh.netid
+            from timeblock tb
+                JOIN `+tableOH+` oh ON (tb.timeblock_id = oh.timeblock_id)
+                JOIN course c ON (c.course_id = oh.course_id)
+            where tb.timeblock_id = :id
         `;
         for (i in ids) {
             let id = ids[i].ID;
             promises.push(db.queryDB(sqltime, [id], db.QUERY.SINGLE));
         }
         return Promise.all(promises);
+    }).then( data => {
+        console.log(data);
+        return data;
     });
 }
 
