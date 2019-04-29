@@ -65,25 +65,22 @@ export default class extends React.Component {
 	};
 
 	handleSubmit = (event) => {
+      const { course, timesChosen } = this.state;
+
       // Post TA chosen office hours
-      /*
-			event.preventDefault();
-			const formData = new FormData(event.target);
-			var object = {};
-			formData.forEach(function(value, key){
-					object[key] = value;
-			});
-            object['cid'] = this.state.course.COURSE_ID;
-            object['netid'] = this.props.netid;
-			var json = JSON.stringify(object);
-			fetch(serverUrl+'/api/courses/enroll/', {
-					method: 'POST',
-					body: json,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-			});
-      */
+      if (!this.state.course || !this.course.timesChosen){
+          return;
+      }  
+      timesChosen.forEach(time => {
+          axios.post(serverUrl + '/api/officehours', {
+              netid: this.props.netid,
+              cid: course.ID,
+              starttime: time.starttime,
+              endtime: time.endtime,
+              location: time.location,
+          }).then(res => console.log(res))
+            .catch(err => console.error(err));
+      });
 	}
   handleAddHours = () => {
     let properStart = this.state.start;
@@ -92,23 +89,14 @@ export default class extends React.Component {
       return;
     }
     // combine time and day of week
-    console.log(properStart);
-    console.log(this.state);
-    console.log(this.state.day.MOMENT.day());
     properStart.day(this.state.day.MOMENT.day());
-    console.log(properStart);
     properEnd.day(this.state.day.MOMENT.day());
     let newBlock = {
-      START: properStart,
-      END:   properEnd,
-      LOCATION: this.state.location,
+      starttime: properStart,
+      endtime:   properEnd,
+      location: this.state.location,
     };
-    console.log(newBlock);
-    //if (!this.state.timesChosen.find(obj => {
-    //  return obj.START.isBefore(properEnd) || properStart.isBefore(obj.END); 
-    //})){
-      this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
-    //}
+    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
   }
 
 	initialize = () => {
