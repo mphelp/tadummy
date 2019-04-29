@@ -7,7 +7,7 @@ const courseFuncs = require('./courses');
 const users = require('./users');
 
 
-router.get('/:netid', users.auth(users.ROLES.PROFESSOR), api.query(getProfessorReq));
+router.get('/:netid', users.authParam(users.ROLES.PROFESSOR), api.query(getProfessorReq));
 
 /* Optional parameters
  *

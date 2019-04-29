@@ -10,22 +10,16 @@ const api = require('./api');
  * dept:    id of department offering course
  * semester:id of semester course is offered
  */
-router.post('/', (req, res) => {
+router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
     if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    users.getRoles(netid).then ( roles => {
-        if (roles.PROFESSOR) {
-            insertCourse(netid, name, dept, semester).then( result => {
-                res.sendStatus(201);
-            }, err => {
-                console.log(err);
-                res.sendStatus(400);
-            });
-        } else {
-            res.status(401).send('user ' + netid + ' is not a professor!');
-        }
+    insertCourse(netid, name, dept, semester).then( result => {
+        res.sendStatus(201);
+    }, err => {
+        console.log(err);
+        res.sendStatus(400);
     });
 });
 
