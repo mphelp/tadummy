@@ -9,7 +9,6 @@ import StudentCourseEnroll from './StudentCourseEnroll';
 import EnrollTA from './EnrollTA';
 import UpdateStatus from './UpdateStatus';
 import SelectHours from './SelectHours';
-import UpdateStatus from './UpdateStatus';
 
 // Framework CSS
 import "normalize.css";
