@@ -40,6 +40,12 @@ const bottom_s = {
     flexDirection: 'row',
     justifyContent: 'space-between',
 }
+const days_s = {
+    height: 30,
+    width: 300,
+    background: '#DDDDEE',
+    margin: 15,
+}
 
 export default class extends React.Component {
 	state = {
@@ -127,13 +133,22 @@ export default class extends React.Component {
 										</Select><br /><br />
                     <div style={timeblock_s}>
                         Select desired Office Hours:<br />
-
-                        <TimePicker
-                            showSecond={false}
-                            defaultValue={nowMoment}
-                            format={format}
-                            use12Hours
-                        />
+                        <div style={bottom_s}>
+                            <TimePicker
+                                showSecond={false}
+                                defaultValue={nowMoment}
+                                format={format}
+                                use12Hours
+                            />
+                            <Select
+                                items={[]}
+                            >
+                                <Button
+                                    text={"Day"}
+                                />
+                            </Select>
+                            <div style={{ width: 0 }}></div>
+                        </div>
                         <TimePicker
                             showSecond={false}
                             defaultValue={nowMoment}
@@ -143,13 +158,14 @@ export default class extends React.Component {
                         <br /><br />
                         Location:<br /><br />
                         <div style={bottom_s}>
-                            <input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/>
+                            <InputGroup id="location" placeholder="Your Location" />
                             <Button>
                                 Add hours
                             </Button>
                             <div style={{ width: 0 }}></div>
                         </div>
                     </div>
+                    <div style={days_s}>Days</div>
 										<input type="submit" value="Submit" />
 								</form>
 						</div>
