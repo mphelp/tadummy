@@ -32,6 +32,7 @@ export default class extends React.Component {
                             start: new Date(obj.start),
                             end:   new Date(obj.end),
                             title: obj.title,
+                            tooltip: "Tooltip",
                         })
                     }
                 });
@@ -50,6 +51,7 @@ export default class extends React.Component {
                     events={this.state.events}
                     startAccessor="start"
                     endAccessor="end"
+                    tooltipAccessor="tooltip"
                 />
             </div>
         )
