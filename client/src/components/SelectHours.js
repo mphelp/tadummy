@@ -69,7 +69,7 @@ export default class extends React.Component {
       const { course, timesChosen } = this.state;
 
       // Post TA chosen office hours
-      if (!this.state.course || !this.course.timesChosen){
+      if (!course || !timesChosen){
           return;
       }  
       timesChosen.forEach(time => {
