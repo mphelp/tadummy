@@ -65,7 +65,7 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-									<h3 style={header_s}>Statuses go here:</h3>
+									<h3 style={header_s}>Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
 															<div style={TagContent_s}>

@@ -17,17 +17,17 @@ const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + 
 const avails = [
     {
         text: 'Available',
-        id: 2,
+        id: 1,
         desc: 'positive',
     },
     {
         text: 'Busy',
-        id: 4,
+        id: 2,
         desc: 'negative',
     },
     {
         text: 'Offline',
-        id: 5,
+        id: 3,
         desc: 'offline',
     },
 ]
@@ -57,7 +57,12 @@ export default class extends React.Component {
 		// make requests to routes
 		axios.get(courseApi)
 			.then(res => {
-				this.setState({ coursesList: res.data })
+				this.setState({ courseList: res.data }, () => {
+                    if (this.state.courseList){
+                        this.setState({ course: this.state.courseList[0] });
+                        this.setState({avail : avails[this.state.courseList[0].AVAIL_ID-1]})
+                    }
+                })
 			})
 			.catch(err => console.error(err))
 	}
@@ -86,7 +91,9 @@ export default class extends React.Component {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-			});
+			})
+            .then(() => alert("Status changed."))
+            .catch(err => alert(err))
 	}
 
     itemRenderer = (item, { handleClick, isActive }) => (
@@ -98,9 +105,17 @@ export default class extends React.Component {
         />
     )
     handleCourseSelectClick = (course) => {
-			this.setState({ course });
-            this.setState(state => ({ statue: course.STATUS }));
-            if (course.AVAIL_ID == 2){
+        console.log("clicked");
+        console.log(course);
+			this.setState({ course }, () => {
+                this.setState({ status: course.STATUS }, () => {
+                    this.setState({ avail: avails[course.AVAIL_ID-1] });
+
+                })
+            })
+
+            //this.setState(state => ({ status: course.STATUS }));
+            /*if (course.AVAIL_ID == 2){
                 this.setState(state => ({ avail: avails[0] }));
             }
             else if (course.AVAIL_ID == 4){
@@ -108,8 +123,7 @@ export default class extends React.Component {
             }
             else if (course.AVAIL_ID == 5){
                 this.setState(state => ({ avail: avails[2] }));
-            }
-
+            }*/
 	}
 
 
@@ -122,7 +136,7 @@ export default class extends React.Component {
 		 />
 	)
 	filterCourse = (query, coursez, _index, exactMatch) => {
-		const normalizedCourse  = coursez.NAME.toLowerCase();
+		const normalizedCourse  = coursez.CNAME.toLowerCase();
 		const normalizedQuery = query.toLowerCase();
 
 		if (exactMatch){
@@ -138,7 +152,6 @@ export default class extends React.Component {
             course,
             courseList
         } = this.state
-
         return (
             <div style={general_s}>
 					<h1>TAs: Update your status below.</h1>
@@ -147,15 +160,16 @@ export default class extends React.Component {
                     Course:<br />
 					<Select
 							items={courseList}
+                            itemPredicate={this.filterCourse}
 							itemRenderer={this.courseRenderer}
 							onItemSelect={this.handleCourseSelectClick}
 					>
 							<Button rightIcon="caret-down"
-									text={avail ? avail.text : "(No selection)"}
+									text={course ? course.CNAME : "(No selection)"}
 							/>
 					</Select><br /><br />
 					Status (40 character max):<br />
-					<input type="text" name="status" maxLength ="40" /><br/><br/>
+					<input type="text" name="status" defaultValue={course && course.STATUS ? course.STATUS : ""} maxLength ="40" /><br/><br/>
 					Availability:<br />
 					<Select
 							items={avails}
