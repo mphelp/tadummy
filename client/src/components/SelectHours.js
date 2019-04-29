@@ -65,6 +65,7 @@ export default class extends React.Component {
 	};
 
 	handleSubmit = (event) => {
+      event.preventDefault();
       const { course, timesChosen } = this.state;
 
       // Post TA chosen office hours
