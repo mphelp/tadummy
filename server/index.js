@@ -68,6 +68,4 @@ app.get('/login', cas.bounce, (req, res) => {
 
 
 // Routes
-app.use('/tohblock', tohblock);
-
 app.use('/api', api.router);
