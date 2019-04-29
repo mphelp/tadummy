@@ -59,8 +59,11 @@ export default class extends React.Component {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-			});
-            window.location.href = "/?netid=" + object['netid'];
+			}).then(res => {
+					console.log('submit res is:');
+					console.log(res);
+					//window.location.href = "/?netid=" + object['netid'];
+			}).catch(err => console.error(err))
 	}
 
 	initializeSignup = () => {
