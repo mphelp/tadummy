@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import Apply from './Apply';
 import Calendar from './Calendar';
 import CourseRegistration from './CourseRegistration';
+import StudentCourseEnroll from './StudentCourseEnroll';
 
 // Framework CSS
 import "normalize.css";
@@ -47,8 +48,7 @@ export default class extends React.Component {
   render() {
 		return (
 			<BrowserRouter>
-								<header>Search is {this.state.search}</header>
-                <Navigation />
+                <Navigation netid={this.props.netid}/>
                 <div
                     style={BodyGeneral_s}
                 >
@@ -57,6 +57,7 @@ export default class extends React.Component {
                         <Route exact path="/" component={Home}/>
                         <Route path="/apply" component={Apply}/>
                         <Route path="/calendar" component={Calendar}/>
+                        <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/contact" component={Contact}/>
                         <Route render={() => <h1>Page not found</h1>}/>

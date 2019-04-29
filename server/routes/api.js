@@ -15,6 +15,8 @@ router.use('/users', require('./users.js').router);
 
 router.use('/courses', require('./courses.js').router);
 
+router.use('/students', require('./students.js').router);
+
 router.get('/dorms', apiQuery(getAllDorms));
 
 router.get('/departments', apiQuery(getAllDepartments));
@@ -36,7 +38,7 @@ function getAllDepartments() {
 }
 
 function getAllSemesters() {
-    return database.queryDB('SELECT * FROM admin.semester', [], database.QUERY.MULTIPLE);
+    return database.queryDB('SELECT * FROM admin.semesterinfo', [], database.QUERY.MULTIPLE);
 }
 
 function apiQuery(func) {

@@ -3,6 +3,14 @@ const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
 
+module.exports = {
+    router: router,
+    addUser: addUser,
+    getRoles: getRoles
+};
+
+const students = require('./students');
+
 const ROLES = {
     ADMIN:      'ADMIN',
     STUDENT:    'STUDENT',
@@ -32,13 +40,12 @@ router.post('/', (req, res) => {
     let affiliation = req.body.affiliation;
     let func;
     if (affiliation === ROLES.STUDENT) {
-        func = insertStudent;
+        func = students.addStudent;
     } else if (affiliation === ROLES.PROFESSOR) {
         func = insertProfessor;
     } else {
         res.status(400).send('invalid affiliation: ' + affiliation);
     }
-    console.log('processing...');
     func(netid, req.body).then( result => {
         console.log(result);
         res.sendStatus(201);
@@ -56,27 +63,35 @@ router.get('/:netid', (req, res) => {
         validRoles = [];
     }
     let doLdap = false;
+    let authorize = false;
     try {
         doLdap = JSON.parse(req.query.ldap);
-    } catch (err) {
-        doLdap = false;
-    }
-    authorizeUser(netid, validRoles).then( roles => {
-        if (doLdap) {
-            ldap.getInfo(netid).then( data => {
-                roles['ldap'] = data;
-                res.json(roles);
-            });
-        } else {
-            res.json(roles);
-        }
+    } catch (err) {}
+    try {
+        authorize = JSON.parse(req.query.authorize);
+    } catch (err) {}
+    let promises = [getUser(netid)];
+    promises.push(authorize ? authorizeUser(netid, validRoles) : Promise.resolve(undefined));
+    promises.push(doLdap ? ldap.getInfo(netid) : Promise.resolve(undefined));
+    Promise.all(promises).then( data => {
+        let userData = {...data[0], ...data[1]};
+        let authData = data[1];
+        let ldapData = data[2];
+        userData['ldap'] = ldapData;
+        res.json(userData);
     }).catch( err => {
-        res.json({authorized: false});
+        res.json({});
     });
 });
 
 function getRoles(netid) {
-    let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
+    //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
+    let sql = `select * from userroles where netid = :id`;
+    return db.queryDB(sql, [netid], db.QUERY.SINGLE);
+}
+
+function getUser(netid) {
+    let sql = `select netid, name, dateJoined from admin.users where netid = :id`;
     return db.queryDB(sql, [netid], db.QUERY.SINGLE);
 }
 
@@ -87,7 +102,7 @@ function authorizeUser(netid, validRoles = []) {
         validRoles = [validRoles];
     }
     if (!netid) {
-        return data;
+        return {authorized: false};
     }
     return getRoles(netid).then(userRoles => {
         if (Object.keys(userRoles).length === 0) {
@@ -104,21 +119,6 @@ function authorizeUser(netid, validRoles = []) {
     }).catch(console.log);
 };
 
-function insertStudent (netid, data) {
-    let missing = missingKeys(data, ['netid', 'major', 'dorm']);
-    if (missing.length) {
-        return Promise.reject(missing);
-    }
-    let sql = `
-        insert into admin.student(netid, major, dorm)
-        values (:netid, :major, :dorm)
-    `;
-    return Promise.all([
-        insertUser(netid, data.name),
-        db.queryDB(sql, [netid, data.major, data.dorm], db.QUERY.INSERT)
-    ]);
-}
-
 function insertProfessor (netid, data) {
     let missing = missingKeys(data, ['netid', 'office', 'dept']);
     if (missing.length) {
@@ -134,15 +134,10 @@ function insertProfessor (netid, data) {
     ]);
 }
 
-function insertUser(netid, name) {
+function addUser(netid, name) {
     let sql = `
         insert into admin.users(netid, name, admin, datejoined)
         values (:netid, :name, 0, SYSDATE)
     `;
     return db.queryDB(sql, [netid, name], db.QUERY.INSERT);
 }
-
-module.exports = {
-    router: router,
-    getRoles: getRoles
-};
