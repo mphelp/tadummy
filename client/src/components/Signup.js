@@ -69,7 +69,7 @@ export default class extends React.Component {
 		let majorApi = serverUrl + "/api/majors";
 		let deptApi = serverUrl + "/api/departments";
 
-		// save ldap department
+		// ldap department is default dept
 		const { nddepartment } = this.props;
 
 		// make requests to routes
