@@ -29,13 +29,6 @@ router.post('/', (req, res) => {
     });
 });
 
-/* Optional parameters (most also apply for single course route)
- *
- * ids: array of course ids (default to all courses)
- * students: [bool] do include students in course
- * tas:      [bool] do include tas in course
- * professor:[bool] do include professor information
- */
 router.get('/', api.query(getCoursesReq));
 
 router.get('/:cid', api.query(getSingleCourseReq));
@@ -82,6 +75,14 @@ function enrollTACourse(cid, netid) {
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
 
+/* Optional parameters
+ *
+ * cid: number of single course to get
+ * ids: array of course ids (default to all courses)
+ * students: [bool] do include students in course
+ * tas:      [bool] do include tas in course
+ * professor:[bool] do include professor information
+ */
 function getCourses({cid=null, ids=null, students=false, tas=false, professor=false}) {
     let sqlSelect = 'SELECT c.course_id AS id, c.course_name AS name, sem.name AS semester';
     let sqlFrom = 'FROM course c JOIN semesterinfo sem ON (c.semester_id = sem.sid)';
@@ -102,7 +103,6 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
         if (!Array.isArray(courses)) {
             courses = [courses];
         }
-        console.log(courses);
         sqlWhere += ' AND (';
         for (i in courses) {
             let id = courses[i];
