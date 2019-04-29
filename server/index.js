@@ -9,7 +9,6 @@ const fs = require('fs')
 const ldap = require('./ldap.js')
 
 // routes
-const tohblock = require('./routes/tohblock.js')
 const api = require('./routes/api.js')
 const users = require('./routes/users.js');
 
