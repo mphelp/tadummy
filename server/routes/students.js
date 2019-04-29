@@ -71,6 +71,10 @@ function getStudentCalendar(netid) {
                 let ta = course.TAS[j];
                 promises.push(officehours.getOfficehours(ta.NETID));
             }
+            if (course.PROFESSOR) {
+                let profnetid = course.PROFESSOR.NETID;
+                promises.push(officehours.getOfficehours(profnetid));
+            }
         }
         return Promise.all(promises);
     }).then ( data => {
