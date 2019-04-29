@@ -86,7 +86,7 @@ function addOfficehour(start, end, loc, netid, cid) {
 }
 
 // for courses NETID is TAing / teaching
-function getOfficehours(netid, cid) {
+function getOfficehours(netid, cid=undefined) {
     console.log('Getting office hour time blocks for ' + netid + ' course ' + cid);
     let officeType;
     let tableOH;
@@ -99,13 +99,18 @@ function getOfficehours(netid, cid) {
         let sql = `
             select timeblock_id as ID
             from `+tableOH+`
-            where netid = :netid AND course_id = :cid
+            where netid = :netid
         `;
-        return db.queryDB(sql, [netid, cid], db.QUERY.MULTIPLE);
+        let params = [netid];
+        if (cid) {
+            sql += ' AND course_id = :cid';
+            params.push(cid);
+        }
+        return db.queryDB(sql, params, db.QUERY.MULTIPLE);
     }).then( ids => {
         let promises = [];
         let sqltime = `
-            select tb.timeblock_id AS id, tb.location, tb.starttime, tb.endtime,
+            select tb.timeblock_id AS tid, tb.location, tb.starttime, tb.endtime,
                 '`+officeType+`' AS "TYPE", c.course_id AS CID, c.course_name AS CNAME,
                 u.name AS TEACHER
             from timeblock tb

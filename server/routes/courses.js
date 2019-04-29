@@ -241,7 +241,7 @@ function addCourseTimesReq(req) {
 
 function getCourseTimes(cid) {
     let sql = `
-        select tb.timeblock_id AS id, tb.location, tb.starttime, tb.endtime,
+        select tb.timeblock_id AS tid, tb.location, tb.starttime, tb.endtime,
             'COURSE' AS "TYPE", c.course_id AS CID, c.course_name AS CNAME, u.name AS TEACHER
         from timeblock tb
             JOIN coursetime ct ON (ct.timeblock_id = tb.timeblock_id)
