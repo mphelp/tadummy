@@ -2,6 +2,8 @@ const router = require('express').Router()
 const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
+const api = require('./api');
+const courses = require('./courses');
 
 module.exports = {
     router: router,
@@ -83,6 +85,7 @@ router.get('/:netid', (req, res) => {
         res.json({});
     });
 });
+
 
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
