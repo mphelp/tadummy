@@ -15,7 +15,8 @@ module.exports = {
     router: router,
     addUser: addUser,
     getRoles: getRoles,
-    auth: auth,
+    authParam: authParam,
+    authBody: authBody,
     ROLES: ROLES,
     getUserPlus: getUserPlus,
 };
@@ -91,7 +92,6 @@ router.get('/:netid', (req, res) => {
     });
 });
 
-
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     let sql = `select * from userroles where netid = :id`;
@@ -127,9 +127,24 @@ function authorizeUser(netid, validRoles = []) {
     }).catch(console.log);
 };
 
-function auth(validRoles = []) {
+function authParam(validRoles = []) {
     return (req, res, next) => {
         let netid = req.params.netid;
+        return authorizeUser(netid, validRoles).then( authData => {
+            if (authData.authorized) {
+                next();
+                return;
+            } else {
+                return res.status(401)
+                    .send("'"+netid+"' does not have role: " + JSON.stringify(validRoles));
+            }
+        })
+    };
+}
+
+function authBody(validRoles = []) {
+    return (req, res, next) => {
+        let netid = req.body.netid;
         return authorizeUser(netid, validRoles).then( authData => {
             if (authData.authorized) {
                 next();

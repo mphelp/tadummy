@@ -16,17 +16,11 @@ router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    users.getRoles(netid).then ( roles => {
-        if (roles.PROFESSOR) {
-            insertCourse(netid, name, dept, semester).then( result => {
-                res.sendStatus(201);
-            }, err => {
-                console.log(err);
-                res.sendStatus(400);
-            });
-        } else {
-            res.status(401).send('user ' + netid + ' is not a professor!');
-        }
+    insertCourse(netid, name, dept, semester).then( result => {
+        res.sendStatus(201);
+    }, err => {
+        console.log(err);
+        res.sendStatus(400);
     });
 });
 
