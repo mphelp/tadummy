@@ -13,11 +13,11 @@ const api = require('./api');
  *      location
  */
 router.post('/', (req, res) => {
-    if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
+    if (missingKeys(req.body, ['netid', 'cid', 'starttime', 'endtime', 'location'], req, res).length) {
         return;
     }
     let {netid, cid, starttime, endtime, location} = req.body;
-    return addOfficehour(start, end, location, netid, cid).then ( result => {
+    return addOfficehour(starttime, endtime, location, netid, cid).then ( result => {
         res.sendStatus(201);
     }, err => {
         res.status(400).send(err);
@@ -35,9 +35,21 @@ function addTimeblock(start, end, loc) {
         insert into timeblock(starttime, endtime, location)
         values (:starttime, :endtime, :loc)
     `;
+    let timeblocksql = `
+        select ID from (
+            select timeblock_id as ID
+            from timeblock
+            where starttime = :starttime AND endtime = :endtime AND location = :loc
+            order by ID desc
+        ) where ROWNUM <= 1
+    `;
     let starttime = new Date(start);
     let endtime = new Date(end);
-    return db.queryDB(sql, [starttime, endtime, loc], db.QUERY.INSERT);
+    return db.queryDB(sql, [starttime, endtime, loc], db.QUERY.INSERT).then( (data) => {
+        return db.queryDB(timeblocksql, [starttime, endtime, loc], db.QUERY.SINGLE);
+    }).then ( data => {
+        return data.ID;
+    });
 }
 
 function getType(netid, table='') {
@@ -55,22 +67,13 @@ function getType(netid, table='') {
 function addOfficehour(start, end, loc, netid, cid) {
     let starttime = new Date(start);
     let endtime = new Date(end);
-    let timeblocksql = `
-        select ID from (
-            select timeblock_id as ID
-            from timeblock
-            where starttime = :starttime AND endtime = :endtime AND location = :loc
-            order by ID desc
-        ) where ROWNUM <= 1
-    `;
     let promises = [
         addTimeblock(start, end, loc),
-        db.queryDB(timeblocksql, [starttime, endtime, loc], db.QUERY.SINGLE),
         getType(netid, 'OFFICEHOURS')
     ];
     return Promise.all(promises).then( data => {
-        let timeblockid = data[1].ID;
-        let table = data[2];
+        let timeblockid = data[0];
+        let table = data[1];
         if (!table) {
             return null;
         }
@@ -104,10 +107,11 @@ function getOfficehours(netid, cid) {
         let sqltime = `
             select tb.timeblock_id AS id, tb.location, tb.starttime, tb.endtime,
                 '`+officeType+`' AS "TYPE", c.course_id AS CID, c.course_name AS CNAME,
-                oh.netid
+                u.name AS TEACHER
             from timeblock tb
                 JOIN `+tableOH+` oh ON (tb.timeblock_id = oh.timeblock_id)
                 JOIN course c ON (c.course_id = oh.course_id)
+                JOIN users u ON (oh.netid = u.netid)
             where tb.timeblock_id = :id
         `;
         for (i in ids) {
@@ -115,9 +119,6 @@ function getOfficehours(netid, cid) {
             promises.push(db.queryDB(sqltime, [id], db.QUERY.SINGLE));
         }
         return Promise.all(promises);
-    }).then( data => {
-        console.log(data);
-        return data;
     });
 }
 
@@ -145,6 +146,7 @@ function setStatusReq(req) {
     return setStatus(netid, cid, avail_id, status);
 }
 
+// get list of courses for specific TA or professor
 function getCourses(netid) {
     return getType(netid).then ( type => {
         let tableFor = type+'FOR';
@@ -167,4 +169,5 @@ function getCoursesReq(req) {
 module.exports = {
     router: router,
     getOfficehours: getOfficehours,
+    addTimeblock: addTimeblock,
 };
