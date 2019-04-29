@@ -74,7 +74,7 @@ function enrollCourse(cid, netid) {
 function enrollTACourse(cid, netid) {
     let sql = `
         insert into admin.tafor(netid, course_id, avail_id)
-        values (:netid, :cid, 1)
+        values (:netid, :cid, 3)
     `;
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
