@@ -69,6 +69,9 @@ export default class extends React.Component {
 		let majorApi = serverUrl + "/api/majors";
 		let deptApi = serverUrl + "/api/departments";
 
+		// save ldap department
+		const { nddepartment } = this.props;
+
 		// make requests to routes
 		axios.get(dormApi)
 			.then(res => {
@@ -82,7 +85,10 @@ export default class extends React.Component {
 			.catch(err => console.error(err))
 		axios.get(deptApi)
 			.then(res => {
-				this.setState({ depts: res.data })
+				this.setState({ 
+						depts: res.data,
+						dept:  res.data.find(item => { return item.NAME == nddepartment; })
+				})
 			})
 			.catch(err => console.error(err))
 	}
