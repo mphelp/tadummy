@@ -15,16 +15,42 @@ const general_s = {
 }
 
 const customEvent = event => {
-  return (
-    <span>
-      {event.title}<br />
-      Location: {event.event.location}<br />
-    </span>
-  )
+  const { type } = event.event;
+  if (type === "TA"){
+    return (
+      <span>
+        {event.event.teacher} at <br />
+        {event.event.location}<br />
+      </span>
+    )
+  } else if (type === "PROF"){
+    return (
+      <span>
+        {event.event.teacher} at <br />
+        {event.event.location}<br />
+      </span>
+    )
+  } else if (type === "COURSE"){
+    return (
+      <span>
+        {event.event.teacher} at <br />
+        {event.event.location}<br />
+      </span>
+    )
+  } else {
+    return <div>Unclassified event</div>
+  }
 }
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
+// Event colors
+const colors = {
+  'TA': 'LightCoral',
+  'PROF': 'MediumPurple',
+  'COURSE': 'SteelBlue',
+  'none': 'LightSalmon',
+}
 export default class extends React.Component {
     state = {
         events: [],
@@ -37,13 +63,15 @@ export default class extends React.Component {
                 let events = [];
                 res.data.forEach(obj => {
                     if (new Date(obj.STARTTIME) <= new Date(obj.ENDTIME)){
-                        events.push({
+                        let thisevent = {
                             start: new Date(obj.STARTTIME),
                             end:   new Date(obj.ENDTIME),
-                            title: obj.TYPE,
-                            tooltip: "Tooltip",
+                            type: obj.TYPE,
                             location: obj.LOCATION,
-                        })
+                            teacher: obj.TEACHER,
+                        };
+                        thisevent['color'] = colors.hasOwnProperty(obj.TYPE) ? colors[obj.TYPE] : colors['none'];
+                        events.push(thisevent);   
                     }
                 });
                 this.setState({ events }, () => console.log(this.state));
@@ -63,6 +91,11 @@ export default class extends React.Component {
                     endAccessor="end"
                     tooltipAccessor="tooltip"
                     components={{ event: customEvent }}
+                    eventPropGetter={ event => ({
+                        style: {
+                            backgroundColor: event.color,
+                        },
+                    })}
                 />
             </div>
         )
