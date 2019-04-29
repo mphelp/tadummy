@@ -22,13 +22,13 @@ export default class extends React.PureComponent {
         return (
             <Navbar className={Classes.DARK}>
                 <NavbarGroup align={Alignment.LEFT}>
-                    <NavbarHeading>TASystem</NavbarHeading>
+                    <NavbarHeading>TASYSTEM</NavbarHeading>
                     <NavbarDivider />
                     <Link to="/calendar" style={subtleLink_s}>
                         <AnchorButton text="CALENDAR" rightIcon="timeline-events"/>
                     </Link>
                     <NavbarDivider />
-                    <NavbarHeading>Manage Courses</NavbarHeading>
+                    <NavbarHeading>Courses</NavbarHeading>
                     <Link to="/student_enroll" style={subtleLink_s}>
                         <AnchorButton text="ENROLL" rightIcon="applications"/>
                     </Link>
@@ -40,7 +40,7 @@ export default class extends React.PureComponent {
                     <Link to="/enrollTA" style={subtleLink_s}>
                         <AnchorButton text="BECOME" rightIcon="envelope"/>
                     </Link>
-                    <Link to="/" style={subtleLink_s}>
+                    <Link to="/select_hours" style={subtleLink_s}>
                         <AnchorButton text="SELECT HOURS" rightIcon="envelope"/>
                     </Link>
                     <Link to="/updatestatusTA" style={subtleLink_s}>

@@ -8,6 +8,7 @@ import CourseRegistration from './CourseRegistration';
 import StudentCourseEnroll from './StudentCourseEnroll';
 import EnrollTA from './EnrollTA';
 import UpdateStatus from './UpdateStatus';
+import SelectHours from './SelectHours';
 
 // Framework CSS
 import "normalize.css";
@@ -57,10 +58,10 @@ export default class extends React.Component {
                     <Sidebar netid={this.props.netid}/>
                     <Switch>
                         <Route exact path="/" component={Home}/>
-                        <Route path="/apply" component={Apply}/>
                         <Route path="/calendar" component={Calendar}/>
                         <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
+												<Route path="/select_hours" render={props => <SelectHours {...this.props} isAuthed={true} />} /> 
                         <Route path="/contact" component={Contact}/>
                         <Route path="/enrollTA" render={(props) => <EnrollTA netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/updatestatusTA" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
