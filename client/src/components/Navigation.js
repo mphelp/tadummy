@@ -22,23 +22,21 @@ export default class extends React.PureComponent {
         return (
             <Navbar className={Classes.DARK}>
                 <NavbarGroup align={Alignment.LEFT}>
-                    <NavbarHeading>TAS</NavbarHeading>
+                    <NavbarHeading>TASystem</NavbarHeading>
                     <NavbarDivider />
-                    <Link to="/" style={subtleLink_s}>
-                        <AnchorButton text="HOME" rightIcon="home"/>
-                    </Link>
-                    <Link to="/apply" style={subtleLink_s}>
-                        <AnchorButton text="APPLY" rightIcon="applications"/>
-                    </Link>
                     <Link to="/calendar" style={subtleLink_s}>
                         <AnchorButton text="CALENDAR" rightIcon="timeline-events"/>
                     </Link>
+                    <NavbarDivider />
+                    <NavbarHeading>Manage Courses</NavbarHeading>
                     <Link to="/student_enroll" style={subtleLink_s}>
-                        <AnchorButton text="ENROLL IN A COURSE" rightIcon="applications"/>
+                        <AnchorButton text="ENROLL" rightIcon="applications"/>
                     </Link>
                     <Link to="/course_creation" style={subtleLink_s}>
-                        <AnchorButton text="CREATE A COURSE" rightIcon="applications"/>
+                        <AnchorButton text="CREATE" rightIcon="applications"/>
                     </Link>
+                    <NavbarDivider />
+                    <NavbarHeading>TA</NavbarHeading>
                     <Link to="/contact" style={subtleLink_s}>
                         <AnchorButton text="CONTACT US" rightIcon="envelope"/>
                     </Link>
