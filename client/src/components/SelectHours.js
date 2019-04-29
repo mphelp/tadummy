@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {
+    Tag,
     Button,
     FormGroup,
     InputGroup,
@@ -84,8 +85,10 @@ export default class extends React.Component {
       });
 	}
   handleAddHours = () => {
-    let properStart = this.state.start;
-    let properEnd   = this.state.end;
+    let properStart = this.state.start.clone();
+    let properEnd   = this.state.end.clone();
+    console.log('Before before: ');
+    console.log(this.state.timesChosen);
     if (!this.state.day || !this.state.end || !this.state.start || !this.state.location){
       return;
     }
@@ -96,8 +99,12 @@ export default class extends React.Component {
       starttime: properStart,
       endtime:   properEnd,
       location: this.state.location,
+      id: properStart.format()+properEnd.format()
     };
-    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] })
+    console.log('Before: ');
+    console.log(this.state.timesChosen);
+    this.setState({ timesChosen: [...this.state.timesChosen, newBlock] },
+      () => { console.log('After: '); console.log(this.state.timesChosen); })
   }
 
 	initialize = () => {
@@ -157,7 +164,7 @@ export default class extends React.Component {
 		}
 	}
 		render(){
-				const { coursesList, course, day } = this.state;
+				const { coursesList, course, day, timesChosen } = this.state;
         return (
             <div style={general_s}>
 								<form onSubmit={this.handleSubmit}>
@@ -213,7 +220,31 @@ export default class extends React.Component {
                             <div style={{ width: 0 }}></div>
                         </div>
                     </div>
-                    <div style={days_s}>Days</div>
+                    <div>
+                        {timesChosen.map(time => (
+                            <div key={time.id}>
+                            { (() => {
+                                if(time.starttime.day() === 0){
+                                    return <Tag>"Su"</Tag>
+                                } else if (time.starttime.day() === 1){
+                                    return <Tag>"Mo"</Tag>
+                                } else if (time.starttime.day() === 2){
+                                    return <Tag>"Tu"</Tag>
+                                } else if (time.starttime.day() === 3){
+                                    return <Tag>"We"</Tag>
+                                } else if (time.starttime.day() === 4){
+                                    return <Tag>"Th"</Tag>
+                                } else if (time.starttime.day() === 5){
+                                    return <Tag>"Fr"</Tag>
+                                } else {
+                                    return <Tag>"Sa"</Tag>
+                                }
+                            
+                            
+                            })()}    
+                            </div>
+                        ))}
+                    </div>
 										<input type="submit" value="Submit" />
 								</form>
 						</div>
