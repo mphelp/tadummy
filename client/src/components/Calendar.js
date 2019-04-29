@@ -14,6 +14,14 @@ const general_s = {
     minWidth: 1000,
 }
 
+const customEvent = event => {
+  return (
+    <span>
+      {event.title}<br />
+      Location: {event.event.location}<br />
+    </span>
+  )
+}
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
@@ -33,6 +41,7 @@ export default class extends React.Component {
                             end:   new Date(obj.end),
                             title: obj.title,
                             tooltip: "Tooltip",
+                            location: "Here",
                         })
                     }
                 });
@@ -52,6 +61,7 @@ export default class extends React.Component {
                     startAccessor="start"
                     endAccessor="end"
                     tooltipAccessor="tooltip"
+                    components={{ event: customEvent }}
                 />
             </div>
         )
