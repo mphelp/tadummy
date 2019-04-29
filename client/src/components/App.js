@@ -52,7 +52,7 @@ export default class extends React.Component {
                 <div
                     style={BodyGeneral_s}
                 >
-                    <Sidebar />
+                    <Sidebar netid={this.props.netid}/>
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route path="/apply" component={Apply}/>
