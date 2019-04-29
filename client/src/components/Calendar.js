@@ -70,6 +70,13 @@ const colors = {
 export default class extends React.Component {
     state = {
         events: [],
+        tas: [],
+        profs: [],
+        courses: [],
+
+        qTAS: true,
+        qPROFS: true,
+        qCOURSES: true,
     }
     // Retrieve TA office hour blocks
     retrieve = () => {
@@ -77,6 +84,9 @@ export default class extends React.Component {
         axios.get(calendarApi)
             .then(res => {
                 let events = [];
+                let tas = [];
+                let profs = [];
+                let courses = [];
                 res.data.forEach(obj => {
                     if (new Date(obj.STARTTIME) <= new Date(obj.ENDTIME)){
                         let thisevent = {
@@ -88,30 +98,44 @@ export default class extends React.Component {
                         };
                         thisevent['color'] = colors.hasOwnProperty(obj.TYPE) ? colors[obj.TYPE] : colors['none'];
                         events.push(thisevent);   
+                        if (thisevent.type === "TA"){
+                            tas.push(thisevent);
+                        } else if (thisevent.type === "PROF"){
+                            profs.push(thisevent);
+                        } else if (thisevent.type === "COURSE"){
+                            courses.push(thisevent)
+                        }
                     }
                 });
-                this.setState({ events }, () => console.log(this.state));
+                this.setState({ events, profs, tas, courses }, () => console.log(this.state));
             })
             .catch(err => console.error(err))
     }
     componentWillMount(){
         this.retrieve()
     }
-    onTAClick = () => {
-    
+    onTASClick = event => {
+        this.setState({ qTAS: !this.state.qTAS })
     }
-    onPROFClick = () => {
-    
+    onPROFSClick = () => {
+        this.setState({ qPROFS: !this.state.qPROFS })
     }
     onCOURSESClick = () => {
-    
+        this.setState({ qCOURSES: !this.state.qCOURSES })
     }
     render(){
+        const { qTAS, qPROFS, qCOURSES, tas, profs, courses } = this.state;
         return (
             <div style={general_s}>
                 <BigCalendar
                     localizer={localizer}
-                    events={this.state.events}
+                    events={
+                        [
+                            ...(qTAS ? tas : []),
+                            ...(qPROFS ? profs : []),
+                            ...(qCOURSES ? courses : [])
+                        ]
+                    }
                     startAccessor="start"
                     endAccessor="end"
                     tooltipAccessor="tooltip"
@@ -123,9 +147,24 @@ export default class extends React.Component {
                     })}
                 />
                 <div style={categories_s}>
-                    <Switch labelElement={<h3 style={label_s}>TA</h3>} large={true} style={category_s}/>
-                    <Switch labelElement={<h3 style={label_s}>PROF</h3>} large={true} style={category_s}/>
-                    <Switch labelElement={<h3 style={label_s}>COURSES</h3>} large={true} style={category_s}/>
+                    <Switch 
+                        checked={qTAS}   
+                        onChange={this.onTASClick.bind(this)} 
+                        labelElement={<h3 style={label_s}>TA</h3>} 
+                        large={true} style={category_s}
+                    />
+                    <Switch 
+                        checked={qPROFS}   
+                        onChange={this.onPROFSClick.bind(this)} 
+                        labelElement={<h3 style={label_s}>PROF</h3>} 
+                        large={true} style={category_s}
+                    />
+                    <Switch 
+                        checked={qCOURSES} 
+                        onChange={this.onCOURSESClick.bind(this)} 
+                        labelElement={<h3 style={label_s}>COURSES</h3>} 
+                        large={true} style={category_s}
+                    />
                 </div>
             </div>
         )
