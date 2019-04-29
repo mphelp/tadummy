@@ -82,13 +82,13 @@ export default class extends React.Component {
 	courseRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
-				 key={item.COURSE_ID}
-				 text={item.COURSE_NAME}
+				 key={item.ID}
+				 text={item.NAME}
 				 onClick={handleClick}
 		 />
 	)
 	filterCourse = (query, course, _index, exactMatch) => {
-		const normalizedCourse  = course.COURSE_NAME.toLowerCase();
+		const normalizedCourse  = course.NAME.toLowerCase();
 		const normalizedQuery = query.toLowerCase();
 
 		if (exactMatch){
