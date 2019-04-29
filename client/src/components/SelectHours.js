@@ -9,8 +9,12 @@ import {
     MenuItem,
 } from "@blueprintjs/core";
 import { Select } from "@blueprintjs/select";
-import { TimePicker } from "@blueprintjs/datetime";
+import moment from 'moment';
+import TimePicker from 'rc-time-picker';
+import 'rc-time-picker/assets/index.css';
 
+const nowMoment = moment().hour(0).minute(0);
+const format = 'h:mm a';
 const config = require('../config.js')
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
@@ -25,6 +29,16 @@ const time_s = {
 		maxWidth: 100,
 		width: 100,
 		margin: "auto",
+}
+const timeblock_s = {
+    background: '#DDEEF0',
+    padding: 15,
+    marginBottom: 20,
+}
+const bottom_s = {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
 }
 
 export default class extends React.Component {
@@ -99,6 +113,7 @@ export default class extends React.Component {
         return (
             <div style={general_s}>
 								<form onSubmit={this.handleSubmit}>
+                    <h1>Customize your office hours:</h1><br />
 										<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
 										<Select
 												items={coursesList}
@@ -110,9 +125,31 @@ export default class extends React.Component {
 														text={course ? course.NAME : "(No selection)"}
 												/>
 										</Select><br /><br />
-										Select desired Office Hours:<br />
-										Location:<br /><br />
-										<input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/><br/><br/>
+                    <div style={timeblock_s}>
+                        Select desired Office Hours:<br />
+
+                        <TimePicker
+                            showSecond={false}
+                            defaultValue={nowMoment}
+                            format={format}
+                            use12Hours
+                        />
+                        <TimePicker
+                            showSecond={false}
+                            defaultValue={nowMoment}
+                            format={format}
+                            use12Hours
+                        />
+                        <br /><br />
+                        Location:<br /><br />
+                        <div style={bottom_s}>
+                            <input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/>
+                            <Button>
+                                Add hours
+                            </Button>
+                            <div style={{ width: 0 }}></div>
+                        </div>
+                    </div>
 										<input type="submit" value="Submit" />
 								</form>
 						</div>
