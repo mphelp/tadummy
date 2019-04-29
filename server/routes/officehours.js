@@ -5,10 +5,12 @@ const missingKeys = require('../missingKeys')
 const api = require('./api');
 
 /* Required fields:
- * netid:   netid of enrollee course
- * name:   name of course
- * dept:    id of department offering course
- * semester:id of semester course is offered
+ * netid:   netid office hour owner
+ * cid:     course_id for course
+ * times: array of times for office hours with following properties
+ *      start
+ *      end
+ *      location
  */
 router.post('/', (req, res) => {
     if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {

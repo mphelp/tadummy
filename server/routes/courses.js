@@ -3,7 +3,6 @@ const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
 const api = require('./api');
-const users = require('./users');
 
 /* Required fields:
  * netid:   netid of professor teaching course
@@ -92,9 +91,13 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     if (cid) {
         courses = [cid];
     } else if (ids) {
-        courses = ids;
+        if (ids.length === 0) {
+            return Promise.resolve([]);
+        } else {
+            courses = ids;
+        }
     }
-    if (courses) {
+    if (courses && courses.length) {
         if (!Array.isArray(courses)) {
             courses = [courses];
         }
@@ -117,7 +120,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     }).then( () => {
         let promises = [];
         if (students) {
-            extra.push('students');
+            extra.push('STUDENTS');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlStudents = `
@@ -130,7 +133,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (tas) {
-            extra.push('tas');
+            extra.push('TAS');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
@@ -144,7 +147,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (professor) {
-            extra.push('professor');
+            extra.push('PROFESSORS');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
