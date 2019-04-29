@@ -12,7 +12,7 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 // My Components
-import StudentCourseEnrollSignup from "./forms/StudentCourseEnrollSignup";
+import EnrollTASignup from "./forms/EnrollTASignup";
 
 const $ = require('jquery');
 const config = require('../config.js')
@@ -50,7 +50,7 @@ export default class extends React.Component {
             object['cid'] = this.state.course.ID;
             object['netid'] = this.props.netid;
 			var json = JSON.stringify(object);
-			fetch(serverUrl+'/api/courses/enroll/', {
+			fetch(serverUrl+'/api/courses/enrollta/', {
 					method: 'POST',
 					body: json,
                     headers: {
@@ -87,8 +87,8 @@ export default class extends React.Component {
 				 onClick={handleClick}
 		 />
 	)
-	filterCourse = (query, course, _index, exactMatch) => {
-		const normalizedCourse  = course.NAME.toLowerCase();
+	filterCourse = (query, coursez, _index, exactMatch) => {
+		const normalizedCourse  = coursez.NAME.toLowerCase();
 		const normalizedQuery = query.toLowerCase();
 
 		if (exactMatch){
@@ -109,7 +109,7 @@ export default class extends React.Component {
 				{
 						(() => {
 									return(
-										<StudentCourseEnrollSignup
+										<EnrollTASignup
                                             netid        = {netid}
 											coursesList        = {coursesList}
 											course       = {course}
