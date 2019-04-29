@@ -87,7 +87,7 @@ export default class extends React.Component {
       timesChosen.forEach(time => {
           axios.post(serverUrl + '/api/officehours', {
               netid: this.props.netid,
-              cid: course.ID,
+              cid: course.CID,
               starttime: time.starttime,
               endtime: time.endtime,
               location: time.location,
@@ -154,8 +154,8 @@ export default class extends React.Component {
 	courseRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
 				 className={ isActive ? Classes.ACTIVE : "" }
-				 key={item.ID}
-				 text={item.NAME}
+				 key={item.CID}
+				 text={item.CNAME}
 				 onClick={handleClick}
 		 />
 	)
@@ -168,7 +168,7 @@ export default class extends React.Component {
 		 />
 	)
 	filterCourse = (query, course, _index, exactMatch) => {
-		const normalizedCourse  = course.NAME.toLowerCase();
+		const normalizedCourse  = course.CNAME.toLowerCase();
 		const normalizedQuery = query.toLowerCase();
 
 		if (exactMatch){
@@ -191,7 +191,7 @@ export default class extends React.Component {
 												onItemSelect={this.handleCourseSelectClick}
 										>
 												<Button rightIcon="caret-down"
-														text={course ? course.NAME : "(No selection)"}
+														text={course ? course.CNAME : "(No selection)"}
 												/>
 										</Select><br /><br />
                     <div style={timeblock_s}>
