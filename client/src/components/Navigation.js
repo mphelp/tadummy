@@ -37,11 +37,14 @@ export default class extends React.PureComponent {
                     </Link>
                     <NavbarDivider />
                     <NavbarHeading>TA</NavbarHeading>
-                    <Link to="/" style={subtleLink_s}>
+                    <Link to="/enrollTA" style={subtleLink_s}>
                         <AnchorButton text="BECOME" rightIcon="envelope"/>
                     </Link>
                     <Link to="/" style={subtleLink_s}>
                         <AnchorButton text="SELECT HOURS" rightIcon="envelope"/>
+                    </Link>
+                    <Link to="/updatestatusTA" style={subtleLink_s}>
+                        <AnchorButton text="UPDATE STATUS" rightIcon="envelope"/>
                     </Link>
                     <NavbarDivider />
                 </NavbarGroup>
