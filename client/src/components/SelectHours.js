@@ -21,6 +21,11 @@ const general_s = {
 const inputName_s = {
     maxWidth: 300,
 }
+const time_s = {
+		maxWidth: 100,
+		width: 100,
+		margin: "auto",
+}
 
 export default class extends React.Component {
 	state = {
@@ -93,29 +98,22 @@ export default class extends React.Component {
 				const { coursesList, course } = this.state;
         return (
             <div style={general_s}>
-								<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
-								<Select
-										items={coursesList}
-										itemPredicate={this.filterCourse}
-										itemRenderer={this.courseRenderer}
-										onItemSelect={this.handleCourseSelectClick}
-								>
-										<Button rightIcon="caret-down"
-												text={course ? course.NAME : "(No selection)"}
-										/>
-								</Select><br /><br />
 								<form onSubmit={this.handleSubmit}>
-								Select desired Office Hours:<br />
-                <TimePicker
-                    useAmPm={true}
-                    showArrowButtons={true}
-                    selectAllOnFocus={true}
-                />
-						    	
-
-								Location:<br /><br />
-								<input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/><br/><br/>
-								<input type="submit" value="Submit" />
+										<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
+										<Select
+												items={coursesList}
+												itemPredicate={this.filterCourse}
+												itemRenderer={this.courseRenderer}
+												onItemSelect={this.handleCourseSelectClick}
+										>
+												<Button rightIcon="caret-down"
+														text={course ? course.NAME : "(No selection)"}
+												/>
+										</Select><br /><br />
+										Select desired Office Hours:<br />
+										Location:<br /><br />
+										<input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/><br/><br/>
+										<input type="submit" value="Submit" />
 								</form>
 						</div>
         )
