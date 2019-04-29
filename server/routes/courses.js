@@ -75,26 +75,48 @@ function enrollTACourse(cid, netid) {
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
 
-function getCourses({cid=null, students=false, tas=false, professor=false}) {
+function getCourses({cid=null, ids=null, students=false, tas=false, professor=false}) {
     let sqlSelect = 'SELECT c.course_id AS id, c.course_name AS name, sem.name AS semester';
     let sqlFrom = 'FROM course c JOIN semesterinfo sem ON (c.semester_id = sem.sid)';
     let sqlWhere = 'WHERE 1=1';
     let params = [];
+    if (!Array.isArray(ids)) {
+        try {
+            ids = JSON.parse(ids);
+        } catch (err) {}
+    }
     if (cid) {
-        sqlWhere += ' AND c.course_id = :cid_';
-        params.push(cid);
+        courses = [cid];
+    } else if (ids) {
+        courses = ids;
+    }
+    if (courses) {
+        if (!Array.isArray(courses)) {
+            courses = [courses];
+        }
+        console.log(courses);
+        sqlWhere += ' AND (';
+        for (i in courses) {
+            let id = courses[i];
+            if (i != 0) {
+                sqlWhere += ' OR ';
+            }
+            sqlWhere += 'c.course_id = :id';
+            params.push(id);
+        }
+        sqlWhere += ')';
     }
     let sql = sqlSelect + ' ' + sqlFrom + ' ' + sqlWhere;
-    let courses;
+    let courseData;
     let extra = [];
     return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( data => {
-        courses = data;
+        courseData = data;
     }).then( () => {
         let promises = [];
         if (students) {
             extra.push('students');
-            for (i in courses) {
-                let course = courses[i];
+            for (i in courseData) {
+                let course = courseData[i];
                 let sqlStudents = `
                     SELECT sf.netid, u.name
                     FROM studentfor sf
@@ -106,8 +128,8 @@ function getCourses({cid=null, students=false, tas=false, professor=false}) {
         }
         if (tas) {
             extra.push('tas');
-            for (i in courses) {
-                let course = courses[i];
+            for (i in courseData) {
+                let course = courseData[i];
                 let sqlTas = `
                     SELECT taf.netid, u.name, taf.status, avail.avail_desc as availability
                     FROM tafor taf
@@ -120,8 +142,8 @@ function getCourses({cid=null, students=false, tas=false, professor=false}) {
         }
         if (professor) {
             extra.push('professor');
-            for (i in courses) {
-                let course = courses[i];
+            for (i in courseData) {
+                let course = courseData[i];
                 let sqlTas = `
                     SELECT pf.netid, u.name, prof.office, pf.status, avail.avail_desc as availability
                     FROM proffor pf
@@ -135,13 +157,13 @@ function getCourses({cid=null, students=false, tas=false, professor=false}) {
         }
         return Promise.all(promises);
     }).then( data => {
-        let numCourses = courses.length;
+        let numcourseData = courseData.length;
         for (i in data) {
-            let key = extra[Math.floor(i / numCourses)];
-            let courseIndex = i % numCourses;
-            courses[courseIndex][key] = data[i];
+            let key = extra[Math.floor(i / numcourseData)];
+            let courseIndex = i % numcourseData;
+            courseData[courseIndex][key] = data[i];
         }
-        return cid ? courses[0] : courses;
+        return cid ? courseData[0] : courseData;
     });
 }
 
@@ -184,4 +206,5 @@ function insertCourse(netid, name, dept, semester) {
 
 module.exports = {
     router:router,
+    getCourses: getCourses
 };

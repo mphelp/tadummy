@@ -3,6 +3,7 @@ const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
 const api = require('./api');
+const courses = require('./courses');
 
 module.exports = {
     router: router,
@@ -108,17 +109,15 @@ function getUserCourses(netid) {
         FROM studentfor sf
         WHERE netid = :netid
     `;
-    let courses = [];
     return db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE).then( data => {
+        console.log(data);
         let courseIds = [];
         for (i in data) {
             let cid = data[i].ID;
             courseIds.push(cid);
         }
-        return courseIds;
-    }).then( courseIds => {
-        courses = courseIds;
-        return courses;
+        console.log(courseIds);
+        return courses.getCourses({ids: courseIds});
     });
 }
 
