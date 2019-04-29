@@ -10,32 +10,19 @@ const api = require('./api');
  * dept:    id of department offering course
  * semester:id of semester course is offered
  */
-router.post('/', (req, res) => {
+router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
     if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    users.getRoles(netid).then ( roles => {
-        if (roles.PROFESSOR) {
-            insertCourse(netid, name, dept, semester).then( result => {
-                res.sendStatus(201);
-            }, err => {
-                console.log(err);
-                res.sendStatus(400);
-            });
-        } else {
-            res.status(401).send('user ' + netid + ' is not a professor!');
-        }
+    insertCourse(netid, name, dept, semester).then( result => {
+        res.sendStatus(201);
+    }, err => {
+        console.log(err);
+        res.sendStatus(400);
     });
 });
 
-/* Optional parameters (most also apply for single course route)
- *
- * ids: array of course ids (default to all courses)
- * students: [bool] do include students in course
- * tas:      [bool] do include tas in course
- * professor:[bool] do include professor information
- */
 router.get('/', api.query(getCoursesReq));
 
 router.get('/:cid', api.query(getSingleCourseReq));
@@ -82,6 +69,14 @@ function enrollTACourse(cid, netid) {
     return db.queryDB(sql, [netid, cid], db.QUERY.INSERT);
 }
 
+/* Optional parameters
+ *
+ * cid: number of single course to get
+ * ids: array of course ids (default to all courses)
+ * students: [bool] do include students in course
+ * tas:      [bool] do include tas in course
+ * professor:[bool] do include professor information
+ */
 function getCourses({cid=null, ids=null, students=false, tas=false, professor=false}) {
     let sqlSelect = 'SELECT c.course_id AS id, c.course_name AS name, sem.name AS semester';
     let sqlFrom = 'FROM course c JOIN semesterinfo sem ON (c.semester_id = sem.sid)';
@@ -96,13 +91,16 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     if (cid) {
         courses = [cid];
     } else if (ids) {
-        courses = ids;
+        if (ids.length === 0) {
+            return Promise.resolve([]);
+        } else {
+            courses = ids;
+        }
     }
-    if (courses) {
+    if (courses && courses.length) {
         if (!Array.isArray(courses)) {
             courses = [courses];
         }
-        console.log(courses);
         sqlWhere += ' AND (';
         for (i in courses) {
             let id = courses[i];
@@ -119,10 +117,9 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     let extra = [];
     return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( data => {
         courseData = data;
-    }).then( () => {
         let promises = [];
         if (students) {
-            extra.push('students');
+            extra.push('STUDENTS');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlStudents = `
@@ -135,7 +132,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (tas) {
-            extra.push('tas');
+            extra.push('TAS');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
@@ -149,7 +146,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (professor) {
-            extra.push('professor');
+            extra.push('PROFESSOR');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
@@ -160,7 +157,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
                         JOIN availability avail ON (pf.avail_id = avail.avail_id)
                     WHERE pf.course_id = :cid
                 `;
-                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.MULTIPLE));
+                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.SINGLE));
             }
         }
         return Promise.all(promises);

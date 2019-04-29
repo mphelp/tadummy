@@ -17,6 +17,12 @@ router.use('/courses', require('./courses.js').router);
 
 router.use('/students', require('./students.js').router);
 
+router.use('/professors', require('./professors.js').router);
+
+router.use('/officehours', require('./officehours.js').router);
+
+router.use('/availabilities', require('./availabilities').router);
+
 router.get('/dorms', apiQuery(getAllDorms));
 
 router.get('/departments', apiQuery(getAllDepartments));

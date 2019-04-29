@@ -16,7 +16,7 @@ const office_s = {
 	minWidth: 400,
 }
 
-class StudentCourseEnrollSignup extends React.Component {
+class EnrollTASignup extends React.Component {
 	render(){
 		const {
             netid,
@@ -28,10 +28,9 @@ class StudentCourseEnrollSignup extends React.Component {
 			filterCourse,
             renderTag
 		} = this.props;
-
 		return (
 			<div style={general_s}>
-					<h1>Enroll in a coures: please select a course to enroll in.</h1>
+					<h1>Select a course that you are a TA for:</h1>
 					<br />
 					<form onSubmit={handleSubmit}>
 					Course:<br />
@@ -52,4 +51,4 @@ class StudentCourseEnrollSignup extends React.Component {
 	}
 }
 
-export default StudentCourseEnrollSignup;
+export default EnrollTASignup;

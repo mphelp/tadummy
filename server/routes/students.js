@@ -2,14 +2,23 @@ const router = require('express').Router()
 const db = require('../database');
 const missingKeys = require('../missingKeys');
 const api = require('./api');
+const courseFuncs = require('./courses');
+const officehours = require('./officehours');
 
 const users = require('./users');
 
 
-router.get('/:netid', api.query(getStudentReq));
+router.get('/:netid', users.authParam(users.ROLES.STUDENT), api.query(getStudentReq));
 
+router.get('/:netid/tas', users.authParam(users.ROLES.STUDENT), api.query(getStudentTasReq));
 
-function getStudent({netid, courses=false}) {
+router.get('/:netid/calendar', users.authParam(users.ROLES.STUDENT), api.query(getStudentCalReq));
+
+/* Optional parameters
+ *
+ * courses: [bool] do get courses of student
+ */
+function getStudent({netid, courses=false, tas=false, professor=false}) {
     let sqlStudent = `
         select s.netid, u.name, u.datejoined, m.major_name, d.dorm_name,
             dep.abbrev as dept, dep.college as college
@@ -21,30 +30,60 @@ function getStudent({netid, courses=false}) {
         where s.netid = :netid
     `;
     let sqlCourses = `
-        select c.course_id as id
+        select sf.course_id as id
         from studentfor sf
         where netid = :netid
     `;
-    let studentPromise = db.queryDB(sqlStudent, [netid], db.QUERY.SINGLE);
-    let coursePromise;
-    if (courses) {
-        coursePromise = db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE);
-    } else {
-        coursePromise = Promise.resolve(null);
-    }
-    return Promise.all([studentPromise, coursePromise]).then( data => {
-        let studentData = data[0];
-        let courseIds = data[1];
-        for (i in courseIds) { // get actual id of course
-            let cid = data[i].ID;
-            courseIds[i] = cid;
-        }
-        return studentData;
-    });
+    return users.getUserPlus(sqlStudent, sqlCourses, netid, courses, tas, professor, false);
 }
 
 function getStudentReq(req) {
     return getStudent({netid: req.params.netid, ...req.query});
+}
+
+function getStudentTas(netid) {
+    return getStudent({netid: netid, courses: true, tas: true}).then ( data => {
+        let tas = [];
+        for (i in data.COURSES) {
+            let course = data.COURSES[i];
+            for (j in course.TAS) {
+                let ta = course.TAS[j];
+                ta['COURSE_ID'] = course.ID;
+                ta['COURSE_NAME'] = course.NAME;
+                tas.push(ta);
+            }
+        }
+        return tas;
+    });
+}
+
+function getStudentTasReq(req) {
+    return getStudentTas(req.params.netid);
+}
+
+function getStudentCalendar(netid) {
+    let timeblocks = [];
+    return getStudent({netid: netid, courses: true, tas: true, professor:true}).then ( data => {
+        let promises = [];
+        for (i in data.COURSES) {
+            let course = data.COURSES[i];
+            for (j in course.TAS) {
+                let ta = course.TAS[j];
+                promises.push(officehours.getOfficehours(ta.NETID));
+            }
+            if (course.PROFESSOR) {
+                let profnetid = course.PROFESSOR.NETID;
+                promises.push(officehours.getOfficehours(profnetid));
+            }
+        }
+        return Promise.all(promises);
+    }).then ( data => {
+        return data.flat();
+    });
+}
+
+function getStudentCalReq(req) {
+    return getStudentCalendar(req.params.netid);
 }
 
 function addStudent (netid, data) {

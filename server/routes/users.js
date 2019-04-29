@@ -3,15 +3,6 @@ const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
 const api = require('./api');
-const courses = require('./courses');
-
-module.exports = {
-    router: router,
-    addUser: addUser,
-    getRoles: getRoles
-};
-
-const students = require('./students');
 
 const ROLES = {
     ADMIN:      'ADMIN',
@@ -19,6 +10,21 @@ const ROLES = {
     PROFESSOR:  'PROFESSOR',
     TA:         'TA',
 };
+
+module.exports = {
+    router: router,
+    addUser: addUser,
+    getRoles: getRoles,
+    authParam: authParam,
+    authBody: authBody,
+    ROLES: ROLES,
+    getUserPlus: getUserPlus,
+};
+
+const courseFuncs = require('./courses');
+const students = require('./students');
+const professors = require('./professors');
+
 
 /* Required fields:
  * ALL USERS
@@ -44,7 +50,7 @@ router.post('/', (req, res) => {
     if (affiliation === ROLES.STUDENT) {
         func = students.addStudent;
     } else if (affiliation === ROLES.PROFESSOR) {
-        func = insertProfessor;
+        func = professors.addProfessor;
     } else {
         res.status(400).send('invalid affiliation: ' + affiliation);
     }
@@ -86,7 +92,6 @@ router.get('/:netid', (req, res) => {
     });
 });
 
-
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     let sql = `select * from userroles where netid = :id`;
@@ -122,19 +127,34 @@ function authorizeUser(netid, validRoles = []) {
     }).catch(console.log);
 };
 
-function insertProfessor (netid, data) {
-    let missing = missingKeys(data, ['netid', 'office', 'dept']);
-    if (missing.length) {
-        return Promise.reject(missing);
-    }
-    let sql = `
-        insert into admin.professor(netid, office, department_id)
-        values (:netid, :office, :dept)
-    `;
-    return Promise.all([
-        addUser(netid, data.name),
-        db.queryDB(sql, [data.netid, data.office, data.dept], db.QUERY.INSERT)
-    ]);
+function authParam(validRoles = []) {
+    return (req, res, next) => {
+        let netid = req.params.netid;
+        return authorizeUser(netid, validRoles).then( authData => {
+            if (authData.authorized) {
+                next();
+                return;
+            } else {
+                return res.status(401)
+                    .send("'"+netid+"' does not have role: " + JSON.stringify(validRoles));
+            }
+        })
+    };
+}
+
+function authBody(validRoles = []) {
+    return (req, res, next) => {
+        let netid = req.body.netid;
+        return authorizeUser(netid, validRoles).then( authData => {
+            if (authData.authorized) {
+                next();
+                return;
+            } else {
+                return res.status(401)
+                    .send("'"+netid+"' does not have role: " + JSON.stringify(validRoles));
+            }
+        })
+    };
 }
 
 function addUser(netid, name) {
@@ -143,4 +163,39 @@ function addUser(netid, name) {
         values (:netid, :name, 0, SYSDATE)
     `;
     return db.queryDB(sql, [netid, name], db.QUERY.INSERT);
+}
+
+function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
+                    professor=false, students=false) {
+    let userPromise = db.queryDB(sqlUser, [netid], db.QUERY.SINGLE);
+    let coursePromise;
+    if (courses) {
+        coursePromise = db.queryDB(sqlCourses, [netid], db.QUERY.MULTIPLE);
+    } else {
+        coursePromise = Promise.resolve(null);
+    }
+    let userData;
+    return Promise.all([userPromise, coursePromise]).then( data => {
+        userData = data[0];
+        let promise;
+        if (courses) {
+            let courseIds = data[1];
+            for (i in courseIds) { // get actual id of course
+                let cid = courseIds[i].ID;
+                courseIds[i] = cid;
+            }
+            promise = courseFuncs.getCourses({
+                ids: courseIds,
+                tas: tas,
+                professor: professor,
+                students: students,
+            });
+        } else {
+            promise = Promise.resolve(undefined);
+        }
+        return promise;
+    }).then ( courseData => {
+        userData.COURSES = courseData;
+        return userData;
+    });
 }
