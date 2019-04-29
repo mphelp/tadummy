@@ -24,6 +24,10 @@ router.post('/', (req, res) => {
     });
 });
 
+router.get('/:netid', api.query(getOfficehoursReq));
+
+router.get('/:netid/courses', api.query(getCoursesReq));
+
 router.put('/status', api.query(setStatusReq));
 
 function addTimeblock(start, end, loc) {
@@ -108,6 +112,10 @@ function getOfficehours(netid) {
     });
 }
 
+function getOfficehoursReq(req) {
+    return getOfficehours(req.params.netid);
+}
+
 function setStatus(netid, cid, avail_id, status) {
     return getType(netid, 'FOR').then( table => {
         let sql = `
@@ -126,6 +134,25 @@ function setStatusReq(req) {
     }
     let {netid, cid, avail_id, status} = req.body;
     return setStatus(netid, cid, avail_id, status);
+}
+
+function getCourses(netid) {
+    return getType(netid).then ( type => {
+        let tableFor = type+'FOR';
+        let tableOH = type+'OFFICEHOURS';
+        let sql = `
+            select f.course_id AS CID, c.course_name AS CNAME, f.netid, av.avail_id, av.avail_desc, f.status
+            from `+tableFor+` f
+                JOIN availability av ON (f.avail_id = av.avail_id)
+                JOIN course c ON (c.course_id = f.course_id)
+            where f.netid = :netid
+        `;
+        return db.queryDB(sql, [netid], db.QUERY.MULTIPLE);
+    });
+}
+
+function getCoursesReq(req) {
+    return getCourses(req.params.netid);
 }
 
 module.exports = {
