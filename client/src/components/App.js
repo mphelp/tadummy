@@ -6,6 +6,8 @@ import Apply from './Apply';
 import Calendar from './Calendar';
 import CourseRegistration from './CourseRegistration';
 import StudentCourseEnroll from './StudentCourseEnroll';
+import EnrollTA from './EnrollTA';
+import UpdateStatus from './UpdateStatus';
 import SelectHours from './SelectHours';
 
 // Framework CSS
@@ -59,8 +61,11 @@ export default class extends React.Component {
                         <Route path="/calendar" render={(props) => <Calendar netid={this.props.netid} />} />
                         <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
-												<Route path="/select_hours" render={props => <SelectHours {...this.props} isAuthed={true} />} /> 
+						<Route path="/select_hours" render={props => <SelectHours {...this.props} isAuthed={true} />} />
+                        <Route path="/update_status" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/contact" component={Contact}/>
+                        <Route path="/enrollTA" render={(props) => <EnrollTA netid={this.props.netid} isAuthed={true} />} />
+                        <Route path="/updatestatusTA" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
                 </div>

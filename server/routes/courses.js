@@ -3,8 +3,9 @@ const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
 const api = require('./api');
+const officehours = require('./officehours');
 
-/* Required fields:
+/* Create a new course (with no time blocks)
  * netid:   netid of professor teaching course
  * name:   name of course
  * dept:    id of department offering course
@@ -15,7 +16,7 @@ router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    insertCourse(netid, name, dept, semester).then( result => {
+    addCourse(netid, name, dept, semester).then( result => {
         res.sendStatus(201);
     }, err => {
         console.log(err);
@@ -23,10 +24,18 @@ router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
     });
 });
 
+router.post('/:cid/times', api.query(addCourseTimesReq));
+
+// Get all courses
 router.get('/', api.query(getCoursesReq));
 
+// Get single course
 router.get('/:cid', api.query(getSingleCourseReq));
 
+router.get('/:cid/times', api.query(getCourseTimesReq));
+
+
+// STUDENT enroll in a course
 router.post('/enroll', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
         return;
@@ -40,6 +49,7 @@ router.post('/enroll', (req, res) => {
     });
 });
 
+// TA enroll in a course
 router.post('/enrollta', (req, res) => {
     if (missingKeys(req.body, ['netid', 'cid'], req, res).length) {
         return;
@@ -180,7 +190,7 @@ function getSingleCourseReq(req) {
     return getCourses({cid: req.params.cid, ...req.query});
 }
 
-function insertCourse(netid, name, dept, semester) {
+function addCourse(netid, name, dept, semester) {
     let sqlInsert1 = `
         insert into admin.course(course_name, semester_id)
         values (:name, :semester)
@@ -209,7 +219,46 @@ function insertCourse(netid, name, dept, semester) {
         });
 }
 
+function addCourseTimes(start, end, loc, cid) {
+    return officehours.addTimeblock(start, end, loc).then( tbid => {
+        let sqlInsert = `
+            insert into coursetime(timeblock_id, course_id)
+            values (:tbid, :cid)
+        `;
+        return db.queryDB(sqlInsert, [tbid, cid], db.QUERY.INSERT);
+    });
+}
+
+function addCourseTimesReq(req) {
+    let missing = missingKeys(req.body, ['starttime', 'endtime', 'location'], req);
+    if (missing.length) {
+        return Promise.reject('Missing keys: ' + JSON.stringify(missing));
+    }
+    let {starttime, endtime, location} = req.body;
+    let cid = req.params.cid;
+    return addCourseTimes(starttime, endtime, location, cid);
+}
+
+function getCourseTimes(cid) {
+    let sql = `
+        select tb.timeblock_id AS tid, tb.location, tb.starttime, tb.endtime,
+            'COURSE' AS "TYPE", c.course_id AS CID, c.course_name AS CNAME, u.name AS TEACHER
+        from timeblock tb
+            JOIN coursetime ct ON (ct.timeblock_id = tb.timeblock_id)
+            JOIN course c ON (ct.course_id = c.course_id)
+            JOIN proffor pf ON (pf.course_id = c.course_id)
+            JOIN users u ON (pf.netid = u.netid)
+        where c.course_id = :cid
+    `;
+    return db.queryDB(sql, [cid], db.QUERY.MULTIPLE);
+}
+
+function getCourseTimesReq(req) {
+    return getCourseTimes(req.params.cid);
+}
+
 module.exports = {
     router:router,
-    getCourses: getCourses
+    getCourses: getCourses,
+    getCourseTimes: getCourseTimes,
 };
