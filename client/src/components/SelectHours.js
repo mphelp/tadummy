@@ -92,25 +92,24 @@ export default class extends React.Component {
 				const { coursesList, course } = this.state;
         return (
             <div style={general_s}>
-
-
-              <header>Enroll in a coures: please select a course to enroll in.</header>
-								<br />
 								<form onSubmit={this.handleSubmit}>
-								Course:<br />
+								<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
 								<Select
 										items={coursesList}
 										itemPredicate={this.filterCourse}
 										itemRenderer={this.courseRenderer}
 										onItemSelect={this.handleCourseSelectClick}
 								>
-													<Button rightIcon="caret-down"
-																	text={course ? course.NAME : "(No selection)"}
-																	/>
+										<Button rightIcon="caret-down"
+												text={course ? course.NAME : "(No selection)"}
+										/>
 								</Select><br /><br />
+								Select desired Office Hours:<br />
+								<h3>Placeholder for inputing times</h3><br />
+								Location:<br /><br />
+								<input type="text" name="name" defaultValue={"Innovation Lounge"} required="required"/><br/><br/>
 								<input type="submit" value="Submit" />
 								</form>
-
 						</div>
         )
     }
