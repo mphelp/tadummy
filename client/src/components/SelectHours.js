@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import {
     FormGroup,
     InputGroup,
@@ -7,6 +8,10 @@ import {
     MenuItem,
     Button
 } from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
+
+const config = require('../config.js')
+const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
 
 // Styles
 const general_s = {
@@ -17,57 +22,96 @@ const inputName_s = {
 }
 
 export default class extends React.Component {
-    state = {
-        label: true,
-        labelInfo: true,
-        course: Courses[1],
-    };
+	state = {
+		error: null,
+		isLoaded: false,
+        netid: "",
+		coursesList: [],
+		course: null   
+	};
 
-    handleSelectClick = (course) => {
-        this.setState(state => ({ course: course }))
-    }
-    itemRenderer = (item, { handleClick, isActive }) => (
-        <MenuItem
-            className={ isActive ? Classes.ACTIVE : "" }
-            key={item.crn}
-            label={item.title}
-            text={item.teacher}
-            onClick={handleClick}
-        />
-    )
-    render(){
-        const {
-            label,
-            labelInfo,
-            course
-        } = this.state
+	handleSubmit = (event) => {
+      // Post TA chosen office hours
+      /*
+			event.preventDefault();
+			const formData = new FormData(event.target);
+			var object = {};
+			formData.forEach(function(value, key){
+					object[key] = value;
+			});
+            object['cid'] = this.state.course.COURSE_ID;
+            object['netid'] = this.props.netid;
+			var json = JSON.stringify(object);
+			fetch(serverUrl+'/api/courses/enroll/', {
+					method: 'POST',
+					body: json,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+			});
+      */
+	}
 
+	initialize = () => {
+		// server routes
+		let courseApi = serverUrl + "/api/courses";
+
+		// make requests to routes
+		axios.get(courseApi)
+			.then(res => {
+				this.setState({ coursesList: res.data })
+			})
+			.catch(err => console.error(err))
+	}
+	componentWillMount() {
+		this.initialize();
+	}
+
+	handleCourseSelectClick = (course) => {
+			this.setState({ course });
+	}
+	courseRenderer = (item, { handleClick, isActive }) => (
+		 <MenuItem
+				 className={ isActive ? Classes.ACTIVE : "" }
+				 key={item.ID}
+				 text={item.NAME}
+				 onClick={handleClick}
+		 />
+	)
+	filterCourse = (query, course, _index, exactMatch) => {
+		const normalizedCourse  = course.NAME.toLowerCase();
+		const normalizedQuery = query.toLowerCase();
+
+		if (exactMatch){
+			return normalizedCourse === normalizedQuery;
+		} else {
+			return normalizedCourse.indexOf(normalizedQuery) >= 0;
+		}
+	}
+		render(){
+				const { coursesList, course } = this.state;
         return (
             <div style={general_s}>
-                <FormGroup
-                    label={label && "Name"}
-                    labelInfo={labelInfo && "(required)"}
-                >
-                    <InputGroup
-                        id="inputName"
-                        placeholder="Your name here..."
-                        style={inputName_s}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Switch id="stud" label="Student"/>
-                    <Switch id="prof" label="Professor"/>
-                </FormGroup>
-                <Select
-                    items={Courses}
-                    itemRenderer={this.itemRenderer}
-                    onItemSelect={this.handleSelectClick}
-                >
-                    <Button rightIcon="caret-down"
-                        text={course ? course.title : "(No selection)" }
-                    />
-                </Select>
-            </div>
+
+
+              <header>Enroll in a coures: please select a course to enroll in.</header>
+								<br />
+								<form onSubmit={this.handleSubmit}>
+								Course:<br />
+								<Select
+										items={coursesList}
+										itemPredicate={this.filterCourse}
+										itemRenderer={this.courseRenderer}
+										onItemSelect={this.handleCourseSelectClick}
+								>
+													<Button rightIcon="caret-down"
+																	text={course ? course.NAME : "(No selection)"}
+																	/>
+								</Select><br /><br />
+								<input type="submit" value="Submit" />
+								</form>
+
+						</div>
         )
     }
 }

@@ -40,7 +40,7 @@ export default class extends React.PureComponent {
                     <Link to="/" style={subtleLink_s}>
                         <AnchorButton text="BECOME" rightIcon="envelope"/>
                     </Link>
-                    <Link to="/" style={subtleLink_s}>
+                    <Link to="/select_hours" style={subtleLink_s}>
                         <AnchorButton text="SELECT HOURS" rightIcon="envelope"/>
                     </Link>
                     <NavbarDivider />

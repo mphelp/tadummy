@@ -6,6 +6,7 @@ import Apply from './Apply';
 import Calendar from './Calendar';
 import CourseRegistration from './CourseRegistration';
 import StudentCourseEnroll from './StudentCourseEnroll';
+import SelectHours from './SelectHours';
 
 // Framework CSS
 import "normalize.css";
@@ -58,6 +59,7 @@ export default class extends React.Component {
                         <Route path="/calendar" component={Calendar}/>
                         <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
+												<Route path="/select_hours" render={props => <SelectHours {...this.props} isAuthed={true} />} /> 
                         <Route path="/contact" component={Contact}/>
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
