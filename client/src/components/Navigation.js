@@ -22,13 +22,13 @@ export default class extends React.PureComponent {
         return (
             <Navbar className={Classes.DARK}>
                 <NavbarGroup align={Alignment.LEFT}>
-                    <NavbarHeading>TASystem</NavbarHeading>
+                    <NavbarHeading>TASYSTEM</NavbarHeading>
                     <NavbarDivider />
                     <Link to="/calendar" style={subtleLink_s}>
                         <AnchorButton text="CALENDAR" rightIcon="timeline-events"/>
                     </Link>
                     <NavbarDivider />
-                    <NavbarHeading>Manage Courses</NavbarHeading>
+                    <NavbarHeading>Courses</NavbarHeading>
                     <Link to="/student_enroll" style={subtleLink_s}>
                         <AnchorButton text="ENROLL" rightIcon="applications"/>
                     </Link>
