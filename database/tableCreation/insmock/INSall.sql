@@ -1,8 +1,8 @@
-prompt *** Courses ***
-@insmock/INScourse
-
 prompt *** Timeblocks ***
 @insmock/INStimeblock
+
+prompt *** Courses ***
+@insmock/INScourse
 
 prompt *** Students ***
 @insmock/INSstudent
