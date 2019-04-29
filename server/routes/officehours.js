@@ -3,15 +3,14 @@ const db = require('../database');
 const users = require('./users');
 const missingKeys = require('../missingKeys')
 const api = require('./api');
-const users = require('./users');
 
 /* Required fields:
- * netid:   netid of professor teaching course
+ * netid:   netid of enrollee course
  * name:   name of course
  * dept:    id of department offering course
  * semester:id of semester course is offered
  */
-router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
+router.post('/', (req, res) => {
     if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
         return;
     }

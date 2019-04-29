@@ -3,7 +3,6 @@ const db = require('../database');
 const ldap = require('../ldap');
 const missingKeys = require('../missingKeys');
 const api = require('./api');
-const courseFuncs = require('./courses');
 
 const ROLES = {
     ADMIN:      'ADMIN',
@@ -21,6 +20,7 @@ module.exports = {
     getUserPlus: getUserPlus,
 };
 
+const courseFuncs = require('./courses');
 const students = require('./students');
 const professors = require('./professors');
 
