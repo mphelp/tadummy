@@ -123,7 +123,7 @@ export default class extends React.Component {
 
 	initialize = () => {
 		// server routes
-		let courseApi = serverUrl + "/api/courses";
+		let courseApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
 
 		// make requests to routes
 		axios.get(courseApi)
