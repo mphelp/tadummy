@@ -9,11 +9,13 @@ const users = require('./users');
 
 router.get('/:netid', users.authParam(users.ROLES.STUDENT), api.query(getStudentReq));
 
+router.get('/:netid/tas', users.authParam(users.ROLES.STUDENT), api.query(getStudentTasReq));
+
 /* Optional parameters
  *
  * courses: [bool] do get courses of student
  */
-function getStudent({netid, courses=false}) {
+function getStudent({netid, courses=false, tas=false}) {
     let sqlStudent = `
         select s.netid, u.name, u.datejoined, m.major_name, d.dorm_name,
             dep.abbrev as dept, dep.college as college
@@ -29,11 +31,30 @@ function getStudent({netid, courses=false}) {
         from studentfor sf
         where netid = :netid
     `;
-    return users.getUserPlus(sqlStudent, sqlCourses, netid, courses);
+    return users.getUserPlus(sqlStudent, sqlCourses, netid, courses, tas);
 }
 
 function getStudentReq(req) {
     return getStudent({netid: req.params.netid, ...req.query});
+}
+
+function getStudentTas(netid) {
+    return getStudent({netid: netid, courses: true, tas: true}).then ( data => {
+        let tas = [];
+        for (i in data.COURSES) {
+            let course = data.COURSES[i];
+            for (j in course.TAS) {
+                let ta = course.TAS[j];
+                ta['COURSE_ID'] = course.ID;
+                tas.push(ta);
+            }
+        }
+        return tas;
+    });
+}
+
+function getStudentTasReq(req) {
+    return getStudentTas(req.params.netid);
 }
 
 function addStudent (netid, data) {

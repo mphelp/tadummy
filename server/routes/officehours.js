@@ -5,21 +5,29 @@ const missingKeys = require('../missingKeys')
 const api = require('./api');
 
 /* Required fields:
- * netid:   netid of professor teaching course
- * name:   name of course
- * dept:    id of department offering course
- * semester:id of semester course is offered
+ * netid:   netid office hour owner
+ * cid:     course_id for course
+ * times: array of times for office hours with following properties
+ *      start
+ *      end
+ *      location
  */
-router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
+router.post('/', (req, res) => {
     if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    insertCourse(netid, name, dept, semester).then( result => {
-        res.sendStatus(201);
-    }, err => {
-        console.log(err);
-        res.sendStatus(400);
+    users.getRoles(netid).then ( roles => {
+        if (roles.PROFESSOR) {
+            insertCourse(netid, name, dept, semester).then( result => {
+                res.sendStatus(201);
+            }, err => {
+                console.log(err);
+                res.sendStatus(400);
+            });
+        } else {
+            res.status(401).send('user ' + netid + ' is not a professor!');
+        }
     });
 });
 
@@ -91,13 +99,9 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     if (cid) {
         courses = [cid];
     } else if (ids) {
-        if (ids.length === 0) {
-            return Promise.resolve([]);
-        } else {
-            courses = ids;
-        }
+        courses = ids;
     }
-    if (courses && courses.length) {
+    if (courses) {
         if (!Array.isArray(courses)) {
             courses = [courses];
         }
@@ -120,7 +124,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     }).then( () => {
         let promises = [];
         if (students) {
-            extra.push('STUDENTS');
+            extra.push('students');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlStudents = `
@@ -133,7 +137,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (tas) {
-            extra.push('TAS');
+            extra.push('tas');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
@@ -147,7 +151,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (professor) {
-            extra.push('PROFESSORS');
+            extra.push('professor');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
