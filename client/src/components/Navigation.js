@@ -37,12 +37,17 @@ export default class extends React.PureComponent {
                     </Link>
                     <NavbarDivider />
                     <NavbarHeading>TA</NavbarHeading>
-                    <Link to="/contact" style={subtleLink_s}>
-                        <AnchorButton text="CONTACT US" rightIcon="envelope"/>
+                    <Link to="/" style={subtleLink_s}>
+                        <AnchorButton text="BECOME" rightIcon="envelope"/>
+                    </Link>
+                    <Link to="/" style={subtleLink_s}>
+                        <AnchorButton text="SELECT HOURS" rightIcon="envelope"/>
                     </Link>
                     <NavbarDivider />
-                    <NavbarHeading>Hello {this.props.netid}!</NavbarHeading>
                 </NavbarGroup>
+								<NavbarGroup align={Alignment.RIGHT}>
+                    <NavbarHeading>Hello {this.props.netid}!</NavbarHeading>
+								</NavbarGroup>
             </Navbar>
         )
     }
