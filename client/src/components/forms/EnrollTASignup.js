@@ -30,7 +30,7 @@ class EnrollTASignup extends React.Component {
 		} = this.props;
 		return (
 			<div style={general_s}>
-					<h1>Select a course that you are a TA for:</h1>
+					<h1>Select a course that you would like to TA for:</h1>
 					<br />
 					<form onSubmit={handleSubmit}>
 					Course:<br />
