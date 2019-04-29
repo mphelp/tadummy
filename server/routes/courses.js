@@ -117,7 +117,6 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
     let extra = [];
     return db.queryDB(sql, params, db.QUERY.MULTIPLE).then( data => {
         courseData = data;
-    }).then( () => {
         let promises = [];
         if (students) {
             extra.push('STUDENTS');
@@ -147,7 +146,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
             }
         }
         if (professor) {
-            extra.push('PROFESSORS');
+            extra.push('PROFESSOR');
             for (i in courseData) {
                 let course = courseData[i];
                 let sqlTas = `
@@ -158,7 +157,7 @@ function getCourses({cid=null, ids=null, students=false, tas=false, professor=fa
                         JOIN availability avail ON (pf.avail_id = avail.avail_id)
                     WHERE pf.course_id = :cid
                 `;
-                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.MULTIPLE));
+                promises.push(db.queryDB(sqlTas, [course.ID], db.QUERY.SINGLE));
             }
         }
         return Promise.all(promises);

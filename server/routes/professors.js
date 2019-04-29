@@ -27,7 +27,7 @@ function getProfessor({netid, courses=false}) {
         from proffor pf
         where netid = :netid
     `;
-    return users.getUserPlus(sqlProfessor, sqlCourses, netid, courses);
+    return users.getUserPlus(sqlProfessor, sqlCourses, netid, courses, false);
 }
 
 function getProfessorReq(req) {
