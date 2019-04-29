@@ -4,7 +4,8 @@ const database = require('../database.js')
 
 module.exports = {
     router: router,
-    query: apiQuery
+    query: apiQuery,
+    getSemester: getSemester,
 };
 
 router.get('/', (req, res) => {
@@ -45,6 +46,11 @@ function getAllDepartments() {
 
 function getAllSemesters() {
     return database.queryDB('SELECT * FROM admin.semesterinfo', [], database.QUERY.MULTIPLE);
+}
+
+function getSemester(sid) {
+    let sql = 'SELECT * FROM semesterinfo WHERE semester_id = :sid'
+    return database.queryDB(sql, [sid], database.QUERY.SINGLE);
 }
 
 function apiQuery(func) {
