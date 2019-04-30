@@ -37,6 +37,10 @@ function getProfessorReq(req) {
     return getProfessor({netid: req.params.netid, ...req.query});
 }
 
+function getProfessorTas(netid) {
+    return users.getUserTas(netid, getProfessor);
+}
+
 function addProfessor (netid, data) {
     let missing = missingKeys(data, ['netid', 'office', 'dept']);
     if (missing.length) {
@@ -79,5 +83,7 @@ function getProfessorCalReq(req) {
 
 module.exports = {
     router: router,
-    addProfessor: addProfessor
+    addProfessor: addProfessor,
+    getProfessorTas: getProfessorTas,
+    getProfessorCalendar: getProfessorCalendar,
 };

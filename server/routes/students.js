@@ -42,19 +42,8 @@ function getStudentReq(req) {
 }
 
 function getStudentTas(netid) {
-    return getStudent({netid: netid, courses: true, tas: true}).then ( data => {
-        let tas = [];
-        for (i in data.COURSES) {
-            let course = data.COURSES[i];
-            for (j in course.TAS) {
-                let ta = course.TAS[j];
-                ta['COURSE_ID'] = course.ID;
-                ta['COURSE_NAME'] = course.NAME;
-                tas.push(ta);
-            }
-        }
-        return tas;
-    });
+    console.log('getting student TAs for ' + netid);
+    return users.getUserTas(netid, getStudent);
 }
 
 function getStudentTasReq(req) {
@@ -107,5 +96,7 @@ function addStudent (netid, data) {
 
 module.exports = {
     router: router,
-    addStudent: addStudent
+    addStudent: addStudent,
+    getStudentTas: getStudentTas,
+    getStudentCalendar: getStudentCalendar,
 };

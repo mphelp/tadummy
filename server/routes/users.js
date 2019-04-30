@@ -19,11 +19,13 @@ module.exports = {
     authBody: authBody,
     ROLES: ROLES,
     getUserPlus: getUserPlus,
+    getUserTas: getUserTas,
 };
 
 const courseFuncs = require('./courses');
 const students = require('./students');
 const professors = require('./professors');
+const officehours = require('./officehours');
 
 
 /* Required fields:
@@ -91,6 +93,10 @@ router.get('/:netid', (req, res) => {
         res.json({});
     });
 });
+
+router.get('/:netid/tas', api.query(getUserTasReq));
+
+router.get('/:netid/calendar', api.query(getUserCalendarReq));
 
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
@@ -200,6 +206,46 @@ function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
     });
 }
 
-function getUserTas(userFunc) {
+function getUserTasReq(req) {
+    let netid = req.params.netid;
+    return getRoles(netid).then( roles => {
+        if (roles.STUDENT) {
+            return students.getStudentTas(netid);
+        } else if (roles.PROFESSOR) {
+            return professors.getProfessorTas(netid);
+        } else {
+            return "'"+netid+"' is not a Student or Professor!";
+        }
+    });
+}
 
+function getUserTas(netid, userFunc) {
+    console.log('getting user TAs for ' + netid);
+    return userFunc({netid: netid, courses: true, tas: true}).then ( data => {
+        let tas = [];
+        for (i in data.COURSES) {
+            let course = data.COURSES[i];
+            for (j in course.TAS) {
+                let ta = course.TAS[j];
+                ta['COURSE_ID'] = course.ID;
+                ta['COURSE_NAME'] = course.NAME;
+                tas.push(ta);
+            }
+        }
+        return tas;
+    });
+}
+
+function getUserCalendarReq(req) {
+    netid = req.params.netid;
+    return getRoles(netid).then( roles => {
+        console.log(roles);
+        if (roles.STUDENT) {
+            return students.getStudentCalendar(netid);
+        } else if (roles.PROFESSOR) {
+            return professors.getProfessorCalendar(netid);
+        } else {
+            return "'"+netid+"' is not a Student or Professor!";
+        }
+    });
 }
