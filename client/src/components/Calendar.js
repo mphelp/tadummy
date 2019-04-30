@@ -107,7 +107,7 @@ export default class extends React.Component {
                         }
                     }
                 });
-                this.setState({ events, profs, tas, courses }, () => console.log(this.state));
+                this.setState({ events, profs, tas, courses })
             })
             .catch(err => console.error(err))
     }
@@ -138,7 +138,6 @@ export default class extends React.Component {
                     }
                     startAccessor="start"
                     endAccessor="end"
-                    tooltipAccessor="tooltip"
                     components={{ event: customEvent }}
                     eventPropGetter={ event => ({
                         style: {
