@@ -208,13 +208,13 @@ function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
 
 function getUserTasReq(req) {
     let netid = req.params.netid;
-    return officehours.getType(netid).then( type => {
-        if (type === 'TA') {
+    return getRoles(netid).then( roles => {
+        if (roles.STUDENT) {
             return students.getStudentTas(netid);
-        } else if (type === 'PROF') {
+        } else if (roles.PROFESSOR) {
             return professors.getProfessorTas(netid);
         } else {
-            return "'"+netid+"' is not a TA or Professor!";
+            return "'"+netid+"' is not a Student or Professor!";
         }
     });
 }
