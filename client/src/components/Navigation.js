@@ -43,9 +43,15 @@ export default class extends React.PureComponent {
                     )()}
                     <NavbarDivider />
                     <NavbarHeading>TA</NavbarHeading>
-                    <Link to="/enrollTA" style={subtleLink_s}>
-                        <AnchorButton text="BECOME" rightIcon="new-object"/>
-                    </Link>
+                    { (() => {
+                        if (this.props.roles.STUDENT){
+                            return (
+                                <Link to="/enrollTA" style={subtleLink_s}>
+                                    <AnchorButton text="BECOME" rightIcon="new-object"/>
+                                </Link>
+                            )
+                        }}
+                    )()}
                     { (() => {
                         if (this.props.roles.PROFESSOR || this.props.roles.TA){
                         return(
