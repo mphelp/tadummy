@@ -47,26 +47,26 @@ const label_s = {
     margin: "-6px 0px 0px 0px"
 }
 const customEvent = event => {
-  const { type } = event.event;
+  const { type, cname, teacher, location } = event.event;
   if (type === "TA"){
     return (
       <span>
-        {event.event.teacher} at <br />
-        {event.event.location}<br />
+        OH: {teacher}<span> at </span>
+        {location}
       </span>
     )
   } else if (type === "PROF"){
     return (
       <span>
-        {event.event.teacher} at <br />
-        {event.event.location}<br />
+        <span>OH: Prof. </span>{teacher}<span> at </span>
+        {location}
       </span>
     )
   } else if (type === "COURSE"){
     return (
       <span>
-        {event.event.teacher} at <br />
-        {event.event.location}<br />
+        {cname}<br /><span> taught by </span>
+        {teacher} at {location}
       </span>
     )
   } else {
@@ -104,6 +104,7 @@ export default class extends React.Component {
                             type: obj.TYPE,
                             location: obj.LOCATION,
                             teacher: obj.TEACHER,
+                            cname: obj.CNAME,
                         };
                         thisevent['color'] = colors.hasOwnProperty(obj.TYPE) ? colors[obj.TYPE] : colors['none'];
                         events.push(thisevent);   
