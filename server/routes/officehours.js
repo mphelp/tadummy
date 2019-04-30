@@ -26,11 +26,13 @@ router.post('/', (req, res) => {
     });
 });
 
-router.get('/:netid', api.query(getOfficehoursReq));
+router.get('/:netid/times', api.query(getOfficehoursReq));
 
 router.get('/:netid/courses', api.query(getCoursesReq));
 
 router.put('/status', api.query(setStatusReq));
+
+router.delete('/:netid/:cid', api.delete(deleteOfficehoursReq));
 
 function addTimeblocks(start, end, loc, cid) {
     let tids = [];
@@ -197,6 +199,39 @@ function getCourses(netid) {
 
 function getCoursesReq(req) {
     return getCourses(req.params.netid);
+}
+
+function deleteOfficehours(netid, cid) {
+    let table;
+    let deletesql;
+    let deletesql2;
+    return getType(netid, 'OFFICEHOURS').then( tableType => {
+        table = tableType;
+        let timesql = `
+            select timeblock_id as ID
+            from `+table+`
+            where netid = :netid AND course_id = :cid
+        `;
+        deletesql = 'delete from '+table+' where timeblock_id = :id';
+        deletesql2 = 'delete from timeblock where timeblock_id = :id';
+        return db.queryDB(timesql, [netid, cid], db.QUERY.MULTIPLE);
+    }).then ( data => {
+        let ids = data;
+        console.log(ids);
+        let promises = [];
+        for (i in ids) {
+            let id = ids[i].ID;
+            promises.push(db.queryDB(deletesql, [id], db.QUERY.DELETE));
+            promises.push(db.queryDB(deletesql2, [id], db.QUERY.DELETE));
+        }
+        return Promise.all(promises);
+    });
+}
+
+function deleteOfficehoursReq(req) {
+    let netid = req.params.netid;
+    let cid = req.params.cid;
+    return deleteOfficehours(netid, cid);
 }
 
 module.exports = {

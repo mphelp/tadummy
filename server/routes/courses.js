@@ -24,7 +24,10 @@ router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
         return;
     }
     let {netid, name, dept, semester} = req.body;
-    addCourse(netid, name, dept, semester).then( result => {
+    let promises = [
+        addCourse(netid, name, dept, semester),
+    ];
+    return Promise.all(promises).then( result => {
         res.sendStatus(201);
     }, err => {
         console.log(err);
@@ -32,7 +35,7 @@ router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
     });
 });
 
-router.post('/:cid/times', api.query(addCourseTimesReq));
+router.post('/:cid/times', api.query(addCourseTimeReq));
 
 // Get all courses
 router.get('/', api.query(getCoursesReq));
@@ -48,7 +51,7 @@ router.post('/enroll', (req, res) => {
         return;
     }
     let {netid, cid} = req.body;
-    enrollCourse(cid, netid).then( (result) => {
+    return enrollCourse(cid, netid).then( (result) => {
         console.log(result);
         res.sendStatus(201);
     }, (err) => {
@@ -207,6 +210,10 @@ function getCourseSemester(cid) {
     return db.queryDB(sql, [cid], db.QUERY.SINGLE);
 }
 
+function addCourseReq(req) {
+
+}
+
 function addCourse(netid, name, dept, semester) {
     let sqlInsert1 = `
         insert into admin.course(course_name, semester_id)
@@ -236,7 +243,7 @@ function addCourse(netid, name, dept, semester) {
         });
 }
 
-function addCourseTimes(start, end, loc, cid) {
+function addCourseTime(start, end, loc, cid) {
     return officehours.addTimeblock(start, end, loc).then( tbid => {
         let sqlInsert = `
             insert into coursetime(timeblock_id, course_id)
@@ -246,7 +253,7 @@ function addCourseTimes(start, end, loc, cid) {
     });
 }
 
-function addCourseTimesReq(req) {
+function addCourseTimeReq(req) {
     let missing = missingKeys(req.body, ['starttime', 'endtime', 'location'], req);
     if (missing.length) {
         return Promise.reject('Missing keys: ' + JSON.stringify(missing));
@@ -273,3 +280,4 @@ function getCourseTimes(cid) {
 function getCourseTimesReq(req) {
     return getCourseTimes(req.params.cid);
 }
+

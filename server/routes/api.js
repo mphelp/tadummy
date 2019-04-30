@@ -5,6 +5,7 @@ const database = require('../database.js')
 module.exports = {
     router: router,
     query: apiQuery,
+    delete: apiDelete,
     getSemester: getSemester,
 };
 
@@ -57,6 +58,16 @@ function apiQuery(func) {
     return (req, res) => {
         func(req).then( data => {
             res.json(data);
+        }, err => {
+            res.status(400).send(err);
+        })
+    };
+}
+
+function apiDelete(func) {
+    return (req, res) => {
+        func(req).then( data => {
+            res.sendStatus(204);
         }, err => {
             res.status(400).send(err);
         })
