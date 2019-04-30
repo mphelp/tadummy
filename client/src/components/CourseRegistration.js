@@ -59,7 +59,9 @@ export default class extends React.Component {
                     headers: {
                         'Content-Type': 'application/json'
                     }
-			});
+			})
+            .then(() => alert("Course created."))
+            .catch(err => alert(err))
 	}
 
 	initializeSignup = () => {

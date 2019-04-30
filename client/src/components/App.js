@@ -21,7 +21,7 @@ import './App.css';
 
 const Home = () => (
     <h1>
-        This will be our Home sweet home.
+        TAS Home.
     </h1>
 )
 const Contact = () => (

@@ -15,7 +15,6 @@ import TimePicker from 'rc-time-picker';
 import 'rc-time-picker/assets/index.css';
 
 const DaysOfWeek = require('./DaysOfWeek.js');
-console.log(DaysOfWeek);
 const nowMoment = moment().hour(0).minute(0);
 const format = 'h:mm a';
 const config = require('../config.js')
@@ -83,7 +82,7 @@ export default class extends React.Component {
       // Post TA chosen office hours
       if (!course || !timesChosen){
           return;
-      }  
+      }
       timesChosen.forEach(time => {
           axios.post(serverUrl + '/api/officehours', {
               netid: this.props.netid,
@@ -95,6 +94,7 @@ export default class extends React.Component {
               console.log(res);
               this.removeTimesChosen();
           })
+          .then(() => alert("Office hours added."))
             .catch(err => console.error(err));
       });
 	}
@@ -146,10 +146,10 @@ export default class extends React.Component {
 			this.setState({ day });
 	}
   handleDayStart = start => {
-      this.setState({ start });    
+      this.setState({ start });
   }
   handleDayEnd = end => {
-      this.setState({ end });    
+      this.setState({ end });
   }
 	courseRenderer = (item, { handleClick, isActive }) => (
 		 <MenuItem
@@ -257,7 +257,7 @@ export default class extends React.Component {
                                     } else {
                                         return <Tag>Sa</Tag>
                                     }
-                                })()}    
+                                })()}
                             </div>
                         ))}
                     </div>
