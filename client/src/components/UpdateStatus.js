@@ -94,8 +94,8 @@ export default class extends React.Component {
                     }
 			})
             .then(() => {
-                alert("You have updated your availability for " + this.state.course.CNAME + ".");
                 window.location.href = '/update_status?netid=' + this.props.netid;
+                alert("You have updated your availability for " + this.state.course.CNAME + ".");
              })
             .catch(err => alert(err))
 	}

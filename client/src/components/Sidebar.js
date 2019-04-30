@@ -38,6 +38,10 @@ const TagContent_sColumn = {
 }
 const Tag_s = {
 		margin: 5,
+    paddingLeft: 22,
+}
+const info_s = {
+    paddingLeft: 30,
 }
 export default class extends React.Component {
     constructor(props){
@@ -84,29 +88,28 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-                <h3 style={header_s}>My Courses:</h3>
+                {this.state.myInfo.length !== 0 ? <h3 style={header_s}>My Info:</h3> : undefined}
                 <div>
-                {console.log(this.state.myInfo)}
-                {console.log("above")}
                 { (() => {
                     if (this.props.roles.STUDENT){
                         return(
-                            <div>
-                            Name: {this.state.myInfo['NAME']}<br />
-                            Major: {this.state.myInfo['MAJOR_NAME']}<br />
-                            Dorm: {this.state.myInfo['DORM_NAME']}<br />
+                            <div style={info_s}>
+                            <em>Name: {this.state.myInfo['NAME']}</em><br />
+                            <em>Major: {this.state.myInfo['MAJOR_NAME']}</em><br />
+                            <em>Dorm: {this.state.myInfo['DORM_NAME']}</em><br />
                             </div>
                     )}
                     if (this.props.roles.PROFESSOR){
                         return(
-                            <div>
-                            Name: {this.state.myInfo['NAME']}<br />
-                            Office: {this.state.myInfo['OFFICE']}<br />
-                            Department: {this.state.myInfo['DEPT']}<br />
+                            <div style={info_s}>
+                            <em>Name: {this.state.myInfo['NAME']}</em><br />
+                            <em>Office: {this.state.myInfo['OFFICE']}</em><br />
+                            <em>Department: {this.state.myInfo['DEPT']}</em><br />
                             </div>
                     )}
                 }
                 )()}
+                {this.state.myCourses.length !== 0 ? <h3 style={header_s}>My Statuses:</h3> : undefined}
                 </div>
                     {this.state.myCourses.map( info => (
                         <Tag round={true} large={true} style={Tag_s}>
@@ -151,15 +154,15 @@ export default class extends React.Component {
                                     </div>
                                 </div>
                                 <div style={TagContent_sColumn}>
-                                    {info.STATUS}
+                                  {info.STATUS ? ("--> " + info.STATUS) : ""}
                                 </div>
                         </Tag>
                     ))}
 
-									<h3 style={header_s}>Office Hour Statuses:</h3>
+                  {this.state.TAs.length !== 0 ? <h3 style={header_s}>Where to get help:</h3> : undefined}
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
-                              { TA.NAME }<br />
+                              {TA.TYPE === "PROF" ? "Prof. " : ""}{ TA.NAME }<br />
 															<div style={TagContent_s}>
                                   <div>
                                   {TA.COURSE_NAME}
@@ -202,7 +205,7 @@ export default class extends React.Component {
 																	</div>
 															</div>
                               <div style={TagContent_sColumn}>
-                              {TA.STATUS}
+                                  {TA.STATUS ? ("--> " + TA.STATUS) : ""}
                               </div>
 													</Tag>
 											))}

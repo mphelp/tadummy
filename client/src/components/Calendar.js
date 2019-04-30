@@ -23,6 +23,7 @@ const general_s = {
     margin: 20,
     maxHeight: 600,
     minWidth: 1000,
+    width: "100%",
 }
 const categories_s = {
     width: 350,
@@ -51,22 +52,23 @@ const customEvent = event => {
   if (type === "TA"){
     return (
       <span>
-        OH: {teacher}<span> at </span>
-        {location}
+        {teacher}<span> @ </span>
+        {location}<br /><em>{cname}</em>
       </span>
     )
   } else if (type === "PROF"){
     return (
       <span>
-        <span>OH: Prof. </span>{teacher}<span> at </span>
-        {location}
+        <span>Prof. </span>{teacher}<span> @ </span>
+        {location}<br /><em>{cname}</em>
       </span>
     )
   } else if (type === "COURSE"){
     return (
       <span>
-        {cname}<br /><span> taught by </span>
-        {teacher} at {location}
+        <em>{cname}</em><br />
+        <span>Prof. </span>{teacher}<br />
+        <span>Loc:  </span>{location}
       </span>
     )
   } else {
@@ -78,6 +80,7 @@ const localizer = BigCalendar.momentLocalizer(moment)
 
 export default class extends React.Component {
     state = {
+        scroll: new Date(),
         events: [],
         tas: [],
         profs: [],
@@ -121,8 +124,12 @@ export default class extends React.Component {
             })
             .catch(err => console.error(err))
     }
+    setMinTime = () => {
+        this.state.scroll.setHours(8, 0);    
+    }
     componentWillMount(){
-        this.retrieve()
+        this.setMinTime();
+        this.retrieve();
     }
     onTASClick = event => {
         this.setState({ qTAS: !this.state.qTAS })
@@ -134,7 +141,7 @@ export default class extends React.Component {
         this.setState({ qCOURSES: !this.state.qCOURSES })
     }
     render(){
-        const { qTAS, qPROFS, qCOURSES, tas, profs, courses } = this.state;
+        const { qTAS, qPROFS, qCOURSES, tas, profs, courses, scroll } = this.state;
         return (
             <div style={general_s}>
                 <BigCalendar
@@ -146,6 +153,9 @@ export default class extends React.Component {
                             ...(qCOURSES ? courses : [])
                         ]
                     }
+                    defaultView="week"
+                    step={10}
+                    min={scroll}
                     startAccessor="start"
                     endAccessor="end"
                     components={{ event: customEvent }}

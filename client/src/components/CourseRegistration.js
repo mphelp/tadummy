@@ -254,7 +254,7 @@ export default class extends React.Component {
                             />
                     </Select><br /><br />
                     <div style={timeblock_s}>
-                        Select desired Office Hours:<br />
+                        Select class times:<br />
                         <div style={bottom_s}>
                             <TimePicker
                                 onChange={this.handleDayStart}

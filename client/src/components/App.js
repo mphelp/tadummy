@@ -57,7 +57,7 @@ export default class extends React.Component {
                 >
                     <Sidebar {...this.props}/>
                     <Switch>
-                        <Route exact path="/" component={Home}/>
+                        <Route exact path="/" render={(props) => <Calendar netid={this.props.netid} />} />
                         <Route path="/calendar" render={(props) => <Calendar netid={this.props.netid} />} />
                         <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
