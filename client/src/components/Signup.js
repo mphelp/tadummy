@@ -220,9 +220,9 @@ export default class extends React.Component {
 				}
 				</div>
         <div style={{display:'flex', marginTop: 50}}>
-            <img alt={"TASystem selfie"} src={TAS} style={{ marginLeft: 30, width: 500, height: 300}}/>
         </div>
         </React.Fragment>
     );
   }
 }
+//<img alt={"TASystem selfie"} src={TAS} style={{ marginLeft: 30, width: 500, height: 300}}/>
