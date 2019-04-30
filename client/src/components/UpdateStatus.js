@@ -94,8 +94,8 @@ export default class extends React.Component {
                     }
 			})
             .then(() => {
-                alert("Your status has changed.")
-//                window.location.href = '/update_status?netid=' + this.props.netid;
+                alert("You have updated your availability for " + this.state.course.CNAME + ".");
+                window.location.href = '/update_status?netid=' + this.props.netid;
              })
             .catch(err => alert(err))
 	}
@@ -117,18 +117,7 @@ export default class extends React.Component {
 
                 })
             })
-
-            //this.setState(state => ({ status: course.STATUS }));
-            /*if (course.AVAIL_ID == 2){
-                this.setState(state => ({ avail: avails[0] }));
-            }
-            else if (course.AVAIL_ID == 4){
-                this.setState(state => ({ avail: avails[1] }));
-            }
-            else if (course.AVAIL_ID == 5){
-                this.setState(state => ({ avail: avails[2] }));
-            }*/
-	}
+    }
 
 
 	courseRenderer = (item, { handleClick, isActive }) => (
@@ -158,7 +147,7 @@ export default class extends React.Component {
         } = this.state
         return (
             <div style={general_s}>
-					<h1>TAs: Update your status below.</h1>
+					<h2>Update your status and availability for course-specific office hours.</h2>
 					<br />
 					<form onSubmit={this.handleSubmit}>
                     Course:<br />

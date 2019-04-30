@@ -183,7 +183,7 @@ export default class extends React.Component {
             <div style={general_s}>
 								<form onSubmit={this.handleSubmit}>
                     <h1>Customize your office hours:</h1><br />
-										<header style={{ margin: "10px 0px" }}>Choose a course you TA:</header>
+										<header style={{ margin: "10px 0px" }}>Choose one of your courses:</header>
 										<Select
 												items={coursesList}
 												itemPredicate={this.filterCourse}
