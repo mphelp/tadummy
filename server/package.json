@@ -3,8 +3,9 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"start": "node index.js",
-		"dev": "(cd ../client && npm start) | nodemon index.js"
+	    "start": "node index.js",
+	    "dev": "(cd ../client && npm start) | nodemon index.js",
+        "prod": "(cd ../client && npm start) | node index.js"
 	},
 	"author": "",
 	"license": "ISC",
