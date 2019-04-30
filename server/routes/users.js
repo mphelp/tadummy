@@ -221,7 +221,7 @@ function getUserTasReq(req) {
 
 function getUserTas(netid, userFunc) {
     console.log('getting user TAs for ' + netid);
-    return userFunc({netid: netid, courses: true, tas: true}).then ( data => {
+    return userFunc({netid: netid, courses: true, tas: true, professor: true}).then ( data => {
         let tas = [];
         for (i in data.COURSES) {
             let course = data.COURSES[i];
@@ -230,6 +230,9 @@ function getUserTas(netid, userFunc) {
                 ta['COURSE_ID'] = course.ID;
                 ta['COURSE_NAME'] = course.NAME;
                 tas.push(ta);
+            }
+            if (course.PROFESSOR && course.PROFESSOR.NETID) {
+                tas.push({...course.PROFESSOR, COURSE_ID: course.ID, COURSE_NAME: course.NAME});
             }
         }
         return tas;
