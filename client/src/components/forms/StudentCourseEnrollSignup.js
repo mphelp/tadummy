@@ -31,7 +31,7 @@ class StudentCourseEnrollSignup extends React.Component {
 
 		return (
 			<div style={general_s}>
-					<h1>Enroll in a coures: please select a course to enroll in.</h1>
+					<h1>Select a course you would like to enroll in:</h1>
 					<br />
 					<form onSubmit={handleSubmit}>
 					Course:<br />

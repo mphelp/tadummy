@@ -59,7 +59,7 @@ export default class extends React.Component {
 			})
             .then(() => {
                 window.location.href = '/enrollTA?netid=' + this.props.netid;
-                alert("Successfully enrolled.")
+                alert("You have enrolled in " + this.state.course.NAME + ".")
             })
             .catch(err => alert(err))
 	}
