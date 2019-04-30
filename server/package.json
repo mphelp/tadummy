@@ -3,8 +3,9 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"start": "node index.js",
-		"dev": "(cd ../client && npm start) | nodemon index.js"
+	    "start": "node index.js",
+	    "dev": "(cd ../client && npm start) | nodemon index.js",
+        "prod": "(cd ../client && npm start) | node index.js"
 	},
 	"author": "",
 	"license": "ISC",
@@ -12,9 +13,18 @@
 		"nodemon": "^1.18.4"
 	},
 	"dependencies": {
+		"body-parser": "^1.18.3",
 		"cas-authentication": "0.0.8",
+		"cors": "^2.8.5",
+		"deasync": "^0.1.14",
 		"express": "^4.16.4",
+		"express-parameters": "^1.0.4",
 		"express-session": "^1.15.6",
-		"oracledb": "^3.1.1"
+		"jade": "^1.11.0",
+		"moment": "^2.24.0",
+		"moment-recur": "^1.0.7",
+		"oracledb": "^3.1.1",
+		"pug": "^2.0.3",
+		"request": "^2.88.0"
 	}
 }

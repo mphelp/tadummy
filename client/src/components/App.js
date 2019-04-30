@@ -3,6 +3,13 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './Navigation';
 import Sidebar from './Sidebar';
 import Apply from './Apply';
+import Calendar from './Calendar';
+import CourseRegistration from './CourseRegistration';
+import StudentCourseEnroll from './StudentCourseEnroll';
+import EnrollTA from './EnrollTA';
+import UpdateStatus from './UpdateStatus';
+import SelectHours from './SelectHours';
+import DeleteOH from './DeleteOH';
 
 // Framework CSS
 import "normalize.css";
@@ -15,13 +22,8 @@ import './App.css';
 
 const Home = () => (
     <h1>
-        This is Home.
+        TAS Home.
     </h1>
-)
-const Calendar = () => (
-    <h2>
-        This will be a calendar.
-    </h2>
 )
 const Contact = () => (
     <p>
@@ -36,19 +38,35 @@ const BodyGeneral_s = {
 }
 
 export default class extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			search: null
+		};
+	}
+	componentDidMount = () => {
+		let search = window.location.search;
+		this.setState({ search });
+	}
   render() {
 		return (
 			<BrowserRouter>
-                <Navigation />
+                <Navigation {...this.props}/>
                 <div
                     style={BodyGeneral_s}
                 >
-                    <Sidebar />
+                    <Sidebar {...this.props}/>
                     <Switch>
-                        <Route exact path="/" component={Home}/>
-                        <Route path="/apply" component={Apply}/>
-                        <Route path="/calendar" component={Calendar}/>
+                        <Route exact path="/" render={(props) => <Calendar netid={this.props.netid} />} />
+                        <Route path="/calendar" render={(props) => <Calendar netid={this.props.netid} />} />
+                        <Route path="/student_enroll" render={(props) => <StudentCourseEnroll netid={this.props.netid} isAuthed={true} />} />
+                        <Route path="/course_creation" render={(props) => <CourseRegistration netid={this.props.netid} isAuthed={true} />} />
+						<Route path="/select_hours" render={props => <SelectHours {...this.props} isAuthed={true} />} />
+                        <Route path="/update_status" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/contact" component={Contact}/>
+                        <Route path="/enrollTA" render={(props) => <EnrollTA netid={this.props.netid} isAuthed={true} />} />
+                        <Route path="/updatestatusTA" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
+                        <Route path="/delete_hours" render={(props) => <DeleteOH netid={this.props.netid} isAuthed={true} />} />
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
                 </div>

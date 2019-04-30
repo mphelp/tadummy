@@ -1,0 +1,12 @@
+insert into timeblock (location, starttime, endtime) values ('Innovation Lounge',   TIMESTAMP '2019-04-24 15:30:00.00', TIMESTAMP '2019-04-24 19:45:00.00');
+insert into timeblock (location, starttime, endtime) values ('Debartolo 129',       TIMESTAMP '2019-04-25 12:30:00.00', TIMESTAMP '2019-04-25 11:45:00.00');
+insert into timeblock (location, starttime, endtime) values ('Smashburger',         TIMESTAMP '2019-04-25 10:30:00.00', TIMESTAMP '2019-04-25 15:00:00.00');
+insert into timeblock (location, starttime, endtime) values ('Hesburgh Library',    TIMESTAMP '2019-04-26 9:30:00.00',  TIMESTAMP '2019-04-26 13:10:00.00');
+insert into timeblock (location, starttime, endtime) values ('Au Bon Pain',         TIMESTAMP '2019-04-22 10:30:00.00', TIMESTAMP '2019-04-22 14:10:00.00');
+insert into timeblock (location, starttime, endtime) values ('Debartolo 140',       TIMESTAMP '2019-04-25 11:00:00.00', TIMESTAMP '2019-04-25 12:15:00.00');
+insert into timeblock (location, starttime, endtime) values ('Debartolo 126',       TIMESTAMP '2019-04-24 14:00:00.00', TIMESTAMP '2019-04-24 14:50:00.00');
+insert into timeblock (location, starttime, endtime) values ('Debartolo 140',       TIMESTAMP '2019-04-24 10:30:00.00', TIMESTAMP '2019-04-24 11:20:00.00');
+insert into timeblock (location, starttime, endtime) values ('Debartolo 102',       TIMESTAMP '2019-04-25 14:00:00.00', TIMESTAMP '2019-04-25 15:15:00.00');
+insert into timeblock (location, starttime, endtime) values ('Fitz 350',       TIMESTAMP '2019-04-25 15:00:00.00', TIMESTAMP '2019-04-25 16:15:00.00');
+insert into timeblock (location, starttime, endtime) values ('Fitz 378',       TIMESTAMP '2019-04-23 10:00:00.00', TIMESTAMP '2019-04-23 11:00:00.00');
+insert into timeblock (location, starttime, endtime) values ('Cushing 211A',       TIMESTAMP '2019-04-26 13:15:00.00', TIMESTAMP '2019-04-26 15:15:00.00');
