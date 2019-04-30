@@ -229,10 +229,15 @@ function getUserTas(netid, userFunc) {
                 let ta = course.TAS[j];
                 ta['COURSE_ID'] = course.ID;
                 ta['COURSE_NAME'] = course.NAME;
+                ta['TYPE'] = 'TA';
                 tas.push(ta);
             }
             if (course.PROFESSOR && course.PROFESSOR.NETID) {
-                tas.push({...course.PROFESSOR, COURSE_ID: course.ID, COURSE_NAME: course.NAME});
+                tas.push({...course.PROFESSOR,
+                    COURSE_ID: course.ID,
+                    COURSE_NAME: course.NAME,
+                    TYPE: 'PROF'
+                });
             }
         }
         return tas;
