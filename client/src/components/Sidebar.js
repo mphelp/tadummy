@@ -154,7 +154,7 @@ export default class extends React.Component {
                                     </div>
                                 </div>
                                 <div style={TagContent_sColumn}>
-                                    {info.STATUS}
+                                  {info.STATUS ? ("-->" + info.STATUS) : ""}
                                 </div>
                         </Tag>
                     ))}
