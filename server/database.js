@@ -82,9 +82,23 @@ function queryDB(sqlquery, bindings, type = QUERY.MULTIPLE){
 	});
 }
 
+function buildConditional(key, values, params) {
+    let cond = '(';
+    for (i in values) {
+        if (i != 0) {
+            cond += ' OR ';
+        }
+        cond += key + ' = :val'
+        params.push(values[i]);
+    }
+    cond += ')';
+    return cond;
+}
+
 
 module.exports = {
     queryDB: queryDB,
     createConnectionPool: createConnectionPool,
     QUERY: QUERY,
+    buildConditional: buildConditional,
 }

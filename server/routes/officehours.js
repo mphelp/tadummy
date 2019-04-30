@@ -212,19 +212,24 @@ function deleteOfficehours(netid, cid) {
             from `+table+`
             where netid = :netid AND course_id = :cid
         `;
-        deletesql = 'delete from '+table+' where timeblock_id = :id';
-        deletesql2 = 'delete from timeblock where timeblock_id = :id';
+        deletesql = 'delete from '+table;
+        deletesql2 = 'delete from timeblock';
         return db.queryDB(timesql, [netid, cid], db.QUERY.MULTIPLE);
     }).then ( data => {
-        let ids = data;
-        console.log(ids);
-        let promises = [];
-        for (i in ids) {
-            let id = ids[i].ID;
-            promises.push(db.queryDB(deletesql, [id], db.QUERY.DELETE));
-            promises.push(db.queryDB(deletesql2, [id], db.QUERY.DELETE));
+        if (!data.length) {
+            return Promise.resolve();
         }
-        return Promise.all(promises);
+        let ids = [];
+        for (i in data) {
+            ids.push(data[i].ID);
+        }
+        let where = ' WHERE ';
+        let params = [];
+        where += db.buildConditional('timeblock_id', ids, params);
+        return Promise.all([
+            db.queryDB(deletesql+where, params, db.QUERY.DELETE),
+            db.queryDB(deletesql2+where, params, db.QUERY.DELETE),
+        ]);
     });
 }
 

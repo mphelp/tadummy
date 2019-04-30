@@ -67,7 +67,7 @@ function apiQuery(func) {
 function apiDelete(func) {
     return (req, res) => {
         func(req).then( data => {
-            res.sendStatus(204);
+            res.sendStatus(200);
         }, err => {
             res.status(400).send(err);
         })
