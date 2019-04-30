@@ -11,6 +11,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 const config = require('../config.js');
 const serverAddr = 'http'+(config.server.https ? 's':'')+'://'+config.ip+':'+config.server.port;
 
+// Event colors
+const colors = {
+  'TA': 'LightCoral',
+  'PROF': 'MediumPurple',
+  'COURSE': 'SteelBlue',
+  'none': 'LightSalmon',
+}
 // Styles
 const general_s = {
     margin: 20,
@@ -24,8 +31,17 @@ const categories_s = {
     flexDirection: 'row',
     justifyContent: 'space-between',
 }
-const category_s = {
+const categoryTA_s = {
     display: 'flex',
+    color: colors['TA']
+}
+const categoryPROF_S = {
+    display: 'flex',
+    color: colors['PROF']
+}
+const categoryCOURSE_s = {
+    display: 'flex',
+    color: colors['COURSE']
 }
 const label_s = {
     margin: "-6px 0px 0px 0px"
@@ -60,13 +76,6 @@ const customEvent = event => {
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
-// Event colors
-const colors = {
-  'TA': 'LightCoral',
-  'PROF': 'MediumPurple',
-  'COURSE': 'SteelBlue',
-  'none': 'LightSalmon',
-}
 export default class extends React.Component {
     state = {
         events: [],
