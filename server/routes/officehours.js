@@ -173,7 +173,7 @@ function setStatus(netid, cid, avail_id, status) {
 }
 
 function setStatusReq(req) {
-    let missing = missingKeys(req.body, ['netid', 'cid', 'avail_id', 'status'], req);
+    let missing = missingKeys(req.body, ['netid', 'cid', 'avail_id'], req);
     if (missing.length) {
         return Promise.reject('Missing keys: ' + JSON.stringify(missing));
     }
