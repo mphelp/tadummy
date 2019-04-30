@@ -146,6 +146,7 @@ export default class extends React.Component {
                             ...(qCOURSES ? courses : [])
                         ]
                     }
+                    defaultView="week"
                     startAccessor="start"
                     endAccessor="end"
                     components={{ event: customEvent }}
