@@ -60,7 +60,7 @@ export default class extends React.Component {
             .then(() => {
                 window.location.href = '/student_enroll?netid=' + this.props.netid;
                 alert("Successfully enrolled.")
-            }
+            })
             .catch(err => alert(err))
 	}
 

@@ -57,7 +57,10 @@ export default class extends React.Component {
                         'Content-Type': 'application/json'
                     }
 			})
-            .then(() => alert("Successfully enrolled."))
+            .then(() => {
+                window.location.href = '/enrollTA?netid=' + this.props.netid;
+                alert("Successfully enrolled.")
+            })
             .catch(err => alert(err))
 	}
 
