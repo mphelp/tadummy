@@ -55,7 +55,7 @@ export default class extends React.Component {
                 <div
                     style={BodyGeneral_s}
                 >
-                    <Sidebar netid={this.props.netid}/>
+                    <Sidebar {...this.props}/>
                     <Switch>
                         <Route exact path="/" component={Home}/>
                         <Route path="/calendar" render={(props) => <Calendar netid={this.props.netid} />} />
