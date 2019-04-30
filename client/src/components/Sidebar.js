@@ -49,9 +49,9 @@ export default class extends React.Component {
         myCourses: []
 	};
     initializeSignup = () => {
-		// server routes
+		// server routes: ta (i.e. office hours) or mycourses
 		let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
-        let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
+    let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
 		// make requests to routes
 		axios.get(taApi)
 			.then(res => {
@@ -70,7 +70,7 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-                <h3 style={header_s}>My Information:</h3>
+                <h3 style={header_s}>My Courses:</h3>
                     {this.state.myCourses.map( info => (
                         <Tag round={true} large={true} style={Tag_s}>
                             <div style={TagContent_s}>
@@ -119,7 +119,7 @@ export default class extends React.Component {
                         </Tag>
                     ))}
 
-									<h3 style={header_s}>Statuses:</h3>
+									<h3 style={header_s}>Office Hour Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
                               { TA.NAME }<br />
