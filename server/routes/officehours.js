@@ -203,4 +203,5 @@ module.exports = {
     router: router,
     getOfficehours: getOfficehours,
     addTimeblock: addTimeblock,
+    getType: getType,
 };
