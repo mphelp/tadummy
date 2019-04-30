@@ -84,6 +84,7 @@ export default class extends React.Component {
             object['avail_id'] = this.state.avail.id;
             object['netid'] = this.props.netid;
             object['cid'] = this.state.course.CID;
+      console.log(object);
 			var json = JSON.stringify(object);
 			fetch(serverUrl+'/api/officehours/status', {
 					method: 'PUT',
@@ -92,7 +93,10 @@ export default class extends React.Component {
                         'Content-Type': 'application/json'
                     }
 			})
-            .then(() => alert("Status changed."))
+            .then(() => {
+                alert("Your status has changed.")
+//                window.location.href = '/update_status?netid=' + this.props.netid;
+             })
             .catch(err => alert(err))
 	}
 
