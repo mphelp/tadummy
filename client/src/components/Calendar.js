@@ -15,7 +15,7 @@ const serverAddr = 'http'+(config.server.https ? 's':'')+'://'+config.ip+':'+con
 const colors = {
   'TA': 'LightCoral',
   'PROF': 'MediumPurple',
-  'COURSE': 'SteelBlue',
+  'COURSE': 'MediumSeaGreen',
   'none': 'LightSalmon',
 }
 // Styles
@@ -35,7 +35,7 @@ const categoryTA_s = {
     display: 'flex',
     color: colors['TA']
 }
-const categoryPROF_S = {
+const categoryPROF_s = {
     display: 'flex',
     color: colors['PROF']
 }
@@ -116,7 +116,7 @@ export default class extends React.Component {
                         }
                     }
                 });
-                this.setState({ events, profs, tas, courses })
+                this.setState({ events, profs, tas, courses }, () => console.log(this.state))
             })
             .catch(err => console.error(err))
     }
@@ -159,19 +159,19 @@ export default class extends React.Component {
                         checked={qTAS}   
                         onChange={this.onTASClick.bind(this)} 
                         labelElement={<h3 style={label_s}>TA</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryTA_s}
                     />
                     <Switch 
                         checked={qPROFS}   
                         onChange={this.onPROFSClick.bind(this)} 
                         labelElement={<h3 style={label_s}>PROF</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryPROF_s}
                     />
                     <Switch 
                         checked={qCOURSES} 
                         onChange={this.onCOURSESClick.bind(this)} 
                         labelElement={<h3 style={label_s}>COURSES</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryCOURSE_s}
                     />
                 </div>
             </div>
