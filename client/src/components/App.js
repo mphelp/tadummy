@@ -9,6 +9,7 @@ import StudentCourseEnroll from './StudentCourseEnroll';
 import EnrollTA from './EnrollTA';
 import UpdateStatus from './UpdateStatus';
 import SelectHours from './SelectHours';
+import DeleteOH from './DeleteOH';
 
 // Framework CSS
 import "normalize.css";
@@ -66,6 +67,7 @@ export default class extends React.Component {
                         <Route path="/contact" component={Contact}/>
                         <Route path="/enrollTA" render={(props) => <EnrollTA netid={this.props.netid} isAuthed={true} />} />
                         <Route path="/updatestatusTA" render={(props) => <UpdateStatus netid={this.props.netid} isAuthed={true} />} />
+                        <Route path="/delete_hours" render={(props) => <DeleteOH netid={this.props.netid} isAuthed={true} />} />
                         <Route render={() => <h1>Page not found</h1>}/>
                     </Switch>
                 </div>
