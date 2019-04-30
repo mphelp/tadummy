@@ -50,7 +50,7 @@ export default class extends React.Component {
 	};
     initializeSignup = () => {
 		// server routes
-		let taApi = serverUrl + "/api/students/" + this.props.netid + "/tas";
+		let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
         let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
 		// make requests to routes
 		axios.get(taApi)
