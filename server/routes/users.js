@@ -96,6 +96,8 @@ router.get('/:netid', (req, res) => {
 
 router.get('/:netid/tas', api.query(getUserTasReq));
 
+router.get('/:netid/calendar', api.query(getUserCalendarReq));
+
 function getRoles(netid) {
     //let sql = `select netid, admin, student, professor, ta from admin.userroles where netid = :id`;
     let sql = `select * from userroles where netid = :id`;
@@ -207,7 +209,6 @@ function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
 function getUserTasReq(req) {
     let netid = req.params.netid;
     return officehours.getType(netid).then( type => {
-        console.log(type);
         if (type === 'TA') {
             return students.getStudentTas(netid);
         } else if (type === 'PROF') {
@@ -232,5 +233,19 @@ function getUserTas(netid, userFunc) {
             }
         }
         return tas;
+    });
+}
+
+function getUserCalendarReq(req) {
+    netid = req.params.netid;
+    return getRoles(netid).then( roles => {
+        console.log(roles);
+        if (roles.STUDENT) {
+            return students.getStudentCalendar(netid);
+        } else if (roles.PROFESSOR) {
+            return professors.getProfessorCalendar(netid);
+        } else {
+            return "'"+netid+"' is not a Student or Professor!";
+        }
     });
 }

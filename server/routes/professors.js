@@ -85,4 +85,5 @@ module.exports = {
     router: router,
     addProfessor: addProfessor,
     getProfessorTas: getProfessorTas,
+    getProfessorCalendar: getProfessorCalendar,
 };
