@@ -18,7 +18,7 @@ if (netid){
         dataType: "json",
         success: (res, status) => {
             if (res.authorized) {
-                render(<App netid={netid}/>, document.getElementById('root'));
+                render(<App netid={netid} roles={{...res}}/>, document.getElementById('root'));
             } else {
                 gotoSignup(netid);
             }
