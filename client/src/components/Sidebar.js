@@ -109,7 +109,7 @@ export default class extends React.Component {
                     )}
                 }
                 )()}
-                {this.state.myCourses.length !== 0 ? <h3 style={header_s}>My Office Hours:</h3> : undefined}
+                {this.state.myCourses.length !== 0 ? <h3 style={header_s}>My Statuses:</h3> : undefined}
                 </div>
                     {this.state.myCourses.map( info => (
                         <Tag round={true} large={true} style={Tag_s}>
