@@ -55,12 +55,12 @@ export default class extends React.Component {
 		// make requests to routes
 		axios.get(taApi)
 			.then(res => {
-				this.setState({ TAs: res.data })
+				this.setState({ TAs: res.data }, () => console.log(this.state.TAs))
 			})
 			.catch(err => console.error(err))
         axios.get(myApi)
     		.then(res => {
-    			this.setState({ myCourses: res.data })
+    			this.setState({ myCourses: res.data }, () => console.log(this.state.myCourses))
     		})
     		.catch(err => console.error(err))
 	}
