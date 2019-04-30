@@ -3,11 +3,14 @@ const db = require('../database');
 const missingKeys = require('../missingKeys');
 const api = require('./api');
 const courseFuncs = require('./courses');
+const officehours = require('./officehours');
 
 const users = require('./users');
 
 
 router.get('/:netid', users.authParam(users.ROLES.PROFESSOR), api.query(getProfessorReq));
+
+router.get('/:netid/calendar', users.authParam(users.ROLES.PROFESSOR), api.query(getProfessorCalReq));
 
 /* Optional parameters
  *
@@ -47,6 +50,31 @@ function addProfessor (netid, data) {
         users.addUser(netid, data.name),
         db.queryDB(sql, [data.netid, data.office, data.dept], db.QUERY.INSERT)
     ]);
+}
+
+function getProfessorCalendar(netid) {
+    let timeblocks = [];
+    return getProfessor({netid: netid, courses: true, tas: true}).then ( data => {
+        let promises = [];
+        for (i in data.COURSES) {
+            let course = data.COURSES[i];
+            promises.push(courseFuncs.getCourseTimes(course.ID));
+            for (j in course.TAS) {
+                let ta = course.TAS[j];
+                promises.push(officehours.getOfficehours(ta.NETID, course.ID));
+            }
+        }
+        return Promise.all(promises);
+    }).then ( data => {
+        timeblocks = data.flat();
+        return officehours.getOfficehours(netid);
+    }).then ( data => {
+        return timeblocks.concat(data);
+    });
+}
+
+function getProfessorCalReq(req) {
+    return getProfessorCalendar(req.params.netid);
 }
 
 module.exports = {

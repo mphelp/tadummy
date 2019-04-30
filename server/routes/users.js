@@ -199,3 +199,7 @@ function getUserPlus(sqlUser, sqlCourses, netid, courses=false, tas=false,
         return userData;
     });
 }
+
+function getUserTas(userFunc) {
+
+}

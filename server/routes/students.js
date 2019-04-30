@@ -79,7 +79,10 @@ function getStudentCalendar(netid) {
         }
         return Promise.all(promises);
     }).then ( data => {
-        return data.flat();
+        timeblocks = data.flat();
+        return officehours.getOfficehours(netid);
+    }).then ( data => {
+        return timeblocks.concat(data);
     });
 }
 
