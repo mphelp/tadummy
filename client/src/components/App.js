@@ -45,14 +45,13 @@ export default class extends React.Component {
 		};
 	}
 	componentDidMount = () => {
-		console.log(window.location.search);
 		let search = window.location.search;
 		this.setState({ search });
 	}
   render() {
 		return (
 			<BrowserRouter>
-                <Navigation netid={this.props.netid}/>
+                <Navigation {...this.props}/>
                 <div
                     style={BodyGeneral_s}
                 >

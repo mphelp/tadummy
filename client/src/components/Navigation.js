@@ -20,6 +20,7 @@ export default class extends React.PureComponent {
 	}
     render(){
         return (
+        <div>
             <Navbar className={Classes.DARK}>
                 <NavbarGroup align={Alignment.LEFT}>
                     <NavbarHeading>TASYSTEM</NavbarHeading>
@@ -32,9 +33,14 @@ export default class extends React.PureComponent {
                     <Link to="/student_enroll" style={subtleLink_s}>
                         <AnchorButton text="ENROLL" rightIcon="applications"/>
                     </Link>
-                    <Link to="/course_creation" style={subtleLink_s}>
-                        <AnchorButton text="CREATE" rightIcon="add"/>
-                    </Link>
+                    { (() => {
+                        if (this.props.roles.PROFESSOR){
+                        return(
+                            <Link to="/course_creation" style={subtleLink_s}>
+                                <AnchorButton text="CREATE" rightIcon="add"/>
+                            </Link>
+                        )}}
+                    )()}
                     <NavbarDivider />
                     <NavbarHeading>TA</NavbarHeading>
                     <Link to="/enrollTA" style={subtleLink_s}>
@@ -55,6 +61,7 @@ export default class extends React.PureComponent {
                     <NavbarHeading>Hello {this.props.netid}!</NavbarHeading>
 								</NavbarGroup>
             </Navbar>
+            </div>
         )
     }
 }
