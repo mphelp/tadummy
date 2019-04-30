@@ -20,6 +20,7 @@ export default class extends React.PureComponent {
 	}
     render(){
         return (
+        <div>
             <Navbar className={Classes.DARK}>
                 <NavbarGroup align={Alignment.LEFT}>
                     <NavbarHeading>TASYSTEM</NavbarHeading>
@@ -32,29 +33,50 @@ export default class extends React.PureComponent {
                     <Link to="/student_enroll" style={subtleLink_s}>
                         <AnchorButton text="ENROLL" rightIcon="applications"/>
                     </Link>
-                    <Link to="/course_creation" style={subtleLink_s}>
-                        <AnchorButton text="CREATE" rightIcon="add"/>
-                    </Link>
+                    { (() => {
+                        if (this.props.roles.PROFESSOR){
+                        return(
+                            <Link to="/course_creation" style={subtleLink_s}>
+                                <AnchorButton text="CREATE" rightIcon="add"/>
+                            </Link>
+                        )}}
+                    )()}
                     <NavbarDivider />
                     <NavbarHeading>TA</NavbarHeading>
                     <Link to="/enrollTA" style={subtleLink_s}>
                         <AnchorButton text="BECOME" rightIcon="new-object"/>
                     </Link>
-                    <Link to="/update_status" style={subtleLink_s}>
-                        <AnchorButton text="UPDATE STATUS" rightIcon="edit"/>
-                    </Link>
-                    <Link to="/select_hours" style={subtleLink_s}>
-                        <AnchorButton text="SELECT HOURS" rightIcon="time"/>
-                    </Link>
-                    <Link to="/delete_hours" style={subtleLink_s}>
-                        <AnchorButton text="DELETE HOURS" rightIcon="trash"/>
-                    </Link>
+                    { (() => {
+                        if (this.props.roles.PROFESSOR || this.props.roles.TA){
+                        return(
+                            <Link to="/update_status" style={subtleLink_s}>
+                                <AnchorButton text="UPDATE STATUS" rightIcon="edit"/>
+                            </Link>
+                        )}}
+                    )()}
+                    { (() => {
+                        if (this.props.roles.PROFESSOR || this.props.roles.TA){
+                        return(
+                            <Link to="/select_hours" style={subtleLink_s}>
+                                <AnchorButton text="SELECT HOURS" rightIcon="time"/>
+                            </Link>
+                        )}}
+                    )()}
+                    { (() => {
+                        if (this.props.roles.PROFESSOR || this.props.roles.TA){
+                        return(
+                            <Link to="/delete_hours" style={subtleLink_s}>
+                                <AnchorButton text="DELETE HOURS" rightIcon="trash"/>
+                            </Link>
+                        )}}
+                    )()}
                     <NavbarDivider />
-                </NavbarGroup>
-								<NavbarGroup align={Alignment.RIGHT}>
+                    </NavbarGroup>
+					<NavbarGroup align={Alignment.RIGHT}>
                     <NavbarHeading>Hello {this.props.netid}!</NavbarHeading>
-								</NavbarGroup>
-            </Navbar>
+					</NavbarGroup>
+                    </Navbar>
+            </div>
         )
     }
 }

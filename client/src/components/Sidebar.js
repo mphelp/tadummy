@@ -46,23 +46,37 @@ export default class extends React.Component {
     state = {
         netid: "",
 		TAs: [],
-        myCourses: []
+        myCourses: [],
+        myInfo: []
 	};
-    initializeSignup = () => {
-		// server routes: ta (i.e. office hours) or mycourses
-		let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
-    let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
-		// make requests to routes
-		axios.get(taApi)
-			.then(res => {
-				this.setState({ TAs: res.data }, () => console.log(this.state.TAs))
-			})
-			.catch(err => console.error(err))
-        axios.get(myApi)
-    		.then(res => {
-    			this.setState({ myCourses: res.data }, () => console.log(this.state.myCourses))
-    		})
-    		.catch(err => console.error(err))
+  initializeSignup = () => {
+      // server routes: ta (i.e. office hours) or mycourses or info
+      let infoApi = serverUrl;
+      if (this.props.roles.STUDENT){
+          infoApi = infoApi + "/api/students/" + this.props.netid;
+      }
+      if (this.props.roles.PROFESSOR){
+          infoApi = infoApi + "/api/professors/" + this.props.netid;
+      }
+      let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
+      let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
+      // make requests to routes
+      axios.get(taApi)
+        .then(res => {
+          this.setState({ TAs: res.data }, () => console.log(this.state.TAs))
+        })
+        .catch(err => console.error(err))
+          axios.get(myApi)
+          .then(res => {
+            this.setState({ myCourses: res.data }, () => console.log(this.state.myCourses))
+          })
+          .catch(err => console.error(err))
+          axios.get(infoApi)
+            .then(res => {
+              this.setState({ myInfo: res.data })
+            })
+              .then(console.log(this.state.myInfo))
+            .catch(err => console.error(err))
 	}
 	componentWillMount() {
 		this.initializeSignup();
@@ -71,6 +85,29 @@ export default class extends React.Component {
         return (
             <div style={SidebarGeneral_s}>
                 <h3 style={header_s}>My Courses:</h3>
+                <div>
+                {console.log(this.state.myInfo)}
+                {console.log("above")}
+                { (() => {
+                    if (this.props.roles.STUDENT){
+                        return(
+                            <div>
+                            Name: {this.state.myInfo['NAME']}<br />
+                            Major: {this.state.myInfo['MAJOR_NAME']}<br />
+                            Dorm: {this.state.myInfo['DORM_NAME']}<br />
+                            </div>
+                    )}
+                    if (this.props.roles.PROFESSOR){
+                        return(
+                            <div>
+                            Name: {this.state.myInfo['NAME']}<br />
+                            Office: {this.state.myInfo['OFFICE']}<br />
+                            Department: {this.state.myInfo['DEPT']}<br />
+                            </div>
+                    )}
+                }
+                )()}
+                </div>
                     {this.state.myCourses.map( info => (
                         <Tag round={true} large={true} style={Tag_s}>
                             <div style={TagContent_s}>

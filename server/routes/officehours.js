@@ -34,7 +34,7 @@ router.put('/status', api.query(setStatusReq));
 
 router.delete('/:netid/:cid', api.delete(deleteOfficehoursReq));
 
-function addTimeblocks(start, end, loc, cid) {
+function addTimeblocks(start, end, loc, cid, recur=true) {
     let tids = [];
     let starttime = new Date(start);
     let startH = starttime.getHours();
@@ -42,17 +42,23 @@ function addTimeblocks(start, end, loc, cid) {
     let endtime = new Date(end);
     let endH = endtime.getHours();
     let endM = endtime.getMinutes();
-    return courseFuncs.getCourseSemester(cid).then ( sem => {
-        return momentTime.getWeeklyTimes(start, end, sem);
-    }).then ( dates => {
-        let promises = [];
-        for (i in dates) {
-            let blockStart = new Date(dates[i]).setHours(startH, startM);
-            let blockEnd = new Date(dates[i]).setHours(endH, endM);
-            promises.push(addTimeblock(blockStart, blockEnd, loc));
-        }
-        return Promise.all(promises);
-    });
+    if (recur) {
+        return courseFuncs.getCourseSemester(cid).then ( sem => {
+            return momentTime.getWeeklyTimes(start, end, sem);
+        }).then ( dates => {
+            let promises = [];
+            for (i in dates) {
+                let blockStart = new Date(dates[i]).setHours(startH, startM);
+                let blockEnd = new Date(dates[i]).setHours(endH, endM);
+                promises.push(addTimeblock(blockStart, blockEnd, loc));
+            }
+            return Promise.all(promises);
+        });
+    } else {
+        return addTimeblock(start, end, loc).then ( id => {
+            return [id];
+        });
+    }
 }
 
 function addTimeblock(start, end, loc) {
@@ -97,12 +103,10 @@ function addOfficehour(start, end, loc, netid, cid) {
     return Promise.all(promises).then( data => {
         let timeblockids = data[0];
         let table = data[1];
-        console.log(data);
         if (!table) {
             return null;
         }
         let promises = [];
-        console.log(timeblockids);
         for (i in timeblockids) {
             let tbid = timeblockids[i];
             let sql =  `
@@ -216,6 +220,7 @@ function deleteOfficehours(netid, cid) {
         deletesql2 = 'delete from timeblock';
         return db.queryDB(timesql, [netid, cid], db.QUERY.MULTIPLE);
     }).then ( data => {
+        console.log('tb ids to delete: ' + JSON.stringify(data));
         if (!data.length) {
             return Promise.resolve();
         }
@@ -243,5 +248,6 @@ module.exports = {
     router: router,
     getOfficehours: getOfficehours,
     addTimeblock: addTimeblock,
+    addTimeblocks: addTimeblocks,
     getType: getType,
 };

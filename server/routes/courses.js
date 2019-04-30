@@ -15,21 +15,34 @@ const officehours = require('./officehours');
 
 /* Create a new course (with no time blocks)
  * netid:   netid of professor teaching course
- * name:   name of course
+ * name:    name of course
  * dept:    id of department offering course
  * semester:id of semester course is offered
+ * times:   array of time data things, with following components
+ *      - starttime
+ *      - endtime
+ *      -
  */
 router.post('/', users.authBody([users.ROLES.PROFESSOR]), (req, res) => {
-    if (missingKeys(req.body, ['netid', 'name', 'dept', 'semester'], req, res).length) {
+    if (missingKeys(req.body, ['netid', 'cname', 'dept', 'semester', 'times'], req, res).length) {
         return;
     }
-    let {netid, name, dept, semester} = req.body;
-    let promises = [
-        addCourse(netid, name, dept, semester),
-    ];
-    return Promise.all(promises).then( result => {
+    let sqlCourse = `
+        select max(course_id) as ID
+        from course
+        where course_name = :name AND semester_id = :semester
+    `;
+
+    let {netid, cname, dept, semester, times} = req.body;
+    return Promise.all([
+        addCourse(netid, cname, dept, semester),
+        db.queryDB(sqlCourse, [cname, semester], db.QUERY.SINGLE)
+    ]).then( data => {
+        let cid = data[1].ID;
+        return addCourseTimes(times, cid);
+    }).then( () => {
         res.sendStatus(201);
-    }, err => {
+    }).catch( err => {
         console.log(err);
         res.sendStatus(400);
     });
@@ -243,13 +256,27 @@ function addCourse(netid, name, dept, semester) {
         });
 }
 
+function addCourseTimes(times, cid) {
+    let promises = [];
+    for (i in times) {
+        let t = times[i];
+        promises.push(addCourseTime(t.starttime, t.endtime, t.location, cid));
+    }
+    return Promise.all(promises);
+}
+
 function addCourseTime(start, end, loc, cid) {
-    return officehours.addTimeblock(start, end, loc).then( tbid => {
+    return officehours.addTimeblocks(start, end, loc, cid).then( ids => {
         let sqlInsert = `
             insert into coursetime(timeblock_id, course_id)
             values (:tbid, :cid)
         `;
-        return db.queryDB(sqlInsert, [tbid, cid], db.QUERY.INSERT);
+        let promises = [];
+        for (i in ids) {
+            let id = ids[i];
+            promises.push(db.queryDB(sqlInsert, [id, cid], db.QUERY.INSERT));
+        }
+        return Promise.all(promises);
     });
 }
 
