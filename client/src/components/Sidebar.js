@@ -70,66 +70,63 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-                <div>
                 <h3 style={header_s}>My Information:</h3>
                     {this.state.myCourses.map( info => (
                         <Tag round={true} large={true} style={Tag_s}>
-                        <div style={TagContent_s}>
-                        <div>
-                        { info.CNAME }
-                        </div>
-                        <div>
-                        { (() => {
-                            if(info.AVAIL_DESC == "active") {
-                                return (
-                                    <status-indicator active pulse multiline='True'
-                                            style={Status_s}
-                                    />
-                                )
-                            } else if (info.AVAIL_DESC == "positive"){
-                                return (
-                                    <status-indicator positive pulse multiline='True'
-                                            style={Status_s}
-                                    />
-                                )
-                            } else if (info.AVAIL_DESC == "intermediary"){
-                                return (
-                                    <status-indicator intermediary pulse multiline='True'
-                                            style={Status_s}
-                                    />
-                                )
-                            } else if (info.AVAIL_DESC == "negative"){
-                                return (
-                                    <status-indicator negative pulse multiline='True'
-                                            style={Status_s}
-                                    />
-                                )
-                            } else if (info.AVAIL_DESC == "offline"){
-                                return (
-                                    <status-indicator pulse multiline='True'
-                                            style={Status_s}
-                                    />
-                                )
-                            }
-                            })() } <br />
-                            </div>
-                            </div>
-                            <div style={TagContent_sColumn}>
-                            {info.STATUS}
-                            </div>
-
+                            <div style={TagContent_s}>
+                                <div>
+                                    { info.CNAME }
+                                </div>
+                                <div style={{flexDirection:'flex-end'}}>
+                                    { (() => {
+                                        if(info.AVAIL_DESC == "active") {
+                                            return (
+                                                <status-indicator active pulse multiline='True'
+                                                        style={Status_s}
+                                                />
+                                            )
+                                        } else if (info.AVAIL_DESC == "positive"){
+                                            return (
+                                                <status-indicator positive pulse multiline='True'
+                                                        style={Status_s}
+                                                />
+                                            )
+                                        } else if (info.AVAIL_DESC == "intermediary"){
+                                            return (
+                                                <status-indicator intermediary pulse multiline='True'
+                                                        style={Status_s}
+                                                />
+                                            )
+                                        } else if (info.AVAIL_DESC == "negative"){
+                                            return (
+                                                <status-indicator negative pulse multiline='True'
+                                                        style={Status_s}
+                                                />
+                                            )
+                                        } else if (info.AVAIL_DESC == "offline"){
+                                            return (
+                                                <status-indicator pulse multiline='True'
+                                                        style={Status_s}
+                                                />
+                                            )
+                                        }
+                                        })() } 
+                                    </div>
+                                </div>
+                                <div style={TagContent_sColumn}>
+                                    {info.STATUS}
+                                </div>
                         </Tag>
                     ))}
-                </div>
 
 									<h3 style={header_s}>Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
-                                                    { TA.NAME }<br />
+                              { TA.NAME }<br />
 															<div style={TagContent_s}>
-                                                            <div>
-                                                            {TA.COURSE_NAME}
-                                                            </div>
+                                  <div>
+                                  {TA.COURSE_NAME}
+                                  </div>
 																	<div>
 																			{ (() => {
 																				if(TA.AVAILABILITY == "active") {
