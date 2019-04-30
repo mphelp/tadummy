@@ -40,11 +40,14 @@ export default class extends React.PureComponent {
                     <Link to="/enrollTA" style={subtleLink_s}>
                         <AnchorButton text="BECOME" rightIcon="new-object"/>
                     </Link>
+                    <Link to="/update_status" style={subtleLink_s}>
+                        <AnchorButton text="UPDATE STATUS" rightIcon="edit"/>
+                    </Link>
                     <Link to="/select_hours" style={subtleLink_s}>
                         <AnchorButton text="SELECT HOURS" rightIcon="time"/>
                     </Link>
-                    <Link to="/update_status" style={subtleLink_s}>
-                        <AnchorButton text="UPDATE STATUS" rightIcon="edit"/>
+                    <Link to="/delete_hours" style={subtleLink_s}>
+                        <AnchorButton text="DELETE HOURS" rightIcon="trash"/>
                     </Link>
                     <NavbarDivider />
                 </NavbarGroup>
