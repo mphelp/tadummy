@@ -11,6 +11,13 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 const config = require('../config.js');
 const serverAddr = 'http'+(config.server.https ? 's':'')+'://'+config.ip+':'+config.server.port;
 
+// Event colors
+const colors = {
+  'TA': 'LightCoral',
+  'PROF': 'MediumPurple',
+  'COURSE': 'MediumSeaGreen',
+  'none': 'LightSalmon',
+}
 // Styles
 const general_s = {
     margin: 20,
@@ -24,8 +31,17 @@ const categories_s = {
     flexDirection: 'row',
     justifyContent: 'space-between',
 }
-const category_s = {
+const categoryTA_s = {
     display: 'flex',
+    color: colors['TA']
+}
+const categoryPROF_s = {
+    display: 'flex',
+    color: colors['PROF']
+}
+const categoryCOURSE_s = {
+    display: 'flex',
+    color: colors['COURSE']
 }
 const label_s = {
     margin: "-6px 0px 0px 0px"
@@ -60,13 +76,6 @@ const customEvent = event => {
 // Calendar Localizer
 const localizer = BigCalendar.momentLocalizer(moment)
 
-// Event colors
-const colors = {
-  'TA': 'LightCoral',
-  'PROF': 'MediumPurple',
-  'COURSE': 'SteelBlue',
-  'none': 'LightSalmon',
-}
 export default class extends React.Component {
     state = {
         events: [],
@@ -80,7 +89,7 @@ export default class extends React.Component {
     }
     // Retrieve TA office hour blocks
     retrieve = () => {
-        let calendarApi = serverAddr + '/api/students/' + this.props.netid + '/calendar';
+        let calendarApi = serverAddr + '/api/users/' + this.props.netid + '/calendar';
         axios.get(calendarApi)
             .then(res => {
                 let events = [];
@@ -107,7 +116,7 @@ export default class extends React.Component {
                         }
                     }
                 });
-                this.setState({ events, profs, tas, courses }, () => console.log(this.state));
+                this.setState({ events, profs, tas, courses }, () => console.log(this.state))
             })
             .catch(err => console.error(err))
     }
@@ -138,7 +147,6 @@ export default class extends React.Component {
                     }
                     startAccessor="start"
                     endAccessor="end"
-                    tooltipAccessor="tooltip"
                     components={{ event: customEvent }}
                     eventPropGetter={ event => ({
                         style: {
@@ -151,19 +159,19 @@ export default class extends React.Component {
                         checked={qTAS}   
                         onChange={this.onTASClick.bind(this)} 
                         labelElement={<h3 style={label_s}>TA</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryTA_s}
                     />
                     <Switch 
                         checked={qPROFS}   
                         onChange={this.onPROFSClick.bind(this)} 
                         labelElement={<h3 style={label_s}>PROF</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryPROF_s}
                     />
                     <Switch 
                         checked={qCOURSES} 
                         onChange={this.onCOURSESClick.bind(this)} 
                         labelElement={<h3 style={label_s}>COURSES</h3>} 
-                        large={true} style={category_s}
+                        large={true} style={categoryCOURSE_s}
                     />
                 </div>
             </div>
