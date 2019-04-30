@@ -3,7 +3,10 @@ import axios from 'axios';
 import {
     Classes,
     MenuItem,
+    Button
 } from "@blueprintjs/core";
+import { Select } from "@blueprintjs/select";
+
 
 // Framework CSS
 import "normalize.css";
@@ -11,8 +14,6 @@ import "@blueprintjs/core/lib/css/blueprint.css";
 import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
-// My Components
-import CourseSignup from "./forms/CourseSignup";
 
 const $ = require('jquery');
 const config = require('../config.js')
@@ -141,28 +142,39 @@ export default class extends React.Component {
 		} = this.props;
 		const { depts, dept, sems, sem} = this.state;
 		return (
-				<div style={BodyGeneral_s}>
-				{
-						(() => {
-									return(
-										<CourseSignup
-                                            netid        = {netid}
-											depts        = {depts}
-											dept         = {dept}
-                                            sems         = {sems}
-                                            sem          = {sem}
-											handleSubmit = {this.handleSubmit}
-											handleDeptSelectClick = {this.handleDeptSelectClick}
-											deptRenderer = {this.deptRenderer}
-											filterDept = {this.filterDept}
-                                            handleSemSelectClick = {this.handleSemSelectClick}
-											semRenderer = {this.semRenderer}
-											filterSem = {this.filterSem}
-										/>
-									)
-						})()
-				}
-				</div>
+            <div>
+                    <h1>Course Registration: please enter in the following information</h1>
+                    <div style = {BodyGeneral_s}>
+                    <br />
+                    <form onSubmit={this.handleSubmit}>
+                    Course Name:<br />
+                    <input type="text" name="name" required="required"/><br/><br/>
+                    Department:<br />
+                    <Select
+                            items={depts}
+                            itemPredicate={this.filterDept}
+                            itemRenderer={this.deptRenderer}
+                            onItemSelect={this.handleDeptSelectClick}
+                    >
+                            <Button rightIcon="caret-down"
+                                    text={dept ? dept.ABBREV : "(No selection)"}
+                            />
+                    </Select><br /><br />
+                    Semester:<br />
+                    <Select
+                            items={sems}
+                            itemPredicate={this.filterSem}
+                            itemRenderer={this.semRenderer}
+                            onItemSelect={this.handleSemSelectClick}
+                    >
+                            <Button rightIcon="caret-down"
+                                    text={sem ? sem.STARTDATE : "(No selection)"}
+                            />
+                    </Select><br /><br />
+                    <input type="submit" value="Submit" />
+                    </form>
+                    </div>
+            </div>
     );
   }
 }

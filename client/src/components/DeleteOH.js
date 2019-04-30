@@ -76,27 +76,13 @@ export default class extends React.Component {
 
     handleSubmit = (event) => {
 			event.preventDefault();
-			const formData = new FormData(event.target);
-			var object = {};
-			formData.forEach(function(value, key){
-					object[key] = value;
-			});
-            object['avail_id'] = this.state.avail.id;
-            object['netid'] = this.props.netid;
-            object['cid'] = this.state.course.CID;
-      console.log(object);
-			var json = JSON.stringify(object);
-			fetch(serverUrl+'/api/officehours/status', {
-					method: 'PUT',
-					body: json,
+			fetch(serverUrl+'/api/officehours/' + this.props.netid + "/" + this.state.course.CID, {
+					method: 'DELETE',
                     headers: {
                         'Content-Type': 'application/json'
                     }
 			})
-            .then(() => {
-                alert("You have updated your availability for " + this.state.course.CNAME + ".");
-                window.location.href = '/update_status?netid=' + this.props.netid;
-             })
+            .then(() => alert("Office Hours Deleted."))
             .catch(err => alert(err))
 	}
 
@@ -117,7 +103,7 @@ export default class extends React.Component {
 
                 })
             })
-    }
+	}
 
 
 	courseRenderer = (item, { handleClick, isActive }) => (
@@ -147,7 +133,7 @@ export default class extends React.Component {
         } = this.state
         return (
             <div style={general_s}>
-					<h2>Update your status and availability for course-specific office hours.</h2>
+					<h1>Delete your office hours for a course:</h1>
 					<br />
 					<form onSubmit={this.handleSubmit}>
                     Course:<br />
@@ -159,18 +145,6 @@ export default class extends React.Component {
 					>
 							<Button rightIcon="caret-down"
 									text={course ? course.CNAME : "(No selection)"}
-							/>
-					</Select><br /><br />
-					Status (40 character max):<br />
-					<input type="text" name="status" defaultValue={course && course.STATUS ? course.STATUS : ""} maxLength ="40" /><br/><br/>
-					Availability:<br />
-					<Select
-							items={avails}
-							itemRenderer={this.itemRenderer}
-							onItemSelect={this.handleSelectClick}
-					>
-							<Button rightIcon="caret-down"
-									text={avail ? avail.text : "(No selection)"}
 							/>
 					</Select><br /><br />
 					<input type="submit" value="Submit" />
