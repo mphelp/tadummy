@@ -15,6 +15,9 @@ import "@blueprintjs/select/lib/css/blueprint-select.css";
 import StudentSignup from "./forms/StudentSignup";
 import ProfessorSignup from "./forms/ProfessorSignup";
 
+// img
+import TAS from '../img/TAS.jpg'
+
 const $ = require('jquery');
 const config = require('../config.js')
 const serverUrl = 'http'+(config.server.https ?'s':'')+'://'+ config.ip + ':' + config.server.port;
@@ -174,7 +177,8 @@ export default class extends React.Component {
 		const { majors, major, depts, dept, dorms, dorm } = this.state;
 
 		return (
-				<div style={BodyGeneral_s}>
+        <React.Fragment style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+				<div style={{marginBottom: 20}}> 
 				{
 						(() => {
 								if (ndprimaryaffiliation === "Faculty"){
@@ -215,6 +219,10 @@ export default class extends React.Component {
 						})()
 				}
 				</div>
+        <div style={{display:'flex', marginTop: 50}}>
+            <img alt={"TASystem selfie"} src={TAS} style={{ marginLeft: 30, width: 500, height: 300}}/>
+        </div>
+        </React.Fragment>
     );
   }
 }

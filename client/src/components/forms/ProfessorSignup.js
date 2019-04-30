@@ -10,7 +10,9 @@ import "@blueprintjs/icons/lib/css/blueprint-icons.css";
 import "@blueprintjs/select/lib/css/blueprint-select.css";
 
 const general_s = {
+  display: 'block',
 	margin: 30,
+  height: 300,
 }
 const office_s = {
 	minWidth: 400,
