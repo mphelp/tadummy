@@ -45,18 +45,24 @@ export default class extends React.Component {
 	}
     state = {
         netid: "",
-		TAs: []
+		TAs: [],
+        myCourses: []
 	};
     initializeSignup = () => {
 		// server routes
 		let taApi = serverUrl + "/api/students/" + this.props.netid + "/tas";
-
+        let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
 		// make requests to routes
 		axios.get(taApi)
 			.then(res => {
 				this.setState({ TAs: res.data })
 			})
 			.catch(err => console.error(err))
+        axios.get(myApi)
+    		.then(res => {
+    			this.setState({ myCourses: res.data })
+    		})
+    		.catch(err => console.error(err))
 	}
 	componentWillMount() {
 		this.initializeSignup();
@@ -64,14 +70,66 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
+                <div>
+                <h3 style={header_s}>My Information:</h3>
+                    {this.state.myCourses.map( info => (
+                        <Tag round={true} large={true} style={Tag_s}>
+                        <div style={TagContent_s}>
+                        <div>
+                        { info.CNAME }
+                        </div>
+                        <div>
+                        { (() => {
+                            if(info.AVAIL_DESC == "active") {
+                                return (
+                                    <status-indicator active pulse multiline='True'
+                                            style={Status_s}
+                                    />
+                                )
+                            } else if (info.AVAIL_DESC == "positive"){
+                                return (
+                                    <status-indicator positive pulse multiline='True'
+                                            style={Status_s}
+                                    />
+                                )
+                            } else if (info.AVAIL_DESC == "intermediary"){
+                                return (
+                                    <status-indicator intermediary pulse multiline='True'
+                                            style={Status_s}
+                                    />
+                                )
+                            } else if (info.AVAIL_DESC == "negative"){
+                                return (
+                                    <status-indicator negative pulse multiline='True'
+                                            style={Status_s}
+                                    />
+                                )
+                            } else if (info.AVAIL_DESC == "offline"){
+                                return (
+                                    <status-indicator pulse multiline='True'
+                                            style={Status_s}
+                                    />
+                                )
+                            }
+                            })() } <br />
+                            </div>
+                            </div>
+                            <div style={TagContent_sColumn}>
+                            {info.STATUS}
+                            </div>
+
+                        </Tag>
+                    ))}
+                </div>
+
 									<h3 style={header_s}>Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
-                              { TA.NAME }<br />
+                                                    { TA.NAME }<br />
 															<div style={TagContent_s}>
-                                  <div>
-                                  {TA.COURSE_NAME}
-                                  </div>
+                                                            <div>
+                                                            {TA.COURSE_NAME}
+                                                            </div>
 																	<div>
 																			{ (() => {
 																				if(TA.AVAILABILITY == "active") {
