@@ -100,7 +100,7 @@ export default class extends React.Component {
       });
       body['times'] = times;
       console.log(body);
-			axios.post('/api/courses', body)
+			axios.post(serverUrl + '/api/courses', body)
             .then(() => alert("Course created."))
             .catch(err => alert(err))
       this.removeTimesChosen();
