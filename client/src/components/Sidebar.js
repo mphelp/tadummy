@@ -159,7 +159,7 @@ export default class extends React.Component {
                         </Tag>
                     ))}
 
-                  {this.state.TAs.length !== 0 ? <h3 style={header_s}>Office Hours for My Courses:</h3> : undefined}
+                  {this.state.TAs.length !== 0 ? <h3 style={header_s}>Where to get help:</h3> : undefined}
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
                               {TA.TYPE === "PROF" ? "Prof. " : ""}{ TA.NAME }<br />
