@@ -42,7 +42,13 @@ export default class extends React.PureComponent {
                         )}}
                     )()}
                     <NavbarDivider />
-                    <NavbarHeading>TA</NavbarHeading>
+                    { (() => {
+                        if (this.props.roles.STUDENT){
+                            return (
+                                <NavbarHeading>TA</NavbarHeading>
+                            )
+                        }}
+                    )()}
                     { (() => {
                         if (this.props.roles.STUDENT){
                             return (
@@ -51,6 +57,19 @@ export default class extends React.PureComponent {
                                 </Link>
                             )
                         }}
+                    )()}
+                    { (() => {
+                        if (this.props.roles.STUDENT){
+                            return (
+                                <NavbarDivider />
+                            )
+                        }}
+                    )()}
+                    { (() => {
+                        if (this.props.roles.PROFESSOR || this.props.roles.TA){
+                        return(
+                            <NavbarHeading>Office Hours</NavbarHeading>
+                        )}}
                     )()}
                     { (() => {
                         if (this.props.roles.PROFESSOR || this.props.roles.TA){
