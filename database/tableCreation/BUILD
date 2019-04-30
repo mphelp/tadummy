@@ -11,4 +11,4 @@ sqlldr $USER/$PASS control=semester.ctl
 sqlldr $USER/$PASS control=availability.ctl
 sqlldr $USER/$PASS control=student.ctl
 
-sqlplus $USER/$PASS @insmock/INSall
+#sqlplus $USER/$PASS @insmock/INSall
