@@ -80,7 +80,7 @@ export default class extends React.Component {
     }
     // Retrieve TA office hour blocks
     retrieve = () => {
-        let calendarApi = serverAddr + '/api/students/' + this.props.netid + '/calendar';
+        let calendarApi = serverAddr + '/api/users/' + this.props.netid + '/calendar';
         axios.get(calendarApi)
             .then(res => {
                 let events = [];
