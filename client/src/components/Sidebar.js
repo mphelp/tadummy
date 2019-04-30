@@ -49,34 +49,34 @@ export default class extends React.Component {
         myCourses: [],
         myInfo: []
 	};
-    initializeSignup = () => {
-		// server routes
-        let infoApi = serverUrl;
-        if (this.props.roles.STUDENT){
-            infoApi = infoApi + "/api/students/" + this.props.netid;
-        }
-        if (this.props.roles.PROFESSOR){
-            infoApi = infoApi + "/api/professors/" + this.props.netid;
-        }
-		let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
-        let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
-		// make requests to routes
-		axios.get(taApi)
-			.then(res => {
-				this.setState({ TAs: res.data })
-			})
-			.catch(err => console.error(err))
-        axios.get(myApi)
-    		.then(res => {
-    			this.setState({ myCourses: res.data })
-    		})
-    		.catch(err => console.error(err))
-        axios.get(infoApi)
-        	.then(res => {
-        		this.setState({ myInfo: res.data })
-        	})
-            .then(console.log(this.state.myInfo))
-        	.catch(err => console.error(err))
+  initializeSignup = () => {
+      // server routes: ta (i.e. office hours) or mycourses or info
+      let infoApi = serverUrl;
+      if (this.props.roles.STUDENT){
+          infoApi = infoApi + "/api/students/" + this.props.netid;
+      }
+      if (this.props.roles.PROFESSOR){
+          infoApi = infoApi + "/api/professors/" + this.props.netid;
+      }
+      let taApi = serverUrl + "/api/users/" + this.props.netid + "/tas";
+      let myApi = serverUrl + "/api/officehours/" + this.props.netid + "/courses";
+      // make requests to routes
+      axios.get(taApi)
+        .then(res => {
+          this.setState({ TAs: res.data }, () => console.log(this.state.TAs))
+        })
+        .catch(err => console.error(err))
+          axios.get(myApi)
+          .then(res => {
+            this.setState({ myCourses: res.data }, () => console.log(this.state.myCourses))
+          })
+          .catch(err => console.error(err))
+          axios.get(infoApi)
+            .then(res => {
+              this.setState({ myInfo: res.data })
+            })
+              .then(console.log(this.state.myInfo))
+            .catch(err => console.error(err))
 	}
 	componentWillMount() {
 		this.initializeSignup();
@@ -84,7 +84,7 @@ export default class extends React.Component {
     render(){
         return (
             <div style={SidebarGeneral_s}>
-                <h3 style={header_s}>My Information:</h3>
+                <h3 style={header_s}>My Courses:</h3>
                 <div>
                 {console.log(this.state.myInfo)}
                 {console.log("above")}
@@ -156,7 +156,7 @@ export default class extends React.Component {
                         </Tag>
                     ))}
 
-									<h3 style={header_s}>Statuses:</h3>
+									<h3 style={header_s}>Office Hour Statuses:</h3>
 											{this.state.TAs.map( TA  => (
 													<Tag round={true} large={true} style={Tag_s}>
                               { TA.NAME }<br />
