@@ -1,4 +1,12 @@
-This app is currently in development.
+# General Usage:
+This app has passed development stage. A production build of version 1.0 is running at the following url:
+
+http://ta.esc.nd.edu:8192
+
+Enjoy!
+
+---------
+
 # Developer Notes
 
 ### Install node and npm
@@ -51,9 +59,8 @@ export LD_LIBRARY_PATH=$ORACLE_HOME/lib:$LD_LIBRARY_PATH
 ```
 Make sure that source your `oracle_env.sh` file **before** your update your `$LD_LIBRARY_PATH`, otherwise `$ORACLE_HOME` won't yet exist.
 
-------
 
-## Usage: Go to server
+## Dev usage: Go to server
 ```
 $ npm run dev
 ```
